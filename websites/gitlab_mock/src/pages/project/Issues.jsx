@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStore } from '../../store';
 import { Plus, MoreHorizontal } from 'lucide-react';
+import { getProjectDataId, isSameProjectId } from './projectRoute';
 
 const IssueCard = ({ issue, onDragStart }) => (
   <div 
@@ -29,7 +30,8 @@ const IssueCard = ({ issue, onDragStart }) => (
 export default function Issues() {
   const { projectId } = useParams();
   const { state, updateState } = useStore();
-  const issues = state.issues.filter(i => i.projectId === parseInt(projectId));
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const issues = state.issues.filter(i => isSameProjectId(i.projectId, dataProjectId));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newIssue, setNewIssue] = useState({ title: '', description: '', labels: 'bug' });
 
@@ -66,7 +68,7 @@ export default function Issues() {
     event.preventDefault();
     const issue = {
       id: Math.max(0, ...state.issues.map(item => item.id)) + 1,
-      projectId: parseInt(projectId),
+      projectId: dataProjectId,
       title: newIssue.title,
       description: newIssue.description,
       status: 'open',

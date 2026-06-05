@@ -3,11 +3,13 @@ import { useParams } from 'react-router-dom';
 import { useStore } from '../../store';
 import ReactMarkdown from 'react-markdown';
 import { Edit, Save } from 'lucide-react';
+import { getProjectDataId, isSameProjectId } from './projectRoute';
 
 export default function Wiki() {
   const { projectId } = useParams();
   const { state, updateState } = useStore();
-  const pages = state.wiki.filter(p => p.projectId === parseInt(projectId));
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const pages = state.wiki.filter(p => isSameProjectId(p.projectId, dataProjectId));
   const [selectedPageId, setSelectedPageId] = useState(pages[0]?.id);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState('');

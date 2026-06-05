@@ -3,13 +3,15 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useStore } from '../../store';
 import { GitPullRequest, MessageSquare, Check, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { getProjectDataId, isSameProjectId } from './projectRoute';
 
 export default function MergeRequests() {
   const { projectId } = useParams();
   const { state } = useStore();
   const navigate = useNavigate();
   const { search } = useLocation();
-  const mrs = state.mergeRequests.filter(mr => mr.projectId === parseInt(projectId));
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const mrs = state.mergeRequests.filter(mr => isSameProjectId(mr.projectId, dataProjectId));
 
   return (
     <div>

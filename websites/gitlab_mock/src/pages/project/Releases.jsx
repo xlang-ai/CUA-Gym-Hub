@@ -3,11 +3,13 @@ import { useParams } from 'react-router-dom';
 import { useStore } from '../../store';
 import { Tag, Plus, Box } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { getProjectDataId, isSameProjectId } from './projectRoute';
 
 export default function Releases() {
   const { projectId } = useParams();
   const { state, updateState } = useStore();
-  const releases = state.releases ? state.releases.filter(r => r.projectId === parseInt(projectId)) : [];
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const releases = state.releases ? state.releases.filter(r => isSameProjectId(r.projectId, dataProjectId)) : [];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newRelease, setNewRelease] = useState({ tagName: '', name: '', description: '' });
 
@@ -15,7 +17,7 @@ export default function Releases() {
     e.preventDefault();
     const release = {
       id: (state.releases?.length || 0) + 1,
-      projectId: parseInt(projectId),
+      projectId: dataProjectId,
       tagName: newRelease.tagName,
       name: newRelease.name,
       description: newRelease.description,

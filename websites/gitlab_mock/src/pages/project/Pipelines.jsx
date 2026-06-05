@@ -3,6 +3,7 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import { useStore } from '../../store';
 import { CheckCircle2, XCircle, Clock, PlayCircle, RotateCw } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { findProjectByRouteId, getProjectDataId, isSameProjectId } from './projectRoute';
 
 const StatusBadge = ({ status }) => {
   const config = {
@@ -26,15 +27,16 @@ export default function Pipelines() {
   const { projectId } = useParams();
   const { search } = useLocation();
   const { state, updateState } = useStore();
-  const pipelines = state.pipelines.filter(p => p.projectId === parseInt(projectId));
-  const project = state.projects.find(p => p.id === parseInt(projectId));
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const pipelines = state.pipelines.filter(p => isSameProjectId(p.projectId, dataProjectId));
+  const project = findProjectByRouteId(state.projects, projectId);
 
   const createPipeline = (source = null) => {
     const nextId = Math.max(0, ...state.pipelines.map(pipeline => pipeline.id)) + 1;
     const branch = source?.branch || project?.branches?.[0] || 'main';
     const pipeline = {
       id: nextId,
-      projectId: parseInt(projectId),
+      projectId: dataProjectId,
       status: 'running',
       branch,
       commit: Math.random().toString(16).slice(2, 9),

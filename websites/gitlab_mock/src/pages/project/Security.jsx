@@ -2,17 +2,19 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useStore } from '../../store';
 import { ShieldAlert, CheckCircle, AlertTriangle } from 'lucide-react';
+import { getProjectDataId, isSameProjectId } from './projectRoute';
 
 export default function Security() {
   const { projectId } = useParams();
   const { state, updateState } = useStore();
-  const vulns = state.vulnerabilities.filter(v => v.projectId === parseInt(projectId));
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const vulns = state.vulnerabilities.filter(v => isSameProjectId(v.projectId, dataProjectId));
   const createSecurityIssue = (vulnerability) => {
     const issueId = Math.max(0, ...state.issues.map(issue => issue.id)) + 1;
     updateState(prev => ({
       issues: [...prev.issues, {
         id: issueId,
-        projectId: parseInt(projectId),
+        projectId: dataProjectId,
         title: `Investigate vulnerability: ${vulnerability.name}`,
         description: `Created from security finding #${vulnerability.id}. Severity: ${vulnerability.severity}.`,
         status: 'open',
@@ -20,6 +22,14 @@ export default function Security() {
         assignee: prev.currentUser.name
       }],
       vulnerabilities: prev.vulnerabilities.map(item => item.id === vulnerability.id ? { ...item, status: 'issue_created', issueId } : item)
+    }));
+  };
+
+  const resolveVulnerability = (vulnerability) => {
+    updateState(prev => ({
+      vulnerabilities: prev.vulnerabilities.map(item =>
+        item.id === vulnerability.id ? { ...item, status: 'resolved' } : item
+      )
     }));
   };
 
@@ -71,7 +81,10 @@ export default function Security() {
                </div>
                <div className="flex items-center gap-2">
                  {v.status === 'detected' ? (
-                   <button onClick={() => createSecurityIssue(v)} className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100">Create Issue</button>
+                   <>
+                     <button onClick={() => createSecurityIssue(v)} className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100">Create Issue</button>
+                     <button onClick={() => resolveVulnerability(v)} className="px-3 py-1 text-sm border border-green-300 text-green-700 rounded hover:bg-green-50">Resolve</button>
+                   </>
                  ) : v.status === 'issue_created' ? (
                    <span className="flex items-center gap-1 text-blue-600 text-sm font-medium"><ShieldAlert size={14} /> Issue #{v.issueId}</span>
                  ) : (

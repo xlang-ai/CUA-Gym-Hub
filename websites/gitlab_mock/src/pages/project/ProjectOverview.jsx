@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useStore } from '../../store';
 import { FileText, Folder, Download, History, GitBranch } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { findProjectByRouteId } from './projectRoute';
 
 const FileTreeItem = ({ item, depth = 0, onSelectFile, selectedFile }) => {
   const isSelected = selectedFile?.name === item.name && item.type === 'file';
@@ -32,7 +33,7 @@ const FileTreeItem = ({ item, depth = 0, onSelectFile, selectedFile }) => {
 export default function ProjectOverview() {
   const { projectId } = useParams();
   const { state } = useStore();
-  const project = state.projects.find(p => p.id === parseInt(projectId));
+  const project = findProjectByRouteId(state.projects, projectId);
   const [selectedBranch, setSelectedBranch] = useState(project?.branches?.[0] || 'main');
   const [selectedFile, setSelectedFile] = useState(null);
 

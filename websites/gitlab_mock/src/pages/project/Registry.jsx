@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useStore } from '../../store';
 import { Database, Copy, Trash2 } from 'lucide-react';
+import { getProjectDataId, isSameProjectId } from './projectRoute';
 
 export default function Registry() {
   const { projectId } = useParams();
   const { state, updateState } = useStore();
-  const images = state.registry.filter(i => i.projectId === parseInt(projectId));
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const images = state.registry.filter(i => isSameProjectId(i.projectId, dataProjectId));
   const [copiedId, setCopiedId] = useState(null);
   const [pendingDelete, setPendingDelete] = useState(null);
 

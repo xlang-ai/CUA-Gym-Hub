@@ -2,11 +2,13 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useStore } from '../../store';
 import { Flag, Calendar } from 'lucide-react';
+import { getProjectDataId, isSameProjectId } from './projectRoute';
 
 export default function Milestones() {
   const { projectId } = useParams();
   const { state } = useStore();
-  const milestones = state.milestones.filter(m => m.projectId === parseInt(projectId));
+  const dataProjectId = getProjectDataId(state.projects, projectId);
+  const milestones = state.milestones.filter(m => isSameProjectId(m.projectId, dataProjectId));
 
   return (
     <div>

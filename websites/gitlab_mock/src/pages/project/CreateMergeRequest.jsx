@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../../store';
 import { ArrowRight, GitPullRequest } from 'lucide-react';
+import { findProjectByRouteId } from './projectRoute';
 
 export default function CreateMergeRequest() {
   const { projectId } = useParams();
   const { state, updateState } = useStore();
   const navigate = useNavigate();
-  const project = state.projects.find(p => p.id === parseInt(projectId));
+  const project = findProjectByRouteId(state.projects, projectId);
   
   const [sourceBranch, setSourceBranch] = useState(project?.branches?.[0] || '');
   const [targetBranch, setTargetBranch] = useState('main');
@@ -28,7 +29,7 @@ export default function CreateMergeRequest() {
     e.preventDefault();
     const newMr = {
       id: (state.mergeRequests?.length || 0) + 1,
-      projectId: parseInt(projectId),
+      projectId: project.id,
       title,
       description,
       sourceBranch,
