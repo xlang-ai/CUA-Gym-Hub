@@ -1,215 +1,205 @@
+import React, { useState } from 'react';
+import { CheckCircle, Clock, Package, RotateCcw, Star, Truck } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
+import { formatCurrency } from '../utils/dataManager';
+import './Orders.css';
 
-import React, { useEffect, useState } from 'react';
-import { useStore } from '../context/StoreContext';
-import { formatCurrency } from '../lib/utils';
-import { CheckCircle, Clock, ChefHat, Truck, MapPin, X } from 'lucide-react';
-
-const STATUS_CONFIG = {
-  preparing: { icon: ChefHat, color: 'text-orange-500', label: 'Preparing your order' },
-  picked_up: { icon: Truck, color: 'text-blue-500', label: 'Heading to you' },
-  delivering: { icon: Truck, color: 'text-blue-500', label: 'Arriving soon' },
-  delivered: { icon: CheckCircle, color: 'text-green-500', label: 'Delivered' },
+const STATUS_LABELS = {
+  placed: 'Order received',
+  confirmed: 'Confirmed',
+  preparing: 'Preparing',
+  picked_up: 'Picked up',
+  delivering: 'Delivering',
+  out_for_delivery: 'Out for delivery',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled'
 };
 
-export default function Orders() {
-  const { state, reorder } = useStore();
-  const orders = state.orders;
-  const [expandedOrder, setExpandedOrder] = useState(null);
-  const [receiptOrder, setReceiptOrder] = useState(null);
+const STATUS_PROGRESS = {
+  placed: 15,
+  confirmed: 30,
+  preparing: 45,
+  picked_up: 70,
+  delivering: 85,
+  out_for_delivery: 90,
+  delivered: 100,
+  cancelled: 0
+};
 
-  useEffect(() => {
-    if (!receiptOrder) return undefined;
+function OrderCard({ order, active, onReorder, onRate }) {
+  const [ratingOpen, setRatingOpen] = useState(false);
+  const [rating, setRating] = useState(order.rating || 0);
+  const [review, setReview] = useState(order.review || '');
+  const orderDate = new Date(order.placedAt);
+  const canRate = order.status === 'delivered' && !order.rating;
 
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') setReceiptOrder(null);
-    };
+  const submitRating = () => {
+    if (!rating) return;
+    onRate(order.id, rating, review);
+    setRatingOpen(false);
+  };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [receiptOrder]);
-
-  if (orders.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
-        <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
-          <Clock className="w-12 h-12 text-gray-400" />
+  return (
+    <article className={`order-card ${active ? 'order-card--active' : ''}`}>
+      <div className="order-card__header">
+        <div className="order-card__rest">
+          <div className="order-card__rest-avatar">
+            {order.restaurantName?.slice(0, 1) || 'R'}
+          </div>
+          <div>
+            <div className="order-card__rest-name">{order.restaurantName}</div>
+            <div className="order-card__date">
+              {Number.isNaN(orderDate.getTime()) ? '' : orderDate.toLocaleString()}
+            </div>
+          </div>
         </div>
-        <h2 className="text-2xl font-bold mb-2">No orders yet</h2>
-        <p className="text-gray-500">Looks like you haven't placed any orders yet.</p>
+        <div className="order-card__status">
+          {order.status === 'delivered' ? <CheckCircle size={16} /> : <Clock size={16} />}
+          <span>{STATUS_LABELS[order.status] || order.status}</span>
+        </div>
+      </div>
+
+      {active && (
+        <div className="order-card__progress">
+          <div className="order-card__progress-bar">
+            <div
+              className="order-card__progress-fill"
+              style={{ width: `${STATUS_PROGRESS[order.status] || 0}%` }}
+            />
+          </div>
+          <div className="order-card__progress-labels">
+            <span>Received</span><span>Preparing</span><span>On the way</span><span>Delivered</span>
+          </div>
+        </div>
+      )}
+
+      <p className="order-card__items-summary">
+        {order.items.map(item => `${item.quantity}x ${item.name}`).join(', ')}
+      </p>
+      <div className="order-card__footer">
+        <span className="order-card__total">{formatCurrency(order.total)}</span>
+        <div className="order-card__actions">
+          <Link className="order-card__action-btn" to={`/orders/${order.id}`}>
+            {active ? <Truck size={14} /> : <Package size={14} />}
+            {active ? 'Track Order' : 'View Receipt'}
+          </Link>
+          <button className="order-card__action-btn" onClick={() => onReorder(order.id)}>
+            <RotateCcw size={14} /> Reorder
+          </button>
+          {canRate && (
+            <button
+              className="order-card__action-btn order-card__action-btn--rate"
+              onClick={() => setRatingOpen(true)}
+            >
+              <Star size={14} /> Rate order
+            </button>
+          )}
+          {order.rating && (
+            <span className="order-card__rated">{'★'.repeat(order.rating)}</span>
+          )}
+        </div>
+      </div>
+
+      {ratingOpen && (
+        <div className="order-card__rating-form">
+          <div className="order-card__star-select" aria-label="Order rating">
+            {[1, 2, 3, 4, 5].map(value => (
+              <button
+                key={value}
+                aria-label={`${value} star${value === 1 ? '' : 's'}`}
+                className={`order-card__star ${value <= rating ? 'order-card__star--active' : ''}`}
+                onClick={() => setRating(value)}
+              >
+                ★
+              </button>
+            ))}
+          </div>
+          <textarea
+            aria-label="Order review"
+            className="order-card__review-input"
+            placeholder="Share your experience"
+            value={review}
+            onChange={event => setReview(event.target.value)}
+          />
+          <div className="order-card__rating-actions">
+            <button className="order-card__cancel-btn" onClick={() => setRatingOpen(false)}>
+              Cancel
+            </button>
+            <button
+              className="order-card__submit-btn"
+              disabled={!rating}
+              onClick={submitRating}
+            >
+              Submit rating
+            </button>
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+export default function Orders() {
+  const { state, reorder, rateOrder } = useApp();
+  const navigate = useNavigate();
+  const activeOrders = state.orders.filter(
+    order => !['delivered', 'cancelled'].includes(order.status)
+  );
+  const pastOrders = state.orders.filter(
+    order => ['delivered', 'cancelled'].includes(order.status)
+  );
+
+  const handleReorder = orderId => {
+    reorder(orderId);
+    navigate('/checkout');
+  };
+
+  if (state.orders.length === 0) {
+    return (
+      <div className="orders-empty">
+        <div className="orders-empty__icon"><Package size={36} /></div>
+        <h2>No orders yet</h2>
+        <p>Your current and past orders will appear here.</p>
+        <Link className="orders-empty__btn" to="/">Browse restaurants</Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Orders</h1>
-      
-      <div className="space-y-6">
-        {orders.map(order => {
-          const restaurant = state.restaurants.find(r => r.id === order.restaurantId);
-          const status = STATUS_CONFIG[order.status] || STATUS_CONFIG.preparing;
-          const StatusIcon = status.icon;
-          const isLive = order.status !== 'delivered';
-
-          return (
-            <div key={order.id} className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow bg-white">
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div className="flex gap-4">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden shrink-0">
-                      <img src={restaurant?.image} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">{restaurant?.name || 'Unknown Restaurant'}</h3>
-                      <p className="text-sm text-gray-500">
-                        {order.items.length} items • {formatCurrency(order.total.total)}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {new Date(order.created).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={`flex items-center gap-2 font-medium ${status.color}`}>
-                    <StatusIcon className="w-5 h-5" />
-                    <span className="hidden sm:inline">{status.label}</span>
-                  </div>
-                </div>
-
-                {/* Progress Bar for Active Orders */}
-                {isLive && (
-                  <div className="mb-4">
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-primary transition-all duration-1000"
-                        style={{ 
-                          width: order.status === 'preparing' ? '30%' : 
-                                 order.status === 'picked_up' ? '60%' : '90%' 
-                        }}
-                      />
-                    </div>
-                    <div className="flex justify-between text-xs text-gray-400 mt-2">
-                      <span>Preparing</span>
-                      <span>Picked Up</span>
-                      <span>Delivering</span>
-                      <span>Delivered</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="border-t border-gray-100 pt-4 mt-4">
-                  <div className="text-sm space-y-1">
-                    {order.items.map(item => (
-                      <div key={item.cartItemId} className="flex justify-between text-gray-600">
-                        <span>{item.quantity}x {item.menuItem.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-3 mt-6">
-                    {isLive && (
-                      <button 
-                        onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
-                        className="flex-1 sm:flex-none bg-primary text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-                      >
-                        <MapPin className="w-4 h-4" />
-                        {expandedOrder === order.id ? 'Hide Map' : 'Track Order'}
-                      </button>
-                    )}
-                    <button
-                      onClick={() => setReceiptOrder(order)}
-                      className="flex-1 sm:flex-none bg-gray-100 px-6 py-2 rounded-full font-bold text-sm hover:bg-gray-200"
-                    >
-                      View Receipt
-                    </button>
-                    <button
-                      onClick={() => reorder(order.id)}
-                      className="flex-1 sm:flex-none bg-black text-white px-6 py-2 rounded-full font-bold text-sm hover:bg-gray-800"
-                    >
-                        Reorder
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mock Map View */}
-              {expandedOrder === order.id && isLive && (
-                <div className="bg-gray-50 p-4 border-t border-gray-200 animate-in slide-in-from-top-2 duration-300">
-                  <div className="relative w-full h-64 bg-gray-200 rounded-xl overflow-hidden">
-                    {/* Mock Map Image */}
-                    <img 
-                      src="https://picsum.photos/800/400?grayscale&blur=2" 
-                      className="w-full h-full object-cover opacity-50"
-                      alt="Map Background"
-                    />
-                    
-                    {/* Map Elements Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="relative w-3/4 h-3/4 border-2 border-dashed border-gray-400 rounded-lg flex items-center justify-center">
-                        {/* Restaurant Pin */}
-                        <div className="absolute top-4 left-4 flex flex-col items-center">
-                          <div className="w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center p-1">
-                            <img src={restaurant?.image} className="w-full h-full rounded-full object-cover" />
-                          </div>
-                          <div className="w-2 h-2 bg-black rounded-full mt-1"></div>
-                        </div>
-
-                        {/* User Pin */}
-                        <div className="absolute bottom-4 right-4 flex flex-col items-center">
-                          <div className="w-8 h-8 bg-black text-white rounded-full shadow-lg flex items-center justify-center">
-                            <MapPin className="w-4 h-4" />
-                          </div>
-                          <div className="w-2 h-2 bg-black rounded-full mt-1"></div>
-                        </div>
-
-                        {/* Driver */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center animate-bounce">
-                          <div className="bg-primary text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg mb-1 whitespace-nowrap">
-                            5 min away
-                          </div>
-                          <div className="w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-primary">
-                            <Truck className="w-5 h-5" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {receiptOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setReceiptOrder(null)}>
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl" onClick={(event) => event.stopPropagation()}>
-            <div className="mb-6 flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-2xl font-bold">Receipt</h2>
-                <p className="text-sm text-gray-500">Order {receiptOrder.id}</p>
-              </div>
-              <button onClick={() => setReceiptOrder(null)} className="rounded-full p-2 hover:bg-gray-100" aria-label="Close receipt">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {receiptOrder.items.map(item => (
-                <div key={item.cartItemId} className="flex justify-between gap-4 text-sm">
-                  <span>{item.quantity}x {item.menuItem.name}</span>
-                  <span>{formatCurrency(item.menuItem.price * item.quantity)}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 space-y-2 border-t border-gray-100 pt-4 text-sm">
-              <div className="flex justify-between"><span>Subtotal</span><span>{formatCurrency(receiptOrder.total.subtotal)}</span></div>
-              <div className="flex justify-between"><span>Delivery Fee</span><span>{formatCurrency(receiptOrder.total.fee)}</span></div>
-              <div className="flex justify-between"><span>Taxes & Fees</span><span>{formatCurrency(receiptOrder.total.tax)}</span></div>
-              <div className="flex justify-between border-t border-gray-100 pt-3 text-lg font-bold"><span>Total</span><span>{formatCurrency(receiptOrder.total.total)}</span></div>
-            </div>
+    <div className="orders-page">
+      <h1 className="orders-page__title">Orders</h1>
+      {activeOrders.length > 0 && (
+        <section className="orders-section">
+          <h2 className="orders-section__title">Current orders</h2>
+          <div className="orders-list">
+            {activeOrders.map(order => (
+              <OrderCard
+                key={order.id}
+                order={order}
+                active
+                onReorder={handleReorder}
+                onRate={rateOrder}
+              />
+            ))}
           </div>
-        </div>
+        </section>
+      )}
+      {pastOrders.length > 0 && (
+        <section className="orders-section">
+          <h2 className="orders-section__title">Past orders</h2>
+          <div className="orders-list">
+            {pastOrders.map(order => (
+              <OrderCard
+                key={order.id}
+                order={order}
+                active={false}
+                onReorder={handleReorder}
+                onRate={rateOrder}
+              />
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

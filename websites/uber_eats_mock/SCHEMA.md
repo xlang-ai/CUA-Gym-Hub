@@ -455,11 +455,9 @@
 | Add new address (header dropdown form) | `user.addresses` array grows with new address object |
 | Set tip percentage | `cart.tipPercentage` updated; `cart.tipAmount` set to 0 |
 | Apply promo code | `cart.promoCode` set; `cart.promoDiscount` calculated; validated against restaurant restriction and expiry date |
-| Invalid/expired promo code | No state change; error shown in UI |
+| Invalid/expired promo code | No state change |
 | Update delivery instructions | `cart.deliveryInstructions` updated (via textarea in checkout) |
-| Schedule delivery time | Visual selection in checkout (no state mutation; stored in local component state) |
-| Place order (requires address) | New order prepended to `orders`; `activeOrderId` set; `cart` reset to empty |
-| Place order without address | Validation error shown; no state change |
+| Place order | New order prepended to `orders`; `activeOrderId` set; `cart` reset to empty |
 | Order status progresses | `orders[i].status` updates through: `placed` → `confirmed` → `preparing` → `out_for_delivery` → `delivered` |
 | Order delivered | `orders[i].status` → `"delivered"`; `orders[i].deliveredAt` set |
 | Rate order | `orders[i].rating` set (1-5); `orders[i].review` set |
@@ -472,7 +470,7 @@
 | Clear all filters | `ui.activeFilters` reset to defaults |
 | Edit profile name/email/phone | `user.name`, `user.email`, or `user.phone` updated |
 | Activate Uber One | `user.uberOneActive` → `true` |
-| Reorder past order | Items from past order added to `cart`; navigates to checkout |
+| Reorder past order | `cart` replaced with items from past order; navigates to checkout |
 
 ## Order Status Progression
 
@@ -494,13 +492,15 @@ When an order is placed and tracked, statuses auto-progress on timers:
 | `removeFromCart(cartItemId)` | — | Removes item from `cart.items` |
 | `updateCartItemQuantity(cartItemId, newQuantity)` | — | Updates `cart.items[i].quantity` and `totalPrice` |
 | `clearCart()` | — | Resets `cart` to empty |
-| `placeOrder({})` | — | Creates order in `orders`; clears cart; sets `activeOrderId` |
+| `placeOrder()` | — | Creates order in `orders`; clears cart; sets `activeOrderId` |
 | `toggleFavorite(restaurantId)` | — | Adds/removes from `user.favoriteRestaurantIds` |
 | `setDeliveryMode(mode)` | `"delivery"` or `"pickup"` | Updates `cart.deliveryMode` and `ui.deliveryMode` |
 | `updateFilters(filters)` | Partial filter object | Merges into `ui.activeFilters` |
 | `setSearchQuery(query)` | string | Updates `ui.searchQuery`; appends to `ui.recentSearches` |
 | `rateOrder(orderId, rating, review)` | — | Sets `orders[i].rating` and `orders[i].review` |
+| `reorder(orderId)` | string | Rebuilds `cart` from the selected order |
 | `updateAddress(addressId)` | string | Sets `ui.selectedAddressId` |
+| `updateDefaultPayment(paymentId)` | string | Sets `user.defaultPaymentId` and updates payment method defaults |
 | `setTip(amount, percentage)` | — | Updates `cart.tipAmount` and `cart.tipPercentage` |
 | `applyPromoCode(code)` | string | Sets `cart.promoCode` and `cart.promoDiscount` (validates expiry + restaurant) |
 | `updateOrderStatus(orderId, status)` | — | Updates `orders[i].status`; sets `deliveredAt` if delivered |
