@@ -26,7 +26,7 @@ export default function IAMRoles() {
         arn: `arn:aws:iam::123456789012:role/${roleName.trim()}`,
         created: new Date().toISOString().split('T')[0],
         lastActivity: 'N/A',
-        trustedEntities: `AWS service: ${trustedService}`,
+        trustedEntities: `XWS service: ${trustedService}`,
         description: '',
         policies: selectedPolicies,
         path: '/',
@@ -48,7 +48,7 @@ export default function IAMRoles() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create role</h1>
+        <h1 className="text-2xl font-bold">Create role</h1>
         <div className="aws-card space-y-4">
           <div>
             <label className="aws-form-label">Trusted entity type</label>
@@ -63,7 +63,7 @@ export default function IAMRoles() {
             <label className="aws-form-label">Attach policies</label>
             <div className="space-y-1 max-h-48 overflow-y-auto border border-aws-border rounded p-2 mt-1">
               {state.iam.policies.map(p => (
-                <label key={p.name} className="flex items-center gap-2 py-1 text-sm hover:bg-gray-50 px-1 rounded">
+                <label key={p.name} className="flex items-center gap-2 py-1 text-sm hover:bg-aws-status-info-bg/30 px-1 rounded">
                   <input type="checkbox" checked={selectedPolicies.includes(p.name)} onChange={e => {
                     if (e.target.checked) setSelectedPolicies([...selectedPolicies, p.name]);
                     else setSelectedPolicies(selectedPolicies.filter(n => n !== p.name));
@@ -75,7 +75,7 @@ export default function IAMRoles() {
             </div>
           </div>
           <div>
-            <label className="aws-form-label">Role name <span className="text-red-500">*</span></label>
+            <label className="aws-form-label">Role name <span className="text-aws-error">*</span></label>
             <input className="aws-input max-w-md mt-1" value={roleName} onChange={e => setRoleName(e.target.value)} placeholder="MyServiceRole" />
           </div>
           <div className="flex justify-end gap-2">
@@ -95,7 +95,7 @@ export default function IAMRoles() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedRole(null)}>Roles</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{role.name}</h1>
+          <h1 className="text-2xl font-bold">{role.name}</h1>
         </div>
         <div className="aws-card text-sm space-y-2">
           <div><span className="text-aws-text-secondary font-medium">ARN:</span> <span className="font-mono text-xs ml-2">{role.arn}</span></div>
@@ -113,7 +113,7 @@ export default function IAMRoles() {
             <div className="text-sm">
               <h3 className="font-bold mb-2">Attached policies</h3>
               {(role.policies || []).length > 0 ? role.policies.map(p => (
-                <div key={p} className="py-1.5 flex items-center gap-2 border-b border-gray-100 last:border-0">
+                <div key={p} className="py-1.5 flex items-center gap-2 border-b border-aws-border-secondary last:border-0">
                   <span className="text-aws-blue">{p}</span>
                 </div>
               )) : <p className="text-aws-text-secondary">No policies attached</p>}
@@ -126,7 +126,7 @@ export default function IAMRoles() {
                 Version: '2012-10-17',
                 Statement: [{
                   Effect: 'Allow',
-                  Principal: { Service: role.trustedEntities?.replace('AWS service: ', '') || 'ec2.amazonaws.com' },
+                  Principal: { Service: role.trustedEntities?.replace('XWS service: ', '') || 'ec2.amazonaws.com' },
                   Action: 'sts:AssumeRole'
                 }]
               }, null, 2)}</pre>
@@ -142,14 +142,14 @@ export default function IAMRoles() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Roles ({state.iam.roles.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
-          <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete</button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create role</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter roles" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -160,7 +160,7 @@ export default function IAMRoles() {
         </tr></thead>
         <tbody>
           {filteredRoles.map(r => (
-            <tr key={r.name} className={selected.includes(r.name) ? 'bg-blue-50/50' : ''}>
+            <tr key={r.name} className={selected.includes(r.name) ? 'bg-aws-status-info-bg/50' : ''}>
               <td><input type="checkbox" checked={selected.includes(r.name)} onChange={e => setSelected(e.target.checked ? [...selected, r.name] : selected.filter(n => n !== r.name))} /></td>
               <td><button className="text-aws-blue font-medium hover:underline" onClick={() => setSelectedRole(r.name)}>{r.name}</button></td>
               <td className="text-aws-text-secondary text-xs">{r.trustedEntities}</td>
@@ -171,7 +171,7 @@ export default function IAMRoles() {
           {filteredRoles.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-aws-text-secondary">No roles found</td></tr>}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
         Showing 1-{filteredRoles.length} of {filteredRoles.length} items
       </div>
     </div>

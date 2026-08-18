@@ -59,7 +59,7 @@ export default function SNSTopics() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create topic</h1>
+        <h1 className="text-2xl font-bold">Create topic</h1>
         <div className="aws-card space-y-4">
           <div>
             <label className="block text-sm font-bold mb-1">Name *</label>
@@ -92,12 +92,12 @@ export default function SNSTopics() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedTopic(null)}>Topics</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{selectedTopic.name}</h1>
+          <h1 className="text-2xl font-bold">{selectedTopic.name}</h1>
         </div>
         <div className="aws-card text-sm space-y-2">
           <div><span className="font-bold">ARN:</span> <span className="font-mono text-xs">{selectedTopic.arn}</span></div>
           <div><span className="font-bold">Display name:</span> {selectedTopic.displayName || '-'}</div>
-          <div><span className="font-bold">Type:</span> <span className={`aws-badge ${selectedTopic.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>{selectedTopic.type}</span></div>
+          <div><span className="font-bold">Type:</span> <span className={`aws-badge ${selectedTopic.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-aws-blue-lighter text-aws-blue'}`}>{selectedTopic.type}</span></div>
         </div>
         <div className="flex gap-4 border-b border-aws-border">
           {['Subscriptions', 'Access policy'].map(t => (
@@ -116,10 +116,10 @@ export default function SNSTopics() {
   Statement: [{
     Sid: "AllowPublish",
     Effect: "Allow",
-    Principal: { AWS: "*" },
+    Principal: { XWS: "*" },
     Action: ["SNS:GetTopicAttributes", "SNS:SetTopicAttributes", "SNS:AddPermission", "SNS:RemovePermission", "SNS:DeleteTopic", "SNS:Subscribe", "SNS:ListSubscriptionsByTopic", "SNS:Publish"],
     Resource: selectedTopic.arn,
-    Condition: { StringEquals: { "AWS:SourceOwner": "123456789012" } }
+    Condition: { StringEquals: { "XWS:SourceOwner": "123456789012" } }
   }]
 }, null, 2)}
             </pre>
@@ -139,7 +139,7 @@ export default function SNSTopics() {
                     <td className="font-mono text-xs">{s.id.split(':').pop()}</td>
                     <td>{s.protocol}</td>
                     <td className="text-xs">{s.endpoint}</td>
-                    <td><span className="aws-badge bg-green-100 text-green-800">{s.status}</span></td>
+                    <td><span className="aws-badge bg-aws-status-success-bg text-aws-success">{s.status}</span></td>
                     <td><button className="text-aws-error text-xs hover:underline" onClick={() => { dispatch({ type: 'DELETE_SUBSCRIPTION', payload: s.id }); addFlash('success', 'Subscription deleted'); }}>Delete</button></td>
                   </tr>
                 ))}
@@ -153,7 +153,7 @@ export default function SNSTopics() {
         {showCreateSub && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-              <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+              <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
                 <h3 className="font-bold">Create subscription</h3>
                 <button onClick={() => setShowCreateSub(false)}><X size={18} /></button>
               </div>
@@ -185,13 +185,13 @@ export default function SNSTopics() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Topics ({topics.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create topic</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter topics" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -204,7 +204,7 @@ export default function SNSTopics() {
               <td className="font-mono text-xs">{t.arn}</td>
               <td>{t.displayName || '-'}</td>
               <td>{t.subscriptionsCount || 0}</td>
-              <td><span className={`aws-badge ${t.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>{t.type}</span></td>
+              <td><span className={`aws-badge ${t.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-aws-blue-lighter text-aws-blue'}`}>{t.type}</span></td>
               <td>{format(new Date(t.created), 'MMM d, yyyy')}</td>
             </tr>
           ))}

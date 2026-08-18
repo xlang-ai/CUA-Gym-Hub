@@ -399,6 +399,37 @@ export const getDefaultData = () => ({
   ],
 
   // ========================
+  // S3 - Access Points / Batch Operations / Storage Lens
+  // ========================
+  s3AccessPoints: [
+    { name: "prod-assets-ap", bucketName: "my-app-assets-prod", arn: "arn:aws:s3:us-east-1:123456789012:accesspoint/prod-assets-ap", alias: "prod-assets-ap-a1b2c3d4e5f6g7h8i9j0.s3-accesspoint.us-east-1.amazonaws.com", status: "Active", networkOrigin: "Internet", vpcId: "", created: "2024-02-01T10:00:00Z" },
+    { name: "internal-datalake-ap", bucketName: "data-lake-raw", arn: "arn:aws:s3:us-west-2:123456789012:accesspoint/internal-datalake-ap", alias: "internal-datalake-ap-b2c3d4e5f6g7h8i9j0k1.s3-accesspoint.us-west-2.amazonaws.com", status: "Active", networkOrigin: "VPC", vpcId: "vpc-0abc1234def56789", created: "2024-02-10T09:00:00Z" },
+    { name: "backups-readonly-ap", bucketName: "company-backups", arn: "arn:aws:s3:us-east-1:123456789012:accesspoint/backups-readonly-ap", alias: "backups-readonly-ap-c3d4e5f6g7h8i9j0k1l2.s3-accesspoint.us-east-1.amazonaws.com", status: "Active", networkOrigin: "Internet", vpcId: "", created: "2024-01-20T11:30:00Z" },
+  ],
+
+  s3BatchOperations: [
+    { id: "674bff40-8a2b-4c1e-9f3a-1234567890ab", description: "Copy objects to backup bucket", operation: "PUT_OBJECT_COPY", status: "Complete", priority: 10, manifestBucket: "data-lake-raw", roleArn: "arn:aws:iam::123456789012:role/S3BatchOperationsRole", totalObjects: 1240, succeededObjects: 1240, failedObjects: 0, created: "2024-03-01T08:00:00Z", completed: "2024-03-01T08:42:00Z" },
+    { id: "8a2c1e40-9f3a-4c1e-b674-234567890abc", description: "Apply Glacier storage class tagging", operation: "PUT_OBJECT_TAGGING", status: "Active", priority: 5, manifestBucket: "logs-archive-2024", roleArn: "arn:aws:iam::123456789012:role/S3BatchOperationsRole", totalObjects: 3500, succeededObjects: 1820, failedObjects: 12, created: "2024-03-14T22:00:00Z", completed: "" },
+    { id: "b674ff40-2c1e-4c1e-9f3a-34567890abcd", description: "Restore Glacier objects for compliance audit", operation: "S3_INITIATE_RESTORE_OBJECT", status: "Failed", priority: 1, manifestBucket: "company-backups", roleArn: "arn:aws:iam::123456789012:role/S3BatchOperationsRole", totalObjects: 84, succeededObjects: 40, failedObjects: 44, created: "2024-02-15T06:00:00Z", completed: "2024-02-15T06:20:00Z" },
+  ],
+
+  s3StorageLens: {
+    dashboardName: "default-dashboard",
+    status: "Enabled",
+    homeRegion: "us-east-1",
+    metricsSelection: "Free metrics",
+    totalStorageBytes: 1876543210,
+    totalObjectCount: 48213,
+    bucketMetrics: [
+      { bucketName: "my-app-assets-prod", region: "us-east-1", storageBytes: 312456789, objectCount: 5, avgObjectSize: 62491358, incompleteMultipartUploads: 0, noncurrentVersionBytes: 12000000 },
+      { bucketName: "data-lake-raw", region: "us-west-2", storageBytes: 1048576000, objectCount: 3, avgObjectSize: 349525333, incompleteMultipartUploads: 2, noncurrentVersionBytes: 0 },
+      { bucketName: "company-backups", region: "us-east-1", storageBytes: 400000000, objectCount: 2, avgObjectSize: 200000000, incompleteMultipartUploads: 0, noncurrentVersionBytes: 88000000 },
+      { bucketName: "static-website-hosting", region: "us-east-1", storageBytes: 10752, objectCount: 3, avgObjectSize: 3584, incompleteMultipartUploads: 0, noncurrentVersionBytes: 0 },
+      { bucketName: "logs-archive-2024", region: "us-east-1", storageBytes: 2032640, objectCount: 3, avgObjectSize: 677547, incompleteMultipartUploads: 0, noncurrentVersionBytes: 0 },
+    ]
+  },
+
+  // ========================
   // Lambda
   // ========================
   lambda: [
@@ -457,6 +488,12 @@ export const getDefaultData = () => ({
     { name: "common-utils", arn: "arn:aws:lambda:us-east-1:123456789012:layer:common-utils", version: 3, runtime: "python3.12", description: "Common Python utilities and helpers", size: 1048576, created: "2024-03-01T09:00:00Z" },
   ],
 
+  lambdaApplications: [
+    { name: "image-processing-app", description: "Serverless image resize pipeline triggered from S3 uploads", status: "CREATE_COMPLETE", templateSource: "XWS Serverless Application Repository", stackId: "arn:aws:cloudformation:us-east-1:123456789012:stack/serverlessrepo-image-processing-app/abcd1234-1234-1234-1234-1234567890ab", functions: ["process-image-resize"], created: "2024-01-20T10:00:00Z", lastUpdated: "2024-03-01T09:15:00Z" },
+    { name: "auth-service-app", description: "API authentication and authorization stack", status: "UPDATE_COMPLETE", templateSource: "XWS SAM", stackId: "arn:aws:cloudformation:us-east-1:123456789012:stack/serverlessrepo-auth-service-app/bcde2345-2345-2345-2345-234567890abc", functions: ["api-auth-handler"], created: "2023-11-05T14:00:00Z", lastUpdated: "2024-02-20T14:30:00Z" },
+    { name: "ecommerce-order-app", description: "Order processing and notification workflow", status: "CREATE_IN_PROGRESS", templateSource: "XWS SAM", stackId: "arn:aws:cloudformation:us-east-1:123456789012:stack/serverlessrepo-ecommerce-order-app/cdef3456-3456-3456-3456-34567890abcd", functions: ["order-processor"], created: "2024-03-10T16:05:00Z", lastUpdated: "2024-03-10T16:05:00Z" },
+  ],
+
   // ========================
   // RDS
   // ========================
@@ -509,6 +546,47 @@ export const getDefaultData = () => ({
     { name: "default.mysql8.0", family: "mysql8.0", description: "Default parameter group for MySQL 8.0", type: "DB Parameter Group" },
     { name: "default.postgres15", family: "postgres15", description: "Default parameter group for PostgreSQL 15", type: "DB Parameter Group" },
     { name: "custom-mysql-performance", family: "mysql8.0", description: "Custom MySQL params optimized for performance", type: "DB Parameter Group" },
+  ],
+
+  rdsQueryHistory: [
+    {
+      id: "qh-0001", dbInstanceId: "prod-db-primary", database: "information_schema",
+      sql: "SELECT table_name, table_rows FROM tables ORDER BY table_rows DESC LIMIT 10;",
+      status: "Completed", ranAt: "2024-03-14T09:12:00Z", durationMs: 182, rowCount: 3, error: "",
+      saved: false, name: "",
+      resultColumns: ["table_name", "table_rows"],
+      resultPreview: [
+        { table_name: "orders", table_rows: 245000 },
+        { table_name: "users", table_rows: 15420 },
+        { table_name: "sessions", table_rows: 3200 }
+      ]
+    },
+    {
+      id: "qh-0002", dbInstanceId: "analytics-postgres", database: "analytics",
+      sql: "SELECT date_trunc('day', created_at) AS day, count(*) FROM events GROUP BY 1 ORDER BY 1 DESC LIMIT 30;",
+      status: "Completed", ranAt: "2024-03-15T08:40:00Z", durationMs: 640, rowCount: 3, error: "",
+      saved: true, name: "Daily event counts",
+      resultColumns: ["day", "count"],
+      resultPreview: [
+        { day: "2024-03-15", count: 8420 },
+        { day: "2024-03-14", count: 7910 },
+        { day: "2024-03-13", count: 8115 }
+      ]
+    },
+    {
+      id: "qh-0003", dbInstanceId: "prod-db-primary", database: "orders",
+      sql: "SELECT status, COUNT(*) FROM orders GROUP BY status;",
+      status: "Failed", ranAt: "2024-03-15T09:02:00Z", durationMs: 45, rowCount: 0,
+      error: "ERROR 1146 (42S02): Table 'prod-db-primary.orders' doesn't exist",
+      saved: false, name: "", resultColumns: [], resultPreview: []
+    },
+  ],
+
+  rdsAutomatedBackups: [
+    { id: "prod-db-primary", dbInstanceId: "prod-db-primary", engine: "mysql", status: "available", retained: false, retentionPeriod: 7, backupRetentionEnabled: true, earliestRestorableTime: "2024-03-08T03:30:00Z", latestRestorableTime: "2024-03-15T03:30:00Z", allocatedStorage: 100, backupWindow: "03:00-04:00" },
+    { id: "analytics-postgres", dbInstanceId: "analytics-postgres", engine: "postgres", status: "available", retained: false, retentionPeriod: 7, backupRetentionEnabled: true, earliestRestorableTime: "2024-03-08T04:30:00Z", latestRestorableTime: "2024-03-15T04:30:00Z", allocatedStorage: 200, backupWindow: "04:00-05:00" },
+    { id: "dev-test-db", dbInstanceId: "dev-test-db", engine: "mysql", status: "available", retained: false, retentionPeriod: 1, backupRetentionEnabled: true, earliestRestorableTime: "2024-03-14T03:30:00Z", latestRestorableTime: "2024-03-15T03:30:00Z", allocatedStorage: 20, backupWindow: "03:00-04:00" },
+    { id: "legacy-reporting-db-final-snapshot", dbInstanceId: "legacy-reporting-db", engine: "mysql", status: "retained", retained: true, retentionPeriod: 0, backupRetentionEnabled: false, earliestRestorableTime: "2023-11-01T03:30:00Z", latestRestorableTime: "2023-12-01T03:30:00Z", allocatedStorage: 50, backupWindow: "" },
   ],
 
   // ========================

@@ -35,7 +35,7 @@ export default function BillingBudgets() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create budget</h1>
+        <h1 className="text-2xl font-bold">Create budget</h1>
         <div className="aws-card space-y-4">
           <div>
             <label className="block text-sm font-bold mb-1">Budget name *</label>
@@ -74,7 +74,7 @@ export default function BillingBudgets() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedBudget(null)}>Budgets</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{selectedBudget.name}</h1>
+          <h1 className="text-2xl font-bold">{selectedBudget.name}</h1>
         </div>
         <div className="aws-card grid grid-cols-2 gap-4 text-sm">
           <div><span className="font-bold block">Type</span>{selectedBudget.type}</div>
@@ -89,7 +89,7 @@ export default function BillingBudgets() {
           ) : (
             <div className="space-y-2">
               {selectedBudget.alertHistory.map((a, i) => (
-                <div key={i} className="text-sm py-1 border-b border-gray-100">{a.message} - {a.date}</div>
+                <div key={i} className="text-sm py-1 border-b border-aws-border-secondary">{a.message} - {a.date}</div>
               ))}
             </div>
           )}
@@ -100,12 +100,12 @@ export default function BillingBudgets() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">Budgets</h1>
+      <h1 className="text-2xl font-bold">Budgets</h1>
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold">All budgets ({budgets.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create budget</button>
           </div>
         </div>
@@ -125,7 +125,7 @@ export default function BillingBudgets() {
                   <td>${(b.forecasted || 0).toFixed(2)}</td>
                   <td className="w-40">
                     <div className="flex items-center gap-2">
-                      <div className="w-24 bg-gray-100 h-2 rounded-full">
+                      <div className="w-24 bg-aws-disabled-bg h-2 rounded-full">
                         <div className={`h-2 rounded-full ${pct >= 100 ? 'bg-aws-error' : pct >= 80 ? 'bg-aws-warning' : 'bg-aws-success'}`} style={{ width: `${Math.min(pct, 100)}%` }}></div>
                       </div>
                       <span className="text-xs">{pct.toFixed(0)}%</span>

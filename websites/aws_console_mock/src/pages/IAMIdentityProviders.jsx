@@ -33,7 +33,7 @@ export default function IAMIdentityProviders() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Identity providers ({providers.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Add provider</button>
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function IAMIdentityProviders() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Add identity provider</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

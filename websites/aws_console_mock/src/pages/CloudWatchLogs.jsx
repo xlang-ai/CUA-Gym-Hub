@@ -57,14 +57,14 @@ export default function CloudWatchLogs() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Log Groups ({logGroups.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create log group</button>
           </div>
         </div>
-        <div className="px-4 py-2 border-b border-gray-100">
+        <div className="px-4 py-2 border-b border-aws-border-secondary">
           <div className="relative max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input className="aws-input pl-8" placeholder="Filter log groups" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
@@ -76,7 +76,7 @@ export default function CloudWatchLogs() {
             </thead>
             <tbody>
               {logGroups.map(lg => (
-                <tr key={lg.name} className={selected.includes(lg.name) ? 'bg-blue-50/50' : ''}>
+                <tr key={lg.name} className={selected.includes(lg.name) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td><input type="checkbox" checked={selected.includes(lg.name)} onChange={e => setSelected(e.target.checked ? [...selected, lg.name] : selected.filter(x=>x!==lg.name))} /></td>
                   <td className="font-medium text-aws-blue font-mono text-sm">{lg.name}</td>
                   <td>{formatBytes(lg.storedBytes)}</td>
@@ -89,13 +89,13 @@ export default function CloudWatchLogs() {
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">Showing 1-{logGroups.length} of {logGroups.length} items</div>
+        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{logGroups.length} of {logGroups.length} items</div>
       </div>
 
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Create log group</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

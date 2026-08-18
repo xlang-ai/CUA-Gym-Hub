@@ -84,6 +84,45 @@ function deepMerge(target, source) {
   return result
 }
 
+/**
+ * Server-side twin of `deepMergeWithDefaults` in src/store/dataManager.js.
+ *
+ * The client fills a task's partial injected state against getDefaultData() before
+ * rendering, then POSTs the fully-populated object back via `set_current`. If the
+ * server stores the *partial* object as `.initial.json`, `/go` ends up diffing a
+ * 2-key baseline against a 32-key current state and reports ~31 fabricated "added"
+ * entries before the agent has done anything — silently corrupting every reward
+ * function that reads state_diff.
+ *
+ * Normalizing here keeps both sides on the same baseline. Semantics must stay
+ * byte-identical to the client version:
+ *   - defaults supply only keys the task omitted; task values always win
+ *   - explicit null/undefined in the task payload is skipped (default is kept)
+ *   - arrays are replaced wholesale, never merged element-wise
+ *   - keys the defaults do not know about are preserved as-is
+ */
+function deepMergeWithDefaults(defaults, custom) {
+  if (!custom) return defaults
+  const result = { ...defaults }
+  for (const key in custom) {
+    if (custom[key] !== null && custom[key] !== undefined) {
+      if (
+        typeof custom[key] === 'object' && !Array.isArray(custom[key]) &&
+        typeof defaults[key] === 'object' && !Array.isArray(defaults[key])
+      ) {
+        result[key] = deepMergeWithDefaults(defaults[key], custom[key])
+      } else {
+        result[key] = custom[key]
+      }
+    }
+  }
+  return result
+}
+
+function normalizeInjectedState(state) {
+  return deepMergeWithDefaults(getDefaultData(), state || {})
+}
+
 function parseQuery(url) {
   const idx = url.indexOf('?')
   if (idx === -1) return {}
@@ -207,7 +246,10 @@ export default defineConfig({
             }
             if (action === 'set') {
               const currentState = readState(sid) || {}
-              const newState = data.merge ? deepMerge(currentState, data.state) : data.state
+              const injected = data.merge ? deepMerge(currentState, data.state) : data.state
+              // Fill defaults for keys the task omitted so that .initial.json and the
+              // state the client will compute share one baseline (see normalizeInjectedState).
+              const newState = normalizeInjectedState(injected)
               writeInitialStateIfMissing(sid, currentState && Object.keys(currentState).length ? currentState : newState)
               writeState(sid, newState)
               if (!readInitialState(sid)) {
@@ -334,7 +376,9 @@ export default defineConfig({
             }
             if (action === 'set') {
               const currentState = readState(sid) || {}
-              const newState = data.merge ? deepMerge(currentState, data.state) : data.state
+              const injected = data.merge ? deepMerge(currentState, data.state) : data.state
+              // Same normalization as the dev-server handler above.
+              const newState = normalizeInjectedState(injected)
               writeState(sid, newState)
               if (!readInitialState(sid)) {
                 try {

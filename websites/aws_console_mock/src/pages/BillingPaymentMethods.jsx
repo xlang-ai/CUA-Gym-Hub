@@ -12,8 +12,8 @@ export default function BillingPaymentMethods() {
   const methods = state.billing?.paymentMethods || [];
 
   const brandIcon = (brand) => {
-    const colors = { Visa: 'text-blue-700', Mastercard: 'text-red-600', Amex: 'text-blue-500' };
-    return colors[brand] || 'text-gray-600';
+    const colors = { Visa: 'text-aws-blue', Mastercard: 'text-aws-error', Amex: 'text-blue-500' };
+    return colors[brand] || 'text-aws-text-secondary';
   };
 
   const handleAdd = () => {
@@ -36,7 +36,7 @@ export default function BillingPaymentMethods() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Payment methods</h1>
+        <h1 className="text-2xl font-bold">Payment methods</h1>
         <button className="aws-btn aws-btn-primary text-xs" onClick={() => setShowAdd(true)}>Add payment method</button>
       </div>
 
@@ -49,7 +49,7 @@ export default function BillingPaymentMethods() {
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-bold">{m.brand}</span>
-                {m.isDefault && <span className="aws-badge bg-green-100 text-green-800">Default</span>}
+                {m.isDefault && <span className="aws-badge bg-aws-status-success-bg text-aws-success">Default</span>}
               </div>
               <div className="text-sm text-aws-text-secondary mt-1">**** **** **** {m.last4}</div>
               <div className="text-xs text-aws-text-secondary">Expires {m.expiry}</div>
@@ -62,7 +62,7 @@ export default function BillingPaymentMethods() {
       {showAdd && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Add payment method</h3>
               <button onClick={() => setShowAdd(false)}><X size={18} /></button>
             </div>

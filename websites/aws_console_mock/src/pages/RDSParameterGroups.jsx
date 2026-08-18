@@ -61,7 +61,7 @@ export default function RDSParameterGroups() {
         <div className="flex items-center gap-2 mb-4">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setDetailGroup(null)}>Parameter groups</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-lg font-bold">{detailGroup.name}</h1>
+          <h1 className="text-2xl font-bold">{detailGroup.name}</h1>
         </div>
         <div className="aws-card p-0">
           <div className="px-4 py-3 border-b border-aws-border">
@@ -69,12 +69,12 @@ export default function RDSParameterGroups() {
               <div><span className="text-aws-text-secondary font-medium block">Group name</span>{detailGroup.name}</div>
               <div><span className="text-aws-text-secondary font-medium block">Family</span>{detailGroup.family}</div>
               <div><span className="text-aws-text-secondary font-medium block">Type</span>
-                <span className={`aws-badge ${detailGroup.type === 'Custom' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}`}>{detailGroup.type || 'Default'}</span>
+                <span className={`aws-badge ${detailGroup.type === 'Custom' ? 'bg-aws-status-warning-bg text-aws-warning' : 'bg-aws-blue-lighter text-aws-blue'}`}>{detailGroup.type || 'Default'}</span>
               </div>
               <div><span className="text-aws-text-secondary font-medium block">Description</span>{detailGroup.description || '-'}</div>
             </div>
           </div>
-          <div className="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
+          <div className="px-4 py-2 border-b border-aws-border-secondary flex items-center justify-between">
             <h3 className="font-bold text-sm">Parameters</h3>
             <button className="aws-btn aws-btn-secondary text-xs" onClick={() => addFlash('info', 'Select a parameter row to edit its value')}>Edit parameters</button>
           </div>
@@ -90,7 +90,7 @@ export default function RDSParameterGroups() {
                     ) : p.value}
                   </td>
                   <td>{p.type}</td>
-                  <td><span className={`aws-badge ${p.applyType === 'dynamic' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{p.applyType}</span></td>
+                  <td><span className={`aws-badge ${p.applyType === 'dynamic' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{p.applyType}</span></td>
                   <td>{p.modifiable ? 'Yes' : 'No'}</td>
                   <td>
                     {p.modifiable && (
@@ -108,7 +108,7 @@ export default function RDSParameterGroups() {
               ))}
             </tbody>
           </table>
-          <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+          <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
             Showing 1-{mockParams.length} of {mockParams.length} parameters
           </div>
         </div>
@@ -122,14 +122,14 @@ export default function RDSParameterGroups() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Parameter groups ({paramGroups.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-secondary text-xs" disabled={!selected.length || selected.some(n => { const g = paramGroups.find(x => x.name === n); return !g || g.type !== 'Custom'; })}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create parameter group</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter parameter groups" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -144,19 +144,19 @@ export default function RDSParameterGroups() {
           {filtered.length === 0 ? (
             <tr><td colSpan={5} className="text-center py-8 text-aws-text-secondary">No parameter groups found</td></tr>
           ) : filtered.map(g => (
-            <tr key={g.name} className={`cursor-pointer ${selected.includes(g.name) ? 'bg-blue-50/50' : ''}`} onClick={() => setDetailGroup(g)}>
+            <tr key={g.name} className={`cursor-pointer ${selected.includes(g.name) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailGroup(g)}>
               <td onClick={e => e.stopPropagation()}>
                 <input type="checkbox" checked={selected.includes(g.name)} onChange={() => toggleSelect(g.name)} />
               </td>
               <td className="text-aws-blue font-medium hover:underline">{g.name}</td>
               <td>{g.family}</td>
               <td className="text-xs text-aws-text-secondary">{g.description || '-'}</td>
-              <td><span className={`aws-badge ${g.type === 'Custom' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}`}>{g.type || 'Default'}</span></td>
+              <td><span className={`aws-badge ${g.type === 'Custom' ? 'bg-aws-status-warning-bg text-aws-warning' : 'bg-aws-blue-lighter text-aws-blue'}`}>{g.type || 'Default'}</span></td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
         Showing 1-{filtered.length} of {filtered.length} items
       </div>
     </div>
@@ -164,7 +164,7 @@ export default function RDSParameterGroups() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Create parameter group</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

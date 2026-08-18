@@ -5,12 +5,12 @@ import { RefreshCw, ChevronDown, Copy, Check, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 const STATE_COLORS = {
-  running: { dot: 'bg-green-500', text: 'text-green-700', bg: 'bg-green-50' },
-  stopped: { dot: 'bg-red-400', text: 'text-gray-700', bg: 'bg-gray-100' },
-  pending: { dot: 'bg-yellow-400 animate-pulse', text: 'text-yellow-700', bg: 'bg-yellow-50' },
-  stopping: { dot: 'bg-yellow-400 animate-pulse', text: 'text-yellow-700', bg: 'bg-yellow-50' },
-  'shutting-down': { dot: 'bg-red-400 animate-pulse', text: 'text-red-700', bg: 'bg-red-50' },
-  terminated: { dot: 'bg-gray-400', text: 'text-gray-500', bg: 'bg-gray-50' },
+  running: { dot: 'bg-aws-success', text: 'text-aws-success', bg: 'bg-aws-status-success-bg' },
+  stopped: { dot: 'bg-aws-error', text: 'text-aws-text-secondary', bg: 'bg-aws-disabled-bg' },
+  pending: { dot: 'bg-aws-warning animate-pulse', text: 'text-aws-warning', bg: 'bg-aws-status-warning-bg' },
+  stopping: { dot: 'bg-aws-warning animate-pulse', text: 'text-aws-warning', bg: 'bg-aws-status-warning-bg' },
+  'shutting-down': { dot: 'bg-aws-error animate-pulse', text: 'text-aws-error', bg: 'bg-aws-status-error-bg' },
+  terminated: { dot: 'bg-aws-text-disabled', text: 'text-aws-text-secondary', bg: 'bg-aws-status-info-bg/30' },
 };
 
 export default function EC2InstanceDetail() {
@@ -55,10 +55,10 @@ export default function EC2InstanceDetail() {
   const CopyBtn = ({ text, field }) => (
     <button
       onClick={() => copyToClipboard(text, field)}
-      className="ml-1 p-0.5 hover:bg-gray-100 rounded inline-flex items-center"
+      className="ml-1 p-0.5 hover:bg-aws-disabled-bg rounded inline-flex items-center"
       title="Copy"
     >
-      {copiedField === field ? <Check size={12} className="text-green-600" /> : <Copy size={12} className="text-gray-400" />}
+      {copiedField === field ? <Check size={12} className="text-aws-success" /> : <Copy size={12} className="text-aws-text-disabled" />}
     </button>
   );
 
@@ -106,7 +106,7 @@ export default function EC2InstanceDetail() {
       <div className="aws-card">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h1 className="text-lg font-bold">
+            <h1 className="text-2xl font-bold">
               Instance summary for {instance.id} ({instance.name || 'unnamed'})
               <span className="text-aws-blue text-xs font-normal ml-2 cursor-pointer hover:underline">Info</span>
             </h1>
@@ -120,11 +120,11 @@ export default function EC2InstanceDetail() {
               </button>
               {stateDropdown && (
                 <div className="absolute top-full right-0 mt-1 bg-white border border-aws-border shadow-lg z-20 w-44" style={{ borderRadius: 8 }}>
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => handleStateChange('start')} disabled={instance.state === 'running'}>Start instance</button>
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => handleStateChange('stop')} disabled={instance.state === 'stopped'}>Stop instance</button>
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => handleStateChange('reboot')}>Reboot instance</button>
-                  <hr className="border-gray-100" />
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 text-aws-error" onClick={() => handleStateChange('terminate')}>Terminate instance</button>
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('start')} disabled={instance.state === 'running'}>Start instance</button>
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('stop')} disabled={instance.state === 'stopped'}>Stop instance</button>
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('reboot')}>Reboot instance</button>
+                  <hr className="border-aws-border-secondary" />
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-error" onClick={() => handleStateChange('terminate')}>Terminate instance</button>
                 </div>
               )}
             </div>
@@ -135,21 +135,21 @@ export default function EC2InstanceDetail() {
               {actionsDropdown && (
                 <div className="absolute top-full right-0 mt-1 bg-white border border-aws-border shadow-lg z-20 w-52" style={{ borderRadius: 8 }}>
                   <div className="px-3 py-1.5 text-xs font-bold text-aws-text-secondary uppercase tracking-wide">Instance settings</div>
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => { setActionsDropdown(false); setActiveTab('Tags'); }}>Edit tags</button>
-                  <hr className="border-gray-100" />
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { setActionsDropdown(false); setActiveTab('Tags'); }}>Edit tags</button>
+                  <hr className="border-aws-border-secondary" />
                   <div className="px-3 py-1.5 text-xs font-bold text-aws-text-secondary uppercase tracking-wide">Monitor and troubleshoot</div>
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => { setActionsDropdown(false); setActiveTab('Monitoring'); }}>View CloudWatch metrics</button>
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => { setActionsDropdown(false); setActiveTab('Status checks'); }}>View status checks</button>
-                  <hr className="border-gray-100" />
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { setActionsDropdown(false); setActiveTab('Monitoring'); }}>View CloudWatch metrics</button>
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { setActionsDropdown(false); setActiveTab('Status checks'); }}>View status checks</button>
+                  <hr className="border-aws-border-secondary" />
                   <div className="px-3 py-1.5 text-xs font-bold text-aws-text-secondary uppercase tracking-wide">Image and templates</div>
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => { setActionsDropdown(false); addFlash('info', 'Create image initiated (simulated in mock)'); }}>Create image</button>
+                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { setActionsDropdown(false); addFlash('info', 'Create image initiated (simulated in mock)'); }}>Create image</button>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Instance summary key-value grid matching real AWS */}
+        {/* Instance summary key-value grid matching real XWS */}
         <div className="grid grid-cols-3 gap-x-8 gap-y-3 text-sm">
           <div>
             <div className="text-aws-text-secondary">Instance ID</div>
@@ -229,7 +229,7 @@ export default function EC2InstanceDetail() {
               className={`pb-2.5 px-4 pt-3 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === tab
                   ? 'border-aws-blue text-aws-blue'
-                  : 'border-transparent text-aws-text-secondary hover:text-aws-text hover:border-gray-300'
+                  : 'border-transparent text-aws-text-secondary hover:text-aws-text hover:border-aws-border'
               }`}
             >
               {tab}
@@ -254,7 +254,7 @@ export default function EC2InstanceDetail() {
                 </div>
               </div>
 
-              <hr className="border-gray-100" />
+              <hr className="border-aws-border-secondary" />
 
               <div>
                 <h3 className="text-sm font-bold mb-3">Instance details</h3>
@@ -420,7 +420,7 @@ export default function EC2InstanceDetail() {
                   <h3 className="text-sm font-bold mb-2">System status checks</h3>
                   {instance.state === 'running' ? (
                     <div className="flex items-center gap-2 text-sm text-aws-success">
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-aws-success"></span>
                       System reachability check passed
                     </div>
                   ) : (
@@ -431,7 +431,7 @@ export default function EC2InstanceDetail() {
                   <h3 className="text-sm font-bold mb-2">Instance status checks</h3>
                   {instance.state === 'running' ? (
                     <div className="flex items-center gap-2 text-sm text-aws-success">
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                      <span className="w-2 h-2 rounded-full bg-aws-success"></span>
                       Instance reachability check passed
                     </div>
                   ) : (
@@ -452,7 +452,7 @@ export default function EC2InstanceDetail() {
                 {['CPUUtilization', 'NetworkIn', 'NetworkOut', 'DiskReadOps', 'DiskWriteOps', 'StatusCheckFailed'].map(metric => (
                   <div key={metric} className="border border-aws-border p-4" style={{ borderRadius: 8 }}>
                     <div className="text-xs font-medium text-aws-text-secondary mb-2">{metric}</div>
-                    <div className="h-24 bg-gray-50 flex items-center justify-center text-xs text-aws-text-disabled" style={{ borderRadius: 4 }}>
+                    <div className="h-24 bg-aws-status-info-bg/30 flex items-center justify-center text-xs text-aws-text-disabled" style={{ borderRadius: 4 }}>
                       {instance.state === 'running' ? (
                         <svg width="100%" height="60" viewBox="0 0 200 60">
                           <polyline
@@ -519,7 +519,7 @@ export default function EC2InstanceDetail() {
       {showConnect && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border" style={{ borderRadius: 8 }}>
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Connect to instance: {instance.id}</h3>
               <button onClick={() => setShowConnect(false)}><X size={18} /></button>
             </div>
@@ -561,8 +561,8 @@ function KV({ label, value, mono, link, copy, onCopy, copied }) {
       <div className={`text-sm ${mono ? 'font-mono' : ''} ${link ? 'text-aws-blue hover:underline cursor-pointer' : 'text-aws-text'}`}>
         {value || '-'}
         {copy && (
-          <button onClick={onCopy} className="ml-1 p-0.5 hover:bg-gray-100 rounded inline-flex items-center">
-            {copied ? <Check size={12} className="text-green-600" /> : <Copy size={12} className="text-gray-400" />}
+          <button onClick={onCopy} className="ml-1 p-0.5 hover:bg-aws-disabled-bg rounded inline-flex items-center">
+            {copied ? <Check size={12} className="text-aws-success" /> : <Copy size={12} className="text-aws-text-disabled" />}
           </button>
         )}
       </div>

@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Copy, Plus, Trash2, X } from 'lucide-react';
 
 const TEST_TEMPLATES = {
-  'API Gateway AWS Proxy': '{\n  "httpMethod": "GET",\n  "path": "/test",\n  "queryStringParameters": null,\n  "body": null\n}',
+  'API Gateway XWS Proxy': '{\n  "httpMethod": "GET",\n  "path": "/test",\n  "queryStringParameters": null,\n  "body": null\n}',
   'S3 Put': '{\n  "Records": [{\n    "s3": {\n      "bucket": { "name": "my-bucket" },\n      "object": { "key": "test.txt" }\n    }\n  }]\n}',
   'Scheduled Event': '{\n  "source": "aws.events",\n  "detail-type": "Scheduled Event",\n  "time": "2024-03-15T10:00:00Z"\n}',
   'Custom': '{\n  "key1": "value1",\n  "key2": "value2"\n}',
@@ -86,7 +86,7 @@ export default function LambdaFunctionDetail() {
     <div className="space-y-4">
       {/* Function header */}
       <div>
-        <h1 className="text-xl font-bold">{func.name}</h1>
+        <h1 className="text-2xl font-bold">{func.name}</h1>
         <div className="flex items-center gap-2 mt-1">
           <span className="text-xs text-aws-text-secondary font-mono">{arn}</span>
           <button className="text-aws-text-disabled hover:text-aws-text"><Copy size={12} /></button>
@@ -157,12 +157,12 @@ export default function LambdaFunctionDetail() {
 
           {output && (
             <div className="aws-card space-y-4">
-              <div className={`p-3 border-l-4 ${output.success ? 'border-l-aws-success bg-green-50' : 'border-l-aws-error bg-red-50'}`}>
+              <div className={`p-3 border-l-4 ${output.success ? 'border-l-aws-success bg-aws-status-success-bg' : 'border-l-aws-error bg-aws-status-error-bg'}`}>
                 <span className="font-bold text-sm">{output.success ? 'Execution result: succeeded' : 'Execution result: failed'}</span>
               </div>
               <div>
                 <h4 className="font-bold text-sm mb-2">Response</h4>
-                <pre className="p-3 bg-gray-50 border border-gray-200 text-sm font-mono overflow-auto" style={{ borderRadius: 2 }}>
+                <pre className="p-3 bg-aws-status-info-bg/30 border border-aws-border-secondary text-sm font-mono overflow-auto" style={{ borderRadius: 2 }}>
                   {JSON.stringify(JSON.parse(output.response.body), null, 2)}
                 </pre>
               </div>
@@ -188,7 +188,7 @@ export default function LambdaFunctionDetail() {
               <button
                 key={ct}
                 onClick={() => setConfigTab(ct)}
-                className={`w-full text-left px-4 py-2 text-sm border-l-3 ${configTab === ct ? 'border-l-aws-orange bg-orange-50/50 text-aws-orange font-medium' : 'border-l-transparent text-aws-text-secondary hover:bg-gray-50'}`}
+                className={`w-full text-left px-4 py-2 text-sm border-l-3 ${configTab === ct ? 'border-l-aws-orange bg-aws-status-warning-bg/50 text-aws-orange font-medium' : 'border-l-transparent text-aws-text-secondary hover:bg-aws-status-info-bg/30'}`}
                 style={{ borderLeftWidth: 3 }}
               >
                 {ct}
@@ -251,7 +251,7 @@ export default function LambdaFunctionDetail() {
                       <tr key={i}>
                         <td className="font-medium text-sm">{t.source}</td>
                         <td className="text-xs font-mono text-aws-text-secondary truncate max-w-xs">{t.arn}</td>
-                        <td><span className="aws-badge bg-green-50 text-green-800 text-xs">{t.status}</span></td>
+                        <td><span className="aws-badge bg-aws-status-success-bg text-aws-success text-xs">{t.status}</span></td>
                       </tr>
                     ))}
                   </tbody>
@@ -284,7 +284,7 @@ export default function LambdaFunctionDetail() {
                         <td className="font-mono text-sm">{ev.key}</td>
                         <td className="font-mono text-sm">{ev.value}</td>
                         <td>
-                          <button className="text-aws-error hover:text-red-800" onClick={() => {
+                          <button className="text-aws-error hover:text-aws-error" onClick={() => {
                             const newVars = envVars.filter((_, idx) => idx !== i);
                             setEnvVars(newVars);
                           }}><Trash2 size={14} /></button>

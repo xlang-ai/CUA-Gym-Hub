@@ -81,8 +81,8 @@ export default function EC2TargetGroups() {
                 <tr key={t.id}>
                   <td className="font-mono text-sm">{t.id}</td>
                   <td>{t.port}</td>
-                  <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${t.health === 'healthy' ? 'bg-green-100 text-green-800' : t.health === 'unhealthy' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>{t.health}</span></td>
-                  <td><button className="text-red-600 text-xs hover:underline" onClick={() => handleDeregister(t.id)}>Deregister</button></td>
+                  <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${t.health === 'healthy' ? 'bg-aws-status-success-bg text-aws-success' : t.health === 'unhealthy' ? 'bg-aws-status-error-bg text-aws-error' : 'bg-aws-disabled-bg text-aws-text'}`}>{t.health}</span></td>
+                  <td><button className="text-aws-error text-xs hover:underline" onClick={() => handleDeregister(t.id)}>Deregister</button></td>
                 </tr>
               ))}
               {currentTg.targets.length === 0 && <tr><td colSpan={4} className="text-center py-6 text-aws-text-secondary">No registered targets</td></tr>}
@@ -93,7 +93,7 @@ export default function EC2TargetGroups() {
         {showRegister && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-              <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+              <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
                 <h3 className="font-bold">Register targets</h3>
                 <button onClick={() => setShowRegister(false)}><X size={18} /></button>
               </div>
@@ -123,11 +123,11 @@ export default function EC2TargetGroups() {
           <h2 className="font-bold text-lg flex items-center gap-2"><Target size={18} /> Target Groups ({tgs.length})</h2>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
               <input className="aws-input pl-7 text-sm w-56" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete</button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create target group</button>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function EC2TargetGroups() {
           </tr></thead>
           <tbody>
             {tgs.map(tg => (
-              <tr key={tg.name} className={selected.includes(tg.name) ? 'bg-blue-50' : ''}>
+              <tr key={tg.name} className={selected.includes(tg.name) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(tg.name)} onChange={() => toggleSelect(tg.name)} /></td>
                 <td className="text-aws-blue font-medium cursor-pointer hover:underline" onClick={() => setDetail(tg)}>{tg.name}</td>
                 <td>{tg.protocol}</td>
@@ -157,7 +157,7 @@ export default function EC2TargetGroups() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Create target group</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

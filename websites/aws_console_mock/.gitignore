@@ -2,3 +2,6 @@
 .mock-states/
 .mock-state.json
 .mock-state.initial.json
+
+# Session-scoped quality scratch (evidence lives in quality-manifest.json)
+.quality/

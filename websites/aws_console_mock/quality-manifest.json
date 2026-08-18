@@ -1,0 +1,111 @@
+{
+  "app": "aws_console_mock",
+  "display_name": "XWS Console Mock",
+  "app_version": "1.1.0",
+  "baseline_git_sha": "f9e1b06ccf680c59c388852641221426899cb7de",
+  "reference": {
+    "product": "AWS Management Console",
+    "design_system": "Cloudscape Design System",
+    "reference_kind": "design-tokens",
+    "note": "Cloudscape is open source, so visual fidelity is measured against pinned token values rather than screenshots of the live product. Token generation is pinned to a single release; the previous palette mixed two."
+  },
+  "gates": {
+    "runner": "node quality.contract.mjs --base http://localhost:5273",
+    "passed": 13,
+    "total": 13,
+    "blocking_failures": 0,
+    "detail": {
+      "G1.1_state_diff_clean_on_partial_inject": "PASS",
+      "G1.2_initial_and_current_share_baseline": "PASS",
+      "G2.1_every_dispatched_action_has_reducer_case": "PASS",
+      "G3.1_no_sidebar_entry_resolves_to_placeholder": "PASS",
+      "G3.2_no_orphaned_page_component": "PASS",
+      "G4.1_injected_values_not_overwritten": "PASS",
+      "G4.2_unknown_fields_survive_roundtrip": "PASS",
+      "G4.3_legacy_local_urls_resolve": "PASS",
+      "G4.4_arns_and_dns_untouched": "PASS",
+      "H1_default_state_deterministic": "PASS",
+      "H2_no_external_network_requests": "PASS",
+      "H3_no_undesensitized_trademarks_in_prose": "PASS",
+      "H4_design_tokens_instead_of_raw_palette": "PASS"
+    }
+  },
+  "metrics": {
+    "reward_signal": {
+      "state_diff_entries_on_untouched_episode": { "before": 31, "after": 0 },
+      "dispatched_action_types": { "before": 105, "after": 114 },
+      "actions_silently_dropped": { "before": 70, "after": 0 },
+      "reducer_cases": { "before": 38, "after": 122 }
+    },
+    "reachability": {
+      "page_components": { "before": 59, "after": 66 },
+      "components_routed": { "before": 19, "after": 66 },
+      "components_orphaned": { "before": 40, "after": 0 },
+      "orphaned_lines_of_code": { "before": 5777, "after": 0 },
+      "sidebar_entries_hitting_placeholder": { "before": 28, "after": 0 },
+      "declared_routes": { "before": 21, "after": 74 },
+      "services_in_navigation": { "before": 6, "after": 14 }
+    },
+    "visual_fidelity": {
+      "design_token_generations_mixed": { "before": 2, "after": 1 },
+      "primary_cta_color": { "before": "#FF9900", "after": "#006ce0" },
+      "button_border_radius": { "before": "20px", "after": "8px" },
+      "body_text_color": { "before": "#000716", "after": "#0f141a" },
+      "font_family": { "before": "Noto Sans (remote)", "after": "Open Sans (self-hosted)" },
+      "h1_elements_off_scale": { "before": 40, "after": 0 },
+      "raw_tailwind_palette_classes_in_pages": { "before": 685, "after": 13 },
+      "raw_tailwind_palette_classes_in_index_css": { "before": 13, "after": 1 }
+    },
+    "compliance": {
+      "runtime_external_network_references": { "before": 3, "after": 0 },
+      "undesensitized_trademark_strings_in_prose": { "before": 127, "after": 0 },
+      "arn_identifiers_preserved": true,
+      "amazonaws_dns_preserved": true
+    },
+    "build": {
+      "clean_build": "PASS",
+      "build_time_s": 2.59,
+      "known_warning": "single chunk >500kB (pre-existing, not introduced by this release)"
+    }
+  },
+  "verification": {
+    "route_sweep": {
+      "routes_exercised": 64,
+      "crashes": 0,
+      "placeholder_hits": 0,
+      "method": "in-browser navigation with per-route error-boundary and global-error reset"
+    },
+    "end_to_end_mutation": {
+      "scenario": "POST baseline -> navigate /vpc/vpcs -> create VPC via UI -> read /go",
+      "result": "initial 2 VPCs, current 3 VPCs, state_diff keys = ['vpc'], no noise",
+      "verified_by": "supervisor, in browser (not agent self-report)"
+    },
+    "backward_compatibility": {
+      "legacy_urls_mapped": 29,
+      "legacy_redirect_spot_checks": ["/local/s3/access-points", "/local/rds/query-editor", "/local/lambda/applications", "/local/ec2/volumes", "/local/billing/bills"],
+      "all_landed_on_real_pages": true
+    }
+  },
+  "authenticity": {
+    "status": "PARTIALLY_MEASURED",
+    "measured": [
+      "design token conformance to pinned Cloudscape values",
+      "typography scale conformance",
+      "component radius and status-color conformance",
+      "brand-color usage rule (orange is logo-only)"
+    ],
+    "not_measured": [
+      "visual structure similarity against captured reference screenshots",
+      "workflow-step parity against the real console",
+      "capability recall against a frozen reference capability list"
+    ],
+    "note": "Token-level fidelity is machine-checked. Structural/workflow fidelity still needs a frozen reference capability+layout spec per service; that spec does not exist yet and is the main remaining gap toward 'no visible difference from the real console'."
+  },
+  "residual_risks": [
+    "A session that never receives POST action=set has no frozen baseline: /go falls back to initial = current, so state_diff stays empty. Real tasks always inject first, so this is latent, but first set_current arguably should freeze a baseline. Not changed here because set_current explicitly promises never to touch .initial.json (golden_patch semantics).",
+    "SCHEMA.md still drifts from the code in several places (rdsSnapshots type/storage, billing.taxSettings shape, budgets id, dynamodb tableSize/lsi/ttl, sns subscriptionCount). Documentation-side fix, deliberately out of scope for this release since changing the seed shape would break old tasks.",
+    "iam.policies[].attachedEntities denormalized counts disagree with actual references for 4 of 10 policies.",
+    "Security-group inbound-rule editing and direct IAM policy attach still have no UI.",
+    "The state-injection default-fill bug (G1) also exists in shared/secureMockApiPlugin.mjs and therefore likely affects other hub mocks; only this app's vite.config.js was fixed."
+  ]
+}

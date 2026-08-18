@@ -39,7 +39,7 @@ export default function ColumnToggle({ tableName, columns, visibleColumns, onTog
   return (
     <div className="relative" ref={ref}>
       <button
-        className="p-1.5 hover:bg-gray-100 rounded"
+        className="p-1.5 hover:bg-aws-disabled-bg rounded"
         onClick={() => setOpen(!open)}
         title="Toggle column visibility"
       >
@@ -47,12 +47,12 @@ export default function ColumnToggle({ tableName, columns, visibleColumns, onTog
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-1 bg-white border border-aws-border shadow-lg z-30 w-56" style={{ borderRadius: 8 }}>
-          <div className="px-3 py-2 border-b border-gray-100 text-xs font-bold text-aws-text-secondary uppercase">
+          <div className="px-3 py-2 border-b border-aws-border-secondary text-xs font-bold text-aws-text-secondary uppercase">
             Visible columns
           </div>
           <div className="py-1 max-h-64 overflow-y-auto">
             {columns.map(col => (
-              <label key={col.key} className="flex items-center gap-2 px-3 py-1.5 hover:bg-gray-50 cursor-pointer text-sm">
+              <label key={col.key} className="flex items-center gap-2 px-3 py-1.5 hover:bg-aws-status-info-bg/30 cursor-pointer text-sm">
                 <input
                   type="checkbox"
                   checked={visibleColumns.includes(col.key)}

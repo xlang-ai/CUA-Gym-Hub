@@ -58,14 +58,14 @@ export default function DynamoDBTables() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Tables ({tables.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete table</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create table</button>
           </div>
         </div>
-        <div className="px-4 py-2 border-b border-gray-100">
+        <div className="px-4 py-2 border-b border-aws-border-secondary">
           <div className="relative max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input className="aws-input pl-8" placeholder="Filter tables" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
@@ -77,10 +77,10 @@ export default function DynamoDBTables() {
             </thead>
             <tbody>
               {tables.map(t => (
-                <tr key={t.name} className={selected.includes(t.name) ? 'bg-blue-50/50' : ''}>
+                <tr key={t.name} className={selected.includes(t.name) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td><input type="checkbox" checked={selected.includes(t.name)} onChange={e => setSelected(e.target.checked ? [...selected, t.name] : selected.filter(x=>x!==t.name))} /></td>
                   <td><Link to={`/dynamodb/${t.name}`} className="font-medium text-aws-blue hover:underline">{t.name}</Link></td>
-                  <td><span className={`aws-badge ${t.status === 'ACTIVE' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>{t.status}</span></td>
+                  <td><span className={`aws-badge ${t.status === 'ACTIVE' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{t.status}</span></td>
                   <td className="font-mono text-sm">{t.partitionKey}</td>
                   <td className="font-mono text-sm">{t.sortKey || '-'}</td>
                   <td>{t.itemCount?.toLocaleString()}</td>
@@ -93,13 +93,13 @@ export default function DynamoDBTables() {
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">Showing 1-{tables.length} of {tables.length} items</div>
+        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{tables.length} of {tables.length} items</div>
       </div>
 
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50 sticky top-0">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30 sticky top-0">
               <h3 className="font-bold">Create table</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

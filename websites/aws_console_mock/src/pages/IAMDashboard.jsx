@@ -6,7 +6,7 @@ import { CheckCircle, XCircle, Shield, Users, Key, FileText } from 'lucide-react
 export default function IAMDashboard() {
   const { state } = useStore();
   const { users, roles, policies, groups } = state.iam;
-  const awsPolicies = policies.filter(p => p.type === 'AWS managed').length;
+  const awsPolicies = policies.filter(p => p.type === 'XWS managed').length;
   const custPolicies = policies.filter(p => p.type === 'Customer managed').length;
 
   // Derive security recommendations from actual state
@@ -24,11 +24,11 @@ export default function IAMDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold">IAM Dashboard</h1>
+      <h1 className="text-2xl font-bold">IAM Dashboard</h1>
 
-      {/* AWS Account */}
+      {/* XWS Account */}
       <div className="aws-card">
-        <h2 className="font-bold text-sm mb-3 flex items-center gap-2"><Shield size={16} /> AWS Account</h2>
+        <h2 className="font-bold text-sm mb-3 flex items-center gap-2"><Shield size={16} /> XWS Account</h2>
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div><span className="text-aws-text-secondary">Account ID:</span> <span className="font-mono ml-2">{state.user.accountId}</span></div>
           <div><span className="text-aws-text-secondary">Account Alias:</span> <span className="ml-2">{state.user.accountAlias}</span></div>
@@ -82,7 +82,7 @@ export default function IAMDashboard() {
             <h3 className="font-bold text-sm">Policies</h3>
           </div>
           <div className="text-3xl font-bold text-aws-blue">{policies.length}</div>
-          <div className="text-xs text-aws-text-secondary mt-1">{awsPolicies} AWS managed, {custPolicies} customer managed</div>
+          <div className="text-xs text-aws-text-secondary mt-1">{awsPolicies} XWS managed, {custPolicies} customer managed</div>
         </Link>
       </div>
     </div>

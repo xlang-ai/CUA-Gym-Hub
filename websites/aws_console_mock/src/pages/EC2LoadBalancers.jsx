@@ -51,11 +51,11 @@ export default function EC2LoadBalancers() {
           <h2 className="font-bold text-lg flex items-center gap-2"><Network size={18} /> Load Balancers ({lbs.length})</h2>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
               <input className="aws-input pl-7 text-sm w-56" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete</button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create load balancer</button>
           </div>
         </div>
@@ -66,13 +66,13 @@ export default function EC2LoadBalancers() {
           </tr></thead>
           <tbody>
             {lbs.map(lb => (
-              <tr key={lb.name} className={selected.includes(lb.name) ? 'bg-blue-50' : ''}>
+              <tr key={lb.name} className={selected.includes(lb.name) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(lb.name)} onChange={() => toggleSelect(lb.name)} /></td>
                 <td className="text-aws-blue font-medium">{lb.name}</td>
                 <td className="font-mono text-xs max-w-xs truncate">{lb.dnsName}</td>
                 <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${lb.type === 'application' ? 'bg-purple-100 text-purple-800' : 'bg-teal-100 text-teal-800'}`}>{lb.type === 'application' ? 'ALB' : 'NLB'}</span></td>
                 <td>{lb.scheme}</td>
-                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${lb.state === 'active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{lb.state}</span></td>
+                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${lb.state === 'active' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{lb.state}</span></td>
                 <td className="text-xs">{lb.az.join(', ')}</td>
                 <td>{format(new Date(lb.created), 'MMM d, yyyy')}</td>
               </tr>
@@ -85,7 +85,7 @@ export default function EC2LoadBalancers() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Create load balancer</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

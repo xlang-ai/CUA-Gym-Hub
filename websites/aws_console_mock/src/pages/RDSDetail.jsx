@@ -4,12 +4,12 @@ import { useParams, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
 const STATUS_COLORS = {
-  available: 'bg-green-50 text-green-800',
-  creating: 'bg-blue-50 text-blue-800',
-  deleting: 'bg-orange-50 text-orange-800',
-  stopped: 'bg-red-50 text-red-800',
-  stopping: 'bg-yellow-50 text-yellow-800',
-  starting: 'bg-blue-50 text-blue-800',
+  available: 'bg-aws-status-success-bg text-aws-success',
+  creating: 'bg-aws-status-info-bg text-aws-blue',
+  deleting: 'bg-aws-status-warning-bg text-aws-warning',
+  stopped: 'bg-aws-status-error-bg text-aws-error',
+  stopping: 'bg-aws-status-warning-bg text-aws-warning',
+  starting: 'bg-aws-status-info-bg text-aws-blue',
 };
 
 export default function RDSDetail() {
@@ -28,8 +28,8 @@ export default function RDSDetail() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <h1 className="text-xl font-bold">{db.id}</h1>
-        <span className={`aws-badge ${STATUS_COLORS[db.status] || 'bg-gray-100 text-gray-800'}`}>{db.status}</span>
+        <h1 className="text-2xl font-bold">{db.id}</h1>
+        <span className={`aws-badge ${STATUS_COLORS[db.status] || 'bg-aws-disabled-bg text-aws-text'}`}>{db.status}</span>
       </div>
 
       {/* Tab bar */}
@@ -49,7 +49,7 @@ export default function RDSDetail() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-aws-text-secondary block mb-1">Endpoint</span>
-                <span className="font-mono text-xs bg-gray-50 px-2 py-1 border border-gray-200 inline-block">{db.endpoint}</span>
+                <span className="font-mono text-xs bg-aws-status-info-bg/30 px-2 py-1 border border-aws-border-secondary inline-block">{db.endpoint}</span>
               </div>
               <div>
                 <span className="text-aws-text-secondary block mb-1">Port</span>
@@ -76,7 +76,7 @@ export default function RDSDetail() {
               <div>
                 <span className="text-aws-text-secondary">VPC security groups:</span>
                 <span className="ml-2 text-aws-blue">{db.engine === 'postgres' ? 'db-access-sg' : 'db-access-sg'}</span>
-                <span className="aws-badge bg-green-50 text-green-800 text-xs ml-2">Active</span>
+                <span className="aws-badge bg-aws-status-success-bg text-aws-success text-xs ml-2">Active</span>
               </div>
               <div><span className="text-aws-text-secondary">Certificate authority:</span> <span className="ml-2">rds-ca-rsa2048-g1</span></div>
             </div>

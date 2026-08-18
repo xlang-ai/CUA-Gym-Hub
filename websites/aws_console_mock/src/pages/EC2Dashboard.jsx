@@ -38,10 +38,10 @@ export default function EC2Dashboard() {
           <div className="aws-card">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-bold text-lg">Resources</h2>
-              <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+              <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             </div>
             <p className="text-sm text-aws-text-secondary mb-4">
-              You are using the following Amazon EC2 resources in the {state.user.region === 'ap-southeast-1' ? 'Asia Pacific (Singapore)' : state.user.region} Region:
+              You are using the following XWS EC2 resources in the {state.user.region === 'ap-southeast-1' ? 'Asia Pacific (Singapore)' : state.user.region} Region:
             </p>
             <div className="grid grid-cols-3 gap-4">
               <ResourceLink label="Instances (running)" count={running} to="/ec2" color="text-aws-blue" />
@@ -65,7 +65,7 @@ export default function EC2Dashboard() {
             <div className="aws-card">
               <h3 className="font-bold text-sm mb-3">Launch instance</h3>
               <p className="text-sm text-aws-text-secondary mb-4">
-                To get started, launch an Amazon EC2 instance, which is a virtual server in the cloud.
+                To get started, launch an XWS EC2 instance, which is a virtual server in the cloud.
               </p>
               <div className="space-y-2">
                 <Link to="/ec2" className="aws-btn aws-btn-call-to-action text-xs inline-flex items-center gap-1">
@@ -88,7 +88,7 @@ export default function EC2Dashboard() {
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-bold text-sm">Service health</h3>
                 <Link to="/cloudwatch" className="text-xs text-aws-blue hover:underline flex items-center gap-1">
-                  AWS Health Dashboard <ExternalLink size={10} />
+                  XWS Health Dashboard <ExternalLink size={10} />
                 </Link>
               </div>
               <div className="space-y-3 text-sm">
@@ -113,7 +113,7 @@ export default function EC2Dashboard() {
           <div className="aws-card">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-bold text-sm">EC2 cost</h3>
-              <button className="p-1 hover:bg-gray-100 rounded">
+              <button className="p-1 hover:bg-aws-disabled-bg rounded">
                 <svg width="14" height="14" viewBox="0 0 14 14" className="text-aws-text-secondary">
                   <path d="M7 1v12M1 7h12" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
                 </svg>

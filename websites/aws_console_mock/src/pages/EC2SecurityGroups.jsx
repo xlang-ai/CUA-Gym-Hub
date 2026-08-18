@@ -60,25 +60,25 @@ export default function EC2SecurityGroups() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Security Groups ({state.securityGroups.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <div className="relative">
               <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" disabled={!selected.length} onClick={() => setActionsOpen(!actionsOpen)}>
                 Actions <ChevronDown size={12} />
               </button>
               {actionsOpen && selected.length > 0 && (
                 <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-aws-border shadow-lg z-20" style={{ borderRadius: 8 }}>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', `Copied ARN for ${selected.length} security group(s)`); setActionsOpen(false); }}>Copy ARN</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', `Manage tags for ${selected.length} security group(s) (simulated)`); setActionsOpen(false); }}>Manage tags</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', `Copied ARN for ${selected.length} security group(s)`); setActionsOpen(false); }}>Copy ARN</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', `Manage tags for ${selected.length} security group(s) (simulated)`); setActionsOpen(false); }}>Manage tags</button>
                 </div>
               )}
             </div>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete security group</button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete security group</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create security group</button>
           </div>
         </div>
-        <div className="px-4 py-2 border-b border-gray-100">
+        <div className="px-4 py-2 border-b border-aws-border-secondary">
           <div className="relative max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input className="aws-input pl-8" placeholder="Filter security groups" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
@@ -97,14 +97,14 @@ export default function EC2SecurityGroups() {
           </thead>
           <tbody>
             {sgs.map(sg => (
-              <tr key={sg.id} className={`cursor-pointer ${selected.includes(sg.id) ? 'bg-blue-50/50' : ''}`} onClick={() => setDetailId(sg.id)}>
+              <tr key={sg.id} className={`cursor-pointer ${selected.includes(sg.id) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailId(sg.id)}>
                 <td onClick={e => e.stopPropagation()}>
                   <input type="checkbox" checked={selected.includes(sg.id)} onChange={() => toggleSelect(sg.id)} />
                 </td>
                 <td className="text-aws-blue font-medium hover:underline">{sg.name}</td>
                 <td>
                   <span className="font-mono text-sm text-aws-blue hover:underline">{sg.id}</span>
-                  <button className="ml-1 text-gray-400 hover:text-gray-600" onClick={e => { e.stopPropagation(); copyToClipboard(sg.id); }}><Copy size={12} /></button>
+                  <button className="ml-1 text-aws-text-disabled hover:text-aws-text-secondary" onClick={e => { e.stopPropagation(); copyToClipboard(sg.id); }}><Copy size={12} /></button>
                 </td>
                 <td className="font-mono text-sm text-aws-blue">{sg.vpcId}</td>
                 <td className="text-aws-text-secondary text-xs max-w-xs truncate">{sg.description}</td>
@@ -116,7 +116,7 @@ export default function EC2SecurityGroups() {
             {sgs.length === 0 && <tr><td colSpan={8} className="text-center py-8 text-aws-text-secondary">No security groups found</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
           Showing 1-{sgs.length} of {sgs.length} items
         </div>
       </div>
@@ -198,7 +198,7 @@ export default function EC2SecurityGroups() {
                 <span>A security group acts as a virtual firewall that controls the traffic for one or more instances.</span>
               </div>
               <div>
-                <label className="aws-form-label">Security group name <span className="text-red-500">*</span></label>
+                <label className="aws-form-label">Security group name <span className="text-aws-error">*</span></label>
                 <input className="aws-input mt-1" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="my-security-group" />
               </div>
               <div>

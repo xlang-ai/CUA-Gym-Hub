@@ -269,6 +269,463 @@ function reducer(prev, action) {
     case 'DISMISS_FLASH':
       newState.flash = (prev.flash || []).filter(f => f.id !== action.payload);
       break;
+    case 'ADD_PAYMENT_METHOD':
+      newState.billing = {
+        ...prev.billing,
+        paymentMethods: [...(prev.billing.paymentMethods || []), action.payload]
+      };
+      break;
+    case 'ALLOCATE_EIP':
+      newState.elasticIps = [...prev.elasticIps, action.payload];
+      break;
+    case 'ASSOCIATE_EIP':
+      newState.elasticIps = prev.elasticIps.map(e =>
+        e.allocationId === action.payload.allocationId
+          ? {
+              ...e,
+              associationId: action.payload.associationId,
+              instanceId: action.payload.instanceId,
+              privateIp: action.payload.privateIp,
+              networkInterfaceId: action.payload.networkInterfaceId
+            }
+          : e
+      );
+      break;
+    case 'CREATE_ALARM':
+      newState.cloudwatch = {
+        ...prev.cloudwatch,
+        alarms: [...prev.cloudwatch.alarms, action.payload]
+      };
+      break;
+    case 'CREATE_ASG':
+      newState.autoScalingGroups = [...(prev.autoScalingGroups || []), action.payload];
+      break;
+    case 'CREATE_BUDGET':
+      newState.billing = {
+        ...prev.billing,
+        budgets: [...(prev.billing.budgets || []), action.payload]
+      };
+      break;
+    case 'CREATE_DASHBOARD':
+      newState.cloudwatch = {
+        ...prev.cloudwatch,
+        dashboards: [...prev.cloudwatch.dashboards, action.payload]
+      };
+      break;
+    case 'CREATE_DISTRIBUTION':
+      newState.cloudfront = {
+        ...prev.cloudfront,
+        distributions: [...(prev.cloudfront.distributions || []), action.payload]
+      };
+      break;
+    case 'CREATE_DYNAMO_TABLE':
+      newState.dynamodb = {
+        ...prev.dynamodb,
+        tables: [...prev.dynamodb.tables, action.payload]
+      };
+      break;
+    case 'CREATE_HOSTED_ZONE':
+      newState.route53 = {
+        ...prev.route53,
+        hostedZones: [...(prev.route53.hostedZones || []), action.payload]
+      };
+      break;
+    case 'CREATE_IDENTITY_PROVIDER':
+      newState.iam = {
+        ...prev.iam,
+        identityProviders: [...(prev.iam.identityProviders || []), action.payload]
+      };
+      break;
+    case 'CREATE_LAMBDA_APPLICATION':
+      newState.lambdaApplications = [...(prev.lambdaApplications || []), action.payload];
+      break;
+    case 'DEPLOY_LAMBDA_APPLICATION':
+      newState.lambdaApplications = (prev.lambdaApplications || []).map(a =>
+        a.name === action.payload.name
+          ? { ...a, status: action.payload.status, lastUpdated: action.payload.lastUpdated }
+          : a
+      );
+      break;
+    case 'DELETE_LAMBDA_APPLICATION':
+      newState.lambdaApplications = (prev.lambdaApplications || []).filter(a => a.name !== action.payload);
+      break;
+    case 'CREATE_S3_ACCESS_POINT':
+      newState.s3AccessPoints = [...(prev.s3AccessPoints || []), action.payload];
+      break;
+    case 'DELETE_S3_ACCESS_POINT':
+      newState.s3AccessPoints = (prev.s3AccessPoints || []).filter(ap => ap.name !== action.payload);
+      break;
+    case 'CREATE_S3_BATCH_JOB':
+      newState.s3BatchOperations = [...(prev.s3BatchOperations || []), action.payload];
+      break;
+    case 'UPDATE_S3_BATCH_JOB_STATUS':
+      newState.s3BatchOperations = (prev.s3BatchOperations || []).map(j =>
+        j.id === action.payload.id
+          ? { ...j, status: action.payload.status, ...(action.payload.succeededObjects !== undefined ? { succeededObjects: action.payload.succeededObjects } : {}), ...(action.payload.completed !== undefined ? { completed: action.payload.completed } : {}) }
+          : j
+      );
+      break;
+    case 'DELETE_S3_BATCH_JOB':
+      newState.s3BatchOperations = (prev.s3BatchOperations || []).filter(j => j.id !== action.payload);
+      break;
+    case 'UPDATE_STORAGE_LENS_CONFIG':
+      newState.s3StorageLens = { ...(prev.s3StorageLens || {}), ...action.payload };
+      break;
+    case 'RUN_RDS_QUERY':
+      newState.rdsQueryHistory = [action.payload, ...(prev.rdsQueryHistory || [])];
+      break;
+    case 'SAVE_RDS_QUERY':
+      newState.rdsQueryHistory = (prev.rdsQueryHistory || []).map(q =>
+        q.id === action.payload.id ? { ...q, saved: true, name: action.payload.name } : q
+      );
+      break;
+    case 'DELETE_RDS_QUERY':
+      newState.rdsQueryHistory = (prev.rdsQueryHistory || []).filter(q => q.id !== action.payload);
+      break;
+    case 'UPDATE_BACKUP_RETENTION':
+      newState.rdsAutomatedBackups = (prev.rdsAutomatedBackups || []).map(b =>
+        b.id === action.payload.id
+          ? { ...b, retentionPeriod: action.payload.retentionPeriod, backupRetentionEnabled: action.payload.retentionPeriod > 0 }
+          : b
+      );
+      break;
+    case 'DELETE_RETAINED_BACKUP':
+      newState.rdsAutomatedBackups = (prev.rdsAutomatedBackups || []).filter(b => !(b.id === action.payload && b.retained));
+      break;
+    case 'CREATE_IGW':
+      newState.vpc = {
+        ...prev.vpc,
+        internetGateways: [...prev.vpc.internetGateways, action.payload]
+      };
+      break;
+    case 'CREATE_LAMBDA_LAYER':
+      newState.lambdaLayers = [...(prev.lambdaLayers || []), action.payload];
+      break;
+    case 'CREATE_LAUNCH_TEMPLATE':
+      newState.launchTemplates = [...(prev.launchTemplates || []), action.payload];
+      break;
+    case 'CREATE_LOAD_BALANCER':
+      newState.loadBalancers = [...(prev.loadBalancers || []), action.payload];
+      break;
+    case 'CREATE_LOG_GROUP':
+      newState.cloudwatch = {
+        ...prev.cloudwatch,
+        logGroups: [...prev.cloudwatch.logGroups, action.payload]
+      };
+      break;
+    case 'CREATE_NAT':
+      newState.vpc = {
+        ...prev.vpc,
+        natGateways: [...prev.vpc.natGateways, action.payload]
+      };
+      break;
+    case 'CREATE_POLICY':
+      newState.iam = {
+        ...prev.iam,
+        policies: [...prev.iam.policies, action.payload]
+      };
+      break;
+    case 'CREATE_QUEUE':
+      newState.sqs = {
+        ...prev.sqs,
+        queues: [...prev.sqs.queues, action.payload]
+      };
+      break;
+    case 'CREATE_RDS_PARAMETER_GROUP':
+      newState.rdsParameterGroups = [...(prev.rdsParameterGroups || []), action.payload];
+      break;
+    case 'CREATE_RDS_SNAPSHOT':
+      newState.rdsSnapshots = [...(prev.rdsSnapshots || []), action.payload];
+      break;
+    case 'CREATE_RECORD':
+      newState.route53 = {
+        ...prev.route53,
+        records: [...(prev.route53.records || []), action.payload]
+      };
+      break;
+    case 'CREATE_ROUTE_TABLE':
+      newState.vpc = {
+        ...prev.vpc,
+        routeTables: [...prev.vpc.routeTables, action.payload]
+      };
+      break;
+    case 'CREATE_SNAPSHOT':
+      newState.snapshots = [...(prev.snapshots || []), action.payload];
+      break;
+    case 'CREATE_SUBNET':
+      newState.vpc = {
+        ...prev.vpc,
+        subnets: [...prev.vpc.subnets, action.payload]
+      };
+      break;
+    case 'CREATE_SUBSCRIPTION':
+      newState.sns = {
+        ...prev.sns,
+        subscriptions: [...(prev.sns.subscriptions || []), action.payload]
+      };
+      break;
+    case 'CREATE_TARGET_GROUP':
+      newState.targetGroups = [...(prev.targetGroups || []), action.payload];
+      break;
+    case 'CREATE_TOPIC':
+      newState.sns = {
+        ...prev.sns,
+        topics: [...(prev.sns.topics || []), action.payload]
+      };
+      break;
+    case 'CREATE_VOLUME':
+      newState.volumes = [...(prev.volumes || []), action.payload];
+      break;
+    case 'CREATE_VPC':
+      newState.vpc = {
+        ...prev.vpc,
+        vpcs: [...prev.vpc.vpcs, action.payload]
+      };
+      break;
+    case 'DEACTIVATE_ACCESS_KEY':
+      newState.iam = {
+        ...prev.iam,
+        users: prev.iam.users.map(u =>
+          u.name === action.payload.userName
+            ? {
+                ...u,
+                accessKeys: (u.accessKeys || []).map(k =>
+                  k.accessKeyId === action.payload.accessKeyId ? { ...k, status: 'Inactive' } : k
+                )
+              }
+            : u
+        )
+      };
+      break;
+    case 'DELETE_ACCESS_KEY':
+      newState.iam = {
+        ...prev.iam,
+        users: prev.iam.users.map(u =>
+          u.name === action.payload.userName
+            ? { ...u, accessKeys: (u.accessKeys || []).filter(k => k.accessKeyId !== action.payload.accessKeyId) }
+            : u
+        )
+      };
+      break;
+    case 'DELETE_ALARM':
+      newState.cloudwatch = {
+        ...prev.cloudwatch,
+        alarms: prev.cloudwatch.alarms.filter(a => a.name !== action.payload)
+      };
+      break;
+    case 'DELETE_AMI':
+      newState.amis = prev.amis.filter(a => a.id !== action.payload);
+      break;
+    case 'DELETE_ASG':
+      newState.autoScalingGroups = (prev.autoScalingGroups || []).filter(a => a.name !== action.payload);
+      break;
+    case 'DELETE_DASHBOARD':
+      newState.cloudwatch = {
+        ...prev.cloudwatch,
+        dashboards: prev.cloudwatch.dashboards.filter(d => d.name !== action.payload)
+      };
+      break;
+    case 'DELETE_DISTRIBUTION':
+      newState.cloudfront = {
+        ...prev.cloudfront,
+        distributions: (prev.cloudfront.distributions || []).filter(d => d.id !== action.payload)
+      };
+      break;
+    case 'DELETE_DYNAMO_TABLE':
+      newState.dynamodb = {
+        ...prev.dynamodb,
+        tables: prev.dynamodb.tables.filter(t => t.name !== action.payload)
+      };
+      break;
+    case 'DELETE_HOSTED_ZONE':
+      newState.route53 = {
+        ...prev.route53,
+        hostedZones: (prev.route53.hostedZones || []).filter(z => z.id !== action.payload)
+      };
+      break;
+    case 'DELETE_IGW':
+      newState.vpc = {
+        ...prev.vpc,
+        internetGateways: prev.vpc.internetGateways.filter(ig => ig.id !== action.payload)
+      };
+      break;
+    case 'DELETE_LAMBDA_LAYER':
+      newState.lambdaLayers = (prev.lambdaLayers || []).filter(l => l.name !== action.payload);
+      break;
+    case 'DELETE_LAUNCH_TEMPLATE':
+      newState.launchTemplates = (prev.launchTemplates || []).filter(lt => lt.id !== action.payload);
+      break;
+    case 'DELETE_LOAD_BALANCER':
+      newState.loadBalancers = (prev.loadBalancers || []).filter(lb => lb.name !== action.payload);
+      break;
+    case 'DELETE_LOG_GROUP':
+      newState.cloudwatch = {
+        ...prev.cloudwatch,
+        logGroups: prev.cloudwatch.logGroups.filter(lg => lg.name !== action.payload)
+      };
+      break;
+    case 'DELETE_NAT':
+      newState.vpc = {
+        ...prev.vpc,
+        natGateways: prev.vpc.natGateways.filter(n => n.id !== action.payload)
+      };
+      break;
+    case 'DELETE_POLICY':
+      newState.iam = {
+        ...prev.iam,
+        policies: prev.iam.policies.filter(p => p.arn !== action.payload)
+      };
+      break;
+    case 'DELETE_QUEUE':
+      newState.sqs = {
+        ...prev.sqs,
+        queues: prev.sqs.queues.filter(q => q.name !== action.payload)
+      };
+      break;
+    case 'DELETE_RDS_SNAPSHOT':
+      newState.rdsSnapshots = (prev.rdsSnapshots || []).filter(s => s.id !== action.payload);
+      break;
+    case 'DELETE_RECORD':
+      newState.route53 = {
+        ...prev.route53,
+        records: (prev.route53.records || []).filter(r => r.id !== action.payload)
+      };
+      break;
+    case 'DELETE_ROUTE_TABLE':
+      newState.vpc = {
+        ...prev.vpc,
+        routeTables: prev.vpc.routeTables.filter(rt => rt.id !== action.payload)
+      };
+      break;
+    case 'DELETE_SNAPSHOT':
+      newState.snapshots = (prev.snapshots || []).filter(s => s.id !== action.payload);
+      break;
+    case 'DELETE_SUBNET':
+      newState.vpc = {
+        ...prev.vpc,
+        subnets: prev.vpc.subnets.filter(s => s.id !== action.payload)
+      };
+      break;
+    case 'DELETE_SUBSCRIPTION':
+      newState.sns = {
+        ...prev.sns,
+        subscriptions: (prev.sns.subscriptions || []).filter(s => s.id !== action.payload)
+      };
+      break;
+    case 'DELETE_TARGET_GROUP':
+      newState.targetGroups = (prev.targetGroups || []).filter(tg => tg.name !== action.payload);
+      break;
+    case 'DELETE_TOPIC':
+      newState.sns = {
+        ...prev.sns,
+        topics: (prev.sns.topics || []).filter(t => t.arn !== action.payload)
+      };
+      break;
+    case 'DELETE_VOLUME':
+      newState.volumes = (prev.volumes || []).filter(v => v.id !== action.payload);
+      break;
+    case 'DELETE_VPC':
+      newState.vpc = {
+        ...prev.vpc,
+        vpcs: prev.vpc.vpcs.filter(v => v.id !== action.payload)
+      };
+      break;
+    case 'DEREGISTER_TARGET':
+      newState.targetGroups = prev.targetGroups.map(tg =>
+        tg.name === action.payload.groupName
+          ? { ...tg, targets: tg.targets.filter(t => t.id !== action.payload.targetId) }
+          : tg
+      );
+      break;
+    case 'DETACH_VOLUME':
+      newState.volumes = prev.volumes.map(v =>
+        v.id === action.payload ? { ...v, state: 'available', attachedTo: '', device: '' } : v
+      );
+      break;
+    case 'DISASSOCIATE_EIP':
+      newState.elasticIps = prev.elasticIps.map(e =>
+        e.allocationId === action.payload
+          ? { ...e, associationId: '', instanceId: '', privateIp: '', networkInterfaceId: '' }
+          : e
+      );
+      break;
+    case 'PURGE_QUEUE':
+      newState.sqs = {
+        ...prev.sqs,
+        queues: prev.sqs.queues.map(q =>
+          q.name === action.payload ? { ...q, messagesAvailable: 0, messagesInFlight: 0 } : q
+        )
+      };
+      break;
+    case 'REGISTER_TARGET':
+      newState.targetGroups = prev.targetGroups.map(tg =>
+        tg.name === action.payload.groupName
+          ? { ...tg, targets: [...tg.targets, action.payload.target] }
+          : tg
+      );
+      break;
+    case 'RELEASE_EIP':
+      newState.elasticIps = prev.elasticIps.filter(e => e.allocationId !== action.payload);
+      break;
+    case 'SEND_MESSAGE':
+      newState.sqs = {
+        ...prev.sqs,
+        queues: prev.sqs.queues.map(q =>
+          q.name === action.payload.queueName ? { ...q, messagesAvailable: q.messagesAvailable + 1 } : q
+        )
+      };
+      break;
+    case 'UPDATE_ASG':
+      newState.autoScalingGroups = prev.autoScalingGroups.map(a =>
+        a.name === action.payload.name
+          ? { ...a, minSize: action.payload.minSize, maxSize: action.payload.maxSize, desiredCapacity: action.payload.desiredCapacity }
+          : a
+      );
+      break;
+    case 'UPDATE_IAM_ACCOUNT_SETTINGS':
+      newState.iam = {
+        ...prev.iam,
+        accountSettings: {
+          ...prev.iam.accountSettings,
+          ...action.payload,
+          passwordPolicy: {
+            ...prev.iam.accountSettings.passwordPolicy,
+            ...action.payload.passwordPolicy
+          }
+        }
+      };
+      break;
+    case 'UPDATE_IGW':
+      newState.vpc = {
+        ...prev.vpc,
+        internetGateways: prev.vpc.internetGateways.map(ig =>
+          ig.id === action.payload.id ? { ...ig, state: action.payload.state, vpcId: action.payload.vpcId } : ig
+        )
+      };
+      break;
+    case 'UPDATE_INSTANCE_TAGS':
+      newState.ec2 = prev.ec2.map(i =>
+        i.id === action.payload.id ? { ...i, tags: action.payload.tags } : i
+      );
+      break;
+    case 'UPDATE_RDS_SNAPSHOT_STATUS':
+      newState.rdsSnapshots = (prev.rdsSnapshots || []).map(s =>
+        s.id === action.payload.id ? { ...s, status: action.payload.status } : s
+      );
+      break;
+    case 'UPDATE_TAX_SETTINGS':
+      newState.billing = {
+        ...prev.billing,
+        taxSettings: {
+          ...prev.billing.taxSettings,
+          ...action.payload,
+          address: {
+            ...prev.billing.taxSettings.address,
+            ...action.payload.address
+          }
+        }
+      };
+      break;
     default:
       return prev;
   }

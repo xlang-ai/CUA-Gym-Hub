@@ -38,7 +38,7 @@ export default function CloudFrontDistributions() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create distribution</h1>
+        <h1 className="text-2xl font-bold">Create distribution</h1>
         <div className="aws-card space-y-4">
           <div>
             <label className="block text-sm font-bold mb-1">Origin domain name *</label>
@@ -71,7 +71,7 @@ export default function CloudFrontDistributions() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedDist(null)}>Distributions</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{selectedDist.id}</h1>
+          <h1 className="text-2xl font-bold">{selectedDist.id}</h1>
         </div>
         <div className="flex gap-2">
           <button className="aws-btn aws-btn-danger text-xs" onClick={() => { dispatch({ type: 'DELETE_DISTRIBUTION', payload: selectedDist.id }); addFlash('success', 'Distribution deleted'); setSelectedDist(null); }}>Delete</button>
@@ -85,8 +85,8 @@ export default function CloudFrontDistributions() {
           <div className="aws-card grid grid-cols-2 gap-4 text-sm">
             <div><span className="font-bold block">Distribution ID</span>{selectedDist.id}</div>
             <div><span className="font-bold block">Domain name</span><span className="font-mono text-xs">{selectedDist.domainName}</span></div>
-            <div><span className="font-bold block">Status</span><span className="aws-badge bg-green-100 text-green-800">{selectedDist.status}</span></div>
-            <div><span className="font-bold block">State</span><span className={`aws-badge ${selectedDist.state === 'Enabled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{selectedDist.state}</span></div>
+            <div><span className="font-bold block">Status</span><span className="aws-badge bg-aws-status-success-bg text-aws-success">{selectedDist.status}</span></div>
+            <div><span className="font-bold block">State</span><span className={`aws-badge ${selectedDist.state === 'Enabled' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-disabled-bg text-aws-text'}`}>{selectedDist.state}</span></div>
             <div><span className="font-bold block">Price class</span>{selectedDist.priceClass}</div>
             <div><span className="font-bold block">Last modified</span>{format(new Date(selectedDist.lastModified), 'MMM d, yyyy h:mm a')}</div>
             <div><span className="font-bold block">Alternate domain names</span>{selectedDist.alternateNames?.length > 0 ? selectedDist.alternateNames.join(', ') : '-'}</div>
@@ -123,13 +123,13 @@ export default function CloudFrontDistributions() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Distributions ({distributions.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create distribution</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter distributions" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -140,8 +140,8 @@ export default function CloudFrontDistributions() {
             <tr key={d.id}>
               <td><button className="text-aws-blue font-medium hover:underline" onClick={() => setSelectedDist(d)}>{d.id}</button></td>
               <td className="font-mono text-xs">{d.domainName}</td>
-              <td><span className="aws-badge bg-green-100 text-green-800">{d.status}</span></td>
-              <td><span className={`aws-badge ${d.state === 'Enabled' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{d.state}</span></td>
+              <td><span className="aws-badge bg-aws-status-success-bg text-aws-success">{d.status}</span></td>
+              <td><span className={`aws-badge ${d.state === 'Enabled' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-disabled-bg text-aws-text'}`}>{d.state}</span></td>
               <td>{d.origins?.length || 0}</td>
               <td className="text-xs">{d.priceClass}</td>
               <td className="text-xs">{d.alternateNames?.join(', ') || '-'}</td>

@@ -63,13 +63,13 @@ export default function EC2ElasticIPs() {
           <h2 className="font-bold text-lg flex items-center gap-2"><Globe size={18} /> Elastic IP addresses ({eips.length})</h2>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
               <input className="aws-input pl-7 text-sm w-56" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <button className="aws-btn aws-btn-secondary text-xs" disabled={selected.length !== 1} onClick={() => { setAssocForm({ allocationId: selected[0], instanceId: '' }); setShowAssociate(true); }}>Associate</button>
             <button className="aws-btn aws-btn-secondary text-xs" disabled={!selected.length} onClick={handleDisassociate}>Disassociate</button>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleRelease}>Release</button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleRelease}>Release</button>
             <button className="aws-btn aws-btn-primary text-xs" onClick={handleAllocate}>Allocate Elastic IP address</button>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function EC2ElasticIPs() {
           </tr></thead>
           <tbody>
             {eips.map(e => (
-              <tr key={e.allocationId} className={selected.includes(e.allocationId) ? 'bg-blue-50' : ''}>
+              <tr key={e.allocationId} className={selected.includes(e.allocationId) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(e.allocationId)} onChange={() => toggleSelect(e.allocationId)} /></td>
                 <td className="text-aws-blue font-medium">{getName(e)}</td>
                 <td className="font-mono text-sm">{e.allocationId}</td>
@@ -98,7 +98,7 @@ export default function EC2ElasticIPs() {
       {showAssociate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Associate Elastic IP address</h3>
               <button onClick={() => setShowAssociate(false)}><X size={18} /></button>
             </div>

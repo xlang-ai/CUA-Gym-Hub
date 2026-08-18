@@ -54,7 +54,7 @@ export default function SQSQueues() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create queue</h1>
+        <h1 className="text-2xl font-bold">Create queue</h1>
         <div className="aws-card space-y-4">
           <div>
             <label className="block text-sm font-bold mb-1">Name *</label>
@@ -95,7 +95,7 @@ export default function SQSQueues() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedQueue(null)}>Queues</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{liveQueue.name}</h1>
+          <h1 className="text-2xl font-bold">{liveQueue.name}</h1>
         </div>
         <div className="flex gap-2">
           <button className="aws-btn aws-btn-primary text-xs" onClick={() => setShowSendMsg(true)}>Send message</button>
@@ -110,7 +110,7 @@ export default function SQSQueues() {
         {detailTab === 'Configuration' && (
           <div className="aws-card grid grid-cols-2 gap-4 text-sm">
             <div><span className="font-bold block">URL</span><span className="font-mono text-xs break-all">{liveQueue.url}</span></div>
-            <div><span className="font-bold block">Type</span><span className={`aws-badge ${liveQueue.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>{liveQueue.type}</span></div>
+            <div><span className="font-bold block">Type</span><span className={`aws-badge ${liveQueue.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-aws-blue-lighter text-aws-blue'}`}>{liveQueue.type}</span></div>
             <div><span className="font-bold block">Messages available</span>{liveQueue.messagesAvailable}</div>
             <div><span className="font-bold block">Messages in flight</span>{liveQueue.messagesInFlight}</div>
             <div><span className="font-bold block">Visibility timeout</span>{liveQueue.visibilityTimeout}s</div>
@@ -126,7 +126,7 @@ export default function SQSQueues() {
               {['NumberOfMessagesSent', 'NumberOfMessagesReceived', 'NumberOfMessagesDeleted', 'ApproximateNumberOfMessagesVisible', 'ApproximateAgeOfOldestMessage', 'SentMessageSize'].map(metric => (
                 <div key={metric} className="border border-aws-border p-3" style={{ borderRadius: 8 }}>
                   <div className="text-xs font-medium text-aws-text-secondary mb-2">{metric}</div>
-                  <div className="h-20 bg-gray-50 flex items-center justify-center" style={{ borderRadius: 4 }}>
+                  <div className="h-20 bg-aws-status-info-bg/30 flex items-center justify-center" style={{ borderRadius: 4 }}>
                     <svg width="100%" height="50" viewBox="0 0 200 50">
                       <polyline fill="none" stroke="#0972D3" strokeWidth="1.5"
                         points={Array.from({ length: 20 }, (_, i) => `${i * 10},${25 + Math.sin(i * 0.7 + metric.length) * 10}`).join(' ')} />
@@ -140,7 +140,7 @@ export default function SQSQueues() {
         {showSendMsg && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-              <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+              <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
                 <h3 className="font-bold">Send message</h3>
                 <button onClick={() => setShowSendMsg(false)}><X size={18} /></button>
               </div>
@@ -166,13 +166,13 @@ export default function SQSQueues() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Queues ({queues.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create queue</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter queues" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -182,7 +182,7 @@ export default function SQSQueues() {
           {queues.map(q => (
             <tr key={q.name}>
               <td><button className="text-aws-blue font-medium hover:underline" onClick={() => setSelectedQueue(q)}>{q.name}</button></td>
-              <td><span className={`aws-badge ${q.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>{q.type}</span></td>
+              <td><span className={`aws-badge ${q.type === 'FIFO' ? 'bg-purple-100 text-purple-800' : 'bg-aws-blue-lighter text-aws-blue'}`}>{q.type}</span></td>
               <td>{q.messagesAvailable}</td>
               <td>{q.messagesInFlight}</td>
               <td>{format(new Date(q.created), 'MMM d, yyyy')}</td>

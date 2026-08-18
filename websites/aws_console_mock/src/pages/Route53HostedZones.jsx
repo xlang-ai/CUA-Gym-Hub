@@ -4,9 +4,9 @@ import { RefreshCw, Search, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 const RECORD_COLORS = {
-  A: 'bg-blue-100 text-blue-800', AAAA: 'bg-indigo-100 text-indigo-800', CNAME: 'bg-green-100 text-green-800',
-  MX: 'bg-orange-100 text-orange-800', TXT: 'bg-yellow-100 text-yellow-800', NS: 'bg-purple-100 text-purple-800',
-  SOA: 'bg-gray-100 text-gray-800', SRV: 'bg-red-100 text-red-800',
+  A: 'bg-aws-blue-lighter text-aws-blue', AAAA: 'bg-indigo-100 text-indigo-800', CNAME: 'bg-aws-status-success-bg text-aws-success',
+  MX: 'bg-aws-status-warning-bg text-aws-warning', TXT: 'bg-aws-status-warning-bg text-aws-warning', NS: 'bg-purple-100 text-purple-800',
+  SOA: 'bg-aws-disabled-bg text-aws-text', SRV: 'bg-aws-status-error-bg text-aws-error',
 };
 
 export default function Route53HostedZones() {
@@ -61,7 +61,7 @@ export default function Route53HostedZones() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create hosted zone</h1>
+        <h1 className="text-2xl font-bold">Create hosted zone</h1>
         <div className="aws-card space-y-4">
           <div>
             <label className="block text-sm font-bold mb-1">Domain name *</label>
@@ -95,8 +95,8 @@ export default function Route53HostedZones() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedZone(null)}>Hosted zones</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{selectedZone.name}</h1>
-          <span className={`aws-badge ${selectedZone.type === 'Private' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}`}>{selectedZone.type}</span>
+          <h1 className="text-2xl font-bold">{selectedZone.name}</h1>
+          <span className={`aws-badge ${selectedZone.type === 'Private' ? 'bg-aws-status-warning-bg text-aws-warning' : 'bg-aws-blue-lighter text-aws-blue'}`}>{selectedZone.type}</span>
         </div>
         <div className="aws-card p-0">
           <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
@@ -112,7 +112,7 @@ export default function Route53HostedZones() {
               {records.length === 0 ? <tr><td colSpan={5} className="text-center text-aws-text-secondary">No records</td></tr> : records.map(r => (
                 <tr key={r.id}>
                   <td className="font-mono text-xs">{r.name}</td>
-                  <td><span className={`aws-badge ${RECORD_COLORS[r.type] || 'bg-gray-100 text-gray-800'}`}>{r.type}</span></td>
+                  <td><span className={`aws-badge ${RECORD_COLORS[r.type] || 'bg-aws-disabled-bg text-aws-text'}`}>{r.type}</span></td>
                   <td>{r.ttl}</td>
                   <td className="font-mono text-xs max-w-xs truncate">{r.value}</td>
                   <td><button className="text-aws-error text-xs hover:underline" onClick={() => { dispatch({ type: 'DELETE_RECORD', payload: r.id }); addFlash('success', 'Record deleted'); }}>Delete</button></td>
@@ -124,7 +124,7 @@ export default function Route53HostedZones() {
         {showCreateRecord && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-              <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+              <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
                 <h3 className="font-bold">Create record</h3>
                 <button onClick={() => setShowCreateRecord(false)}><X size={18} /></button>
               </div>
@@ -164,7 +164,7 @@ export default function Route53HostedZones() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Hosted zones ({zones.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create hosted zone</button>
         </div>
       </div>
@@ -174,7 +174,7 @@ export default function Route53HostedZones() {
           {zones.map(z => (
             <tr key={z.id}>
               <td><button className="text-aws-blue font-medium hover:underline" onClick={() => setSelectedZone(z)}>{z.name}</button></td>
-              <td><span className={`aws-badge ${z.type === 'Private' ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'}`}>{z.type}</span></td>
+              <td><span className={`aws-badge ${z.type === 'Private' ? 'bg-aws-status-warning-bg text-aws-warning' : 'bg-aws-blue-lighter text-aws-blue'}`}>{z.type}</span></td>
               <td>{z.recordCount}</td>
               <td className="text-xs text-aws-text-secondary">{z.comment || '-'}</td>
               <td>{format(new Date(z.created), 'MMM d, yyyy')}</td>

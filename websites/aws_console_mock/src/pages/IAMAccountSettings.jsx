@@ -36,7 +36,7 @@ export default function IAMAccountSettings() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">Account Settings</h1>
+      <h1 className="text-2xl font-bold">Account Settings</h1>
 
       {/* Password Policy */}
       <div className="aws-card space-y-4 max-w-2xl">
@@ -94,10 +94,10 @@ export default function IAMAccountSettings() {
         <p className="text-sm text-aws-text-secondary mb-3">Active regions for STS endpoint usage.</p>
         <div className="space-y-2">
           {(sts.regions || []).map(region => (
-            <div key={region} className="flex items-center gap-2 text-sm py-1 border-b border-gray-100 last:border-0">
+            <div key={region} className="flex items-center gap-2 text-sm py-1 border-b border-aws-border-secondary last:border-0">
               <CheckCircle size={14} className="text-aws-success" />
               <span className="font-mono">{region}</span>
-              <span className="aws-badge bg-green-100 text-green-800 ml-auto">Active</span>
+              <span className="aws-badge bg-aws-status-success-bg text-aws-success ml-auto">Active</span>
             </div>
           ))}
           {(sts.regions || []).length === 0 && (

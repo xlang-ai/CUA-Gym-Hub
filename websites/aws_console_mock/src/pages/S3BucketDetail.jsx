@@ -69,13 +69,37 @@ export default function S3BucketDetail() {
     setDeleteConfirm('');
   };
 
+  const handleDownload = () => {
+    // Real browser download via Blob + object URL, per the "file interactions are
+    // first-class" contract. Object bodies are not stored, so we serve a manifest
+    // describing the object, which is still a genuine file the agent receives.
+    selectedObjects.forEach(key => {
+      const obj = (bucket?.objects || []).find(o => o.key === key);
+      const body = JSON.stringify({
+        bucket: bucketName, key, size: obj?.size ?? 0,
+        storageClass: obj?.storageClass ?? 'Standard',
+        lastModified: obj?.lastModified ?? null,
+      }, null, 2);
+      const url = URL.createObjectURL(new Blob([body], { type: 'application/json' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = key.split('/').pop() || 'object';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+    addFlash('success', `Downloaded ${selectedObjects.length} object(s)`);
+  };
+
   const handleFileSelection = (event) => {
     setUploadFiles(Array.from(event.target.files || []));
   };
 
   const handleUpload = () => {
+    if (!uploadFiles.length) return;
     setUploading(true);
-    const filesToUpload = uploadFiles.length ? uploadFiles : [{ name: 'sample-upload.csv', size: 21 }];
+    const filesToUpload = uploadFiles;
     setTimeout(() => {
       filesToUpload.forEach(file => {
         const extension = file.name.includes('.') ? file.name.split('.').pop() : 'file';
@@ -128,9 +152,12 @@ export default function S3BucketDetail() {
               <span className="text-aws-text-secondary">/</span>
             </div>
             {/* Actions */}
-            <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-2 bg-gray-50">
+            <div className="px-4 py-2 border-b border-aws-border-secondary flex items-center gap-2 bg-aws-status-info-bg/30">
               <button className="aws-btn aws-btn-primary text-xs" onClick={() => setShowUpload(true)}>Upload</button>
               <button className="aws-btn aws-btn-secondary text-xs" onClick={() => setShowCreateFolder(true)}>Create folder</button>
+              {selectedObjects.length > 0 && (
+                <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDownload}>Download</button>
+              )}
               {selectedObjects.length > 0 && (
                 <button className="aws-btn aws-btn-danger text-xs" onClick={() => setShowDelete(true)}>Delete</button>
               )}
@@ -156,7 +183,7 @@ export default function S3BucketDetail() {
                       if (e.target.checked) setSelectedObjects([...selectedObjects, obj.key]);
                       else setSelectedObjects(selectedObjects.filter(k => k !== obj.key));
                     }} /></td>
-                    <td className="flex items-center gap-2 text-aws-blue"><File size={16} className="text-gray-400" />{obj.key.split('/').pop()}</td>
+                    <td className="flex items-center gap-2 text-aws-blue"><File size={16} className="text-aws-text-disabled" />{obj.key.split('/').pop()}</td>
                     <td>{obj.type || '-'}</td>
                     <td>{obj.lastModified ? format(new Date(obj.lastModified), 'MMM d, yyyy h:mm a') : '-'}</td>
                     <td>{formatSize(obj.size)}</td>
@@ -175,7 +202,7 @@ export default function S3BucketDetail() {
           <div className="p-4 space-y-6">
             {/* Bucket versioning */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Bucket Versioning</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Bucket Versioning</div>
               <div className="p-4 space-y-3">
                 <p className="text-sm text-aws-text-secondary">Versioning is a means of keeping multiple variants of an object in the same bucket.</p>
                 <div className="flex items-center gap-4">
@@ -187,7 +214,7 @@ export default function S3BucketDetail() {
                     <input type="radio" name="versioning" checked={bucket.versioning !== 'Enabled'} onChange={() => dispatch({ type: 'UPDATE_BUCKET_VERSIONING', payload: { bucketName, versioning: 'Disabled' } })} />
                     Suspend
                   </label>
-                  <span className={`aws-badge text-xs ${bucket.versioning === 'Enabled' ? 'bg-green-50 text-green-800' : 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`aws-badge text-xs ${bucket.versioning === 'Enabled' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-disabled-bg text-aws-text-secondary'}`}>
                     Currently: {bucket.versioning || 'Disabled'}
                   </span>
                 </div>
@@ -195,7 +222,7 @@ export default function S3BucketDetail() {
             </div>
             {/* Default encryption */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Default encryption</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Default encryption</div>
               <div className="p-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div><span className="text-aws-text-secondary">Encryption type:</span> <span className="ml-2 font-medium">{bucket.encryption || 'SSE-S3'}</span></div>
@@ -205,25 +232,25 @@ export default function S3BucketDetail() {
             </div>
             {/* Server access logging */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Server access logging</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Server access logging</div>
               <div className="p-4">
-                <span className="aws-badge bg-gray-100 text-gray-700 text-xs">Disabled</span>
+                <span className="aws-badge bg-aws-disabled-bg text-aws-text-secondary text-xs">Disabled</span>
                 <p className="text-sm text-aws-text-secondary mt-2">Server access logging provides detailed records for the requests that are made to a bucket.</p>
               </div>
             </div>
             {/* Static website hosting */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Static website hosting</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Static website hosting</div>
               <div className="p-4">
-                <span className="aws-badge bg-gray-100 text-gray-700 text-xs">Disabled</span>
-                <p className="text-sm text-aws-text-secondary mt-2">You can use Amazon S3 to host a static website.</p>
+                <span className="aws-badge bg-aws-disabled-bg text-aws-text-secondary text-xs">Disabled</span>
+                <p className="text-sm text-aws-text-secondary mt-2">You can use XWS S3 to host a static website.</p>
               </div>
             </div>
             {/* Requester pays */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Requester pays</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Requester pays</div>
               <div className="p-4">
-                <span className="aws-badge bg-gray-100 text-gray-700 text-xs">Disabled</span>
+                <span className="aws-badge bg-aws-disabled-bg text-aws-text-secondary text-xs">Disabled</span>
                 <p className="text-sm text-aws-text-secondary mt-2">When enabled, the requester pays for requests and data transfer costs.</p>
               </div>
             </div>
@@ -234,9 +261,9 @@ export default function S3BucketDetail() {
           <div className="p-4 space-y-6">
             {/* Block public access */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Block public access (bucket settings)</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Block public access (bucket settings)</div>
               <div className="p-4 space-y-2">
-                <div className="p-3 bg-green-50 border border-green-100 text-sm flex items-center gap-2">
+                <div className="p-3 bg-aws-status-success-bg border border-green-100 text-sm flex items-center gap-2">
                   <span className="text-aws-success font-bold">On</span>
                   <span>Block <em>all</em> public access</span>
                 </div>
@@ -256,7 +283,7 @@ export default function S3BucketDetail() {
             </div>
             {/* Bucket policy */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Bucket policy</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Bucket policy</div>
               <div className="p-4">
                 <pre className="p-3 text-sm font-mono overflow-auto" style={{ background: '#1E1E1E', color: '#D4D4D4', borderRadius: 2, maxHeight: 200 }}>
 {JSON.stringify({
@@ -280,13 +307,13 @@ export default function S3BucketDetail() {
             </div>
             {/* ACL */}
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Access control list (ACL)</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Access control list (ACL)</div>
               <div className="p-4">
                 <table className="aws-table">
                   <thead><tr><th>Grantee</th><th>Objects</th><th>Bucket ACL</th></tr></thead>
                   <tbody>
                     <tr>
-                      <td className="text-sm font-medium">Bucket owner (your AWS account)</td>
+                      <td className="text-sm font-medium">Bucket owner (your XWS account)</td>
                       <td className="text-sm">List, Write</td>
                       <td className="text-sm">Read, Write</td>
                     </tr>
@@ -332,19 +359,19 @@ export default function S3BucketDetail() {
         {tab === 'Management' && (
           <div className="p-4 space-y-4">
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Lifecycle rules</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Lifecycle rules</div>
               <div className="p-4">
                 <table className="aws-table">
                   <thead><tr><th>Name</th><th>Status</th><th>Scope</th><th>Transition</th></tr></thead>
                   <tbody>
-                    <tr><td>archive-old-logs</td><td><span className="aws-badge bg-green-50 text-green-800">Enabled</span></td><td>logs/</td><td>Glacier after 90 days</td></tr>
-                    <tr><td>expire-temp</td><td><span className="aws-badge bg-gray-100 text-gray-700">Disabled</span></td><td>tmp/</td><td>Delete after 7 days</td></tr>
+                    <tr><td>archive-old-logs</td><td><span className="aws-badge bg-aws-status-success-bg text-aws-success">Enabled</span></td><td>logs/</td><td>Glacier after 90 days</td></tr>
+                    <tr><td>expire-temp</td><td><span className="aws-badge bg-aws-disabled-bg text-aws-text-secondary">Disabled</span></td><td>tmp/</td><td>Delete after 7 days</td></tr>
                   </tbody>
                 </table>
               </div>
             </div>
             <div className="border border-aws-border">
-              <div className="px-4 py-3 bg-gray-50 border-b border-aws-border font-bold text-sm">Replication rules</div>
+              <div className="px-4 py-3 bg-aws-status-info-bg/30 border-b border-aws-border font-bold text-sm">Replication rules</div>
               <div className="p-4 text-sm text-aws-text-secondary">No active replication rules for this local sandbox bucket.</div>
             </div>
           </div>
@@ -355,7 +382,7 @@ export default function S3BucketDetail() {
       {showUpload && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Upload</h3>
               <button onClick={() => setShowUpload(false)}><X size={18} /></button>
             </div>
@@ -376,14 +403,14 @@ export default function S3BucketDetail() {
                 </div>
               )}
               {uploading && (
-                <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                <div className="w-full bg-aws-disabled-bg h-2 rounded-full overflow-hidden">
                   <div className="bg-aws-orange h-full rounded-full animate-pulse" style={{ width: '75%' }}></div>
                 </div>
               )}
               <p className="text-sm">Choose local files to upload into this sandbox bucket. If no file is selected, a sample CSV is added for deterministic testing.</p>
               <div className="flex justify-end gap-2">
                 <button className="aws-btn aws-btn-secondary" onClick={() => setShowUpload(false)} disabled={uploading}>Cancel</button>
-                <button className="aws-btn aws-btn-primary" onClick={handleUpload} disabled={uploading}>{uploading ? 'Uploading...' : 'Upload'}</button>
+                <button className="aws-btn aws-btn-primary" onClick={handleUpload} disabled={uploading || uploadFiles.length === 0}>{uploading ? 'Uploading...' : 'Upload'}</button>
               </div>
             </div>
           </div>
@@ -394,7 +421,7 @@ export default function S3BucketDetail() {
       {showCreateFolder && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Create folder</h3>
               <button onClick={() => setShowCreateFolder(false)}><X size={18} /></button>
             </div>
@@ -416,7 +443,7 @@ export default function S3BucketDetail() {
       {showDelete && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold text-aws-error">Delete objects</h3>
               <button onClick={() => { setShowDelete(false); setDeleteConfirm(''); }}><X size={18} /></button>
             </div>

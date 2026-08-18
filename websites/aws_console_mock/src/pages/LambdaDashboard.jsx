@@ -16,12 +16,12 @@ export default function LambdaDashboard() {
   });
 
   const runtimeBadgeColor = (rt) => {
-    if (rt.startsWith('nodejs')) return 'bg-green-100 text-green-800';
-    if (rt.startsWith('python')) return 'bg-blue-100 text-blue-800';
-    if (rt.startsWith('java')) return 'bg-red-100 text-red-800';
+    if (rt.startsWith('nodejs')) return 'bg-aws-status-success-bg text-aws-success';
+    if (rt.startsWith('python')) return 'bg-aws-blue-lighter text-aws-blue';
+    if (rt.startsWith('java')) return 'bg-aws-status-error-bg text-aws-error';
     if (rt.startsWith('go')) return 'bg-cyan-100 text-cyan-800';
     if (rt.startsWith('dotnet')) return 'bg-purple-100 text-purple-800';
-    return 'bg-gray-100 text-gray-800';
+    return 'bg-aws-disabled-bg text-aws-text';
   };
 
   const recentFunctions = [...functions]
@@ -30,7 +30,7 @@ export default function LambdaDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold">Lambda Dashboard</h1>
+      <h1 className="text-2xl font-bold">Lambda Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="aws-card" style={{ borderLeft: '4px solid #FF9900' }}>

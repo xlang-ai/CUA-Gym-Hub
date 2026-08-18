@@ -42,11 +42,11 @@ export default function IAMUsers() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create user</h1>
+        <h1 className="text-2xl font-bold">Create user</h1>
         <div className="flex gap-2 mb-4">
           {[1, 2, 3].map(s => (
             <div key={s} className={`flex items-center gap-2 ${step >= s ? 'text-aws-blue' : 'text-aws-text-disabled'}`}>
-              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= s ? 'bg-aws-orange text-white' : 'bg-gray-200'}`}>{s}</span>
+              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= s ? 'bg-aws-orange text-white' : 'bg-aws-disabled-bg'}`}>{s}</span>
               <span className="text-sm font-medium">{s === 1 ? 'User details' : s === 2 ? 'Permissions' : 'Review'}</span>
               {s < 3 && <span className="mx-2 text-gray-300">—</span>}
             </div>
@@ -69,7 +69,7 @@ export default function IAMUsers() {
             <h3 className="font-bold text-sm">Add user to group</h3>
             <div className="space-y-2">
               {state.iam.groups.map(g => (
-                <label key={g.name} className="flex items-center gap-2 p-2 border border-aws-border hover:bg-gray-50">
+                <label key={g.name} className="flex items-center gap-2 p-2 border border-aws-border hover:bg-aws-status-info-bg/30">
                   <input type="checkbox" checked={selectedGroups.includes(g.name)} onChange={e => {
                     if (e.target.checked) setSelectedGroups([...selectedGroups, g.name]);
                     else setSelectedGroups(selectedGroups.filter(n => n !== g.name));
@@ -110,7 +110,7 @@ export default function IAMUsers() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedUser(null)}>Users</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{user.name}</h1>
+          <h1 className="text-2xl font-bold">{user.name}</h1>
         </div>
         <div className="flex gap-4 border-b border-aws-border">
           {['Permissions', 'Groups', 'Security credentials', 'Tags'].map(t => (
@@ -150,7 +150,7 @@ export default function IAMUsers() {
                         <tr key={k.accessKeyId}>
                           <td className="font-mono text-xs">{k.accessKeyId}</td>
                           <td>
-                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${k.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                            <span className={`px-2 py-0.5 rounded text-xs font-medium ${k.status === 'Active' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-error-bg text-aws-error'}`}>
                               {k.status}
                             </span>
                           </td>
@@ -164,7 +164,7 @@ export default function IAMUsers() {
                             ) : (
                               <span className="text-xs text-aws-text-disabled">Inactive</span>
                             )}
-                            <button className="aws-btn aws-btn-secondary text-xs text-red-600" onClick={() => {
+                            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" onClick={() => {
                               dispatch({ type: 'DELETE_ACCESS_KEY', payload: { userName: user.name, accessKeyId: k.accessKeyId } });
                               addFlash('success', `Access key ${k.accessKeyId} has been deleted.`);
                             }}>Delete</button>
@@ -208,14 +208,14 @@ export default function IAMUsers() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Users ({state.iam.users.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
-          <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selectedUsers.length} onClick={handleDeleteUsers}>Delete</button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selectedUsers.length} onClick={handleDeleteUsers}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create user</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter users" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -226,7 +226,7 @@ export default function IAMUsers() {
         </tr></thead>
         <tbody>
           {filteredUsers.map(u => (
-            <tr key={u.name} className={selectedUsers.includes(u.name) ? 'bg-blue-50/50' : ''}>
+            <tr key={u.name} className={selectedUsers.includes(u.name) ? 'bg-aws-status-info-bg/50' : ''}>
               <td><input type="checkbox" checked={selectedUsers.includes(u.name)} onChange={e => setSelectedUsers(e.target.checked ? [...selectedUsers, u.name] : selectedUsers.filter(n => n !== u.name))} /></td>
               <td><button className="text-aws-blue font-medium hover:underline" onClick={() => setSelectedUser(u.name)}>{u.name}</button></td>
               <td className="text-aws-text-secondary text-xs">{u.groups.join(', ')}</td>
@@ -238,7 +238,7 @@ export default function IAMUsers() {
           {filteredUsers.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-aws-text-secondary">No users found</td></tr>}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
         Showing 1-{filteredUsers.length} of {filteredUsers.length} items
       </div>
     </div>

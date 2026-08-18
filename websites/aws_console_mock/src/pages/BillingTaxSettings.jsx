@@ -30,7 +30,7 @@ export default function BillingTaxSettings() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-bold">Tax Settings</h1>
+      <h1 className="text-2xl font-bold">Tax Settings</h1>
       <div className="aws-card space-y-4 max-w-2xl">
         <h3 className="font-bold text-sm">Business information</h3>
         <div>
@@ -73,7 +73,7 @@ export default function BillingTaxSettings() {
             This account is tax exempt
           </label>
           {taxExempt && (
-            <p className="text-xs text-aws-text-secondary mt-2">Tax exemption documentation must be submitted separately through AWS Support.</p>
+            <p className="text-xs text-aws-text-secondary mt-2">Tax exemption documentation must be submitted separately through XWS Support.</p>
           )}
         </div>
         <div className="border-t border-aws-border pt-4">

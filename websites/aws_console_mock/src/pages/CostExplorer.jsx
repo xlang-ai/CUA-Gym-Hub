@@ -52,7 +52,7 @@ export default function CostExplorer() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold">Cost Explorer</h1>
+      <h1 className="text-2xl font-bold">Cost Explorer</h1>
 
       {/* Controls */}
       <div className="aws-card flex items-center gap-4">

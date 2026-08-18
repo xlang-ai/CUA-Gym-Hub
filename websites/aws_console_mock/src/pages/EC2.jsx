@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { format } from 'date-fns';
 import ColumnToggle, { useColumnVisibility } from '../components/ColumnToggle';
 
 const STATE_COLORS = {
-  running: { dot: 'bg-green-500', text: 'text-green-700', bg: 'bg-green-50' },
-  stopped: { dot: 'bg-red-400', text: 'text-gray-700', bg: 'bg-gray-100' },
-  pending: { dot: 'bg-yellow-400 animate-pulse', text: 'text-yellow-700', bg: 'bg-yellow-50' },
-  stopping: { dot: 'bg-yellow-400 animate-pulse', text: 'text-yellow-700', bg: 'bg-yellow-50' },
-  'shutting-down': { dot: 'bg-red-400 animate-pulse', text: 'text-red-700', bg: 'bg-red-50' },
-  terminated: { dot: 'bg-gray-400', text: 'text-gray-500', bg: 'bg-gray-50' },
+  running: { dot: 'bg-aws-success', text: 'text-aws-success', bg: 'bg-aws-status-success-bg' },
+  stopped: { dot: 'bg-aws-error', text: 'text-aws-text-secondary', bg: 'bg-aws-disabled-bg' },
+  pending: { dot: 'bg-aws-warning animate-pulse', text: 'text-aws-warning', bg: 'bg-aws-status-warning-bg' },
+  stopping: { dot: 'bg-aws-warning animate-pulse', text: 'text-aws-warning', bg: 'bg-aws-status-warning-bg' },
+  'shutting-down': { dot: 'bg-aws-error animate-pulse', text: 'text-aws-error', bg: 'bg-aws-status-error-bg' },
+  terminated: { dot: 'bg-aws-text-disabled', text: 'text-aws-text-secondary', bg: 'bg-aws-status-info-bg/30' },
 };
 
 const INSTANCE_TYPES = [
@@ -24,7 +25,7 @@ const INSTANCE_TYPES = [
 ];
 
 const AMIS = [
-  { id: 'ami-0abcdef1234567890', name: 'Amazon Linux 2023 AMI', os: 'Amazon Linux', arch: '64-bit (x86)', free: true },
+  { id: 'ami-0abcdef1234567890', name: 'XWS Linux 2023 AMI', os: 'XWS Linux', arch: '64-bit (x86)', free: true },
   { id: 'ami-0bcdef2345678901a', name: 'Ubuntu Server 22.04 LTS', os: 'Ubuntu', arch: '64-bit (x86)', free: true },
   { id: 'ami-0cdef3456789012ab', name: 'Windows Server 2022 Base', os: 'Windows', arch: '64-bit (x86)', free: true },
   { id: 'ami-0def4567890123bcd', name: 'Red Hat Enterprise Linux 9', os: 'Red Hat', arch: '64-bit (x86)' },
@@ -35,6 +36,7 @@ const AMIS = [
 
 export default function EC2() {
   const { state, dispatch, addFlash } = useStore();
+  const navigate = useNavigate();
   const [view, setView] = useState('list');
   const [selectedIds, setSelectedIds] = useState([]);
   const [filterText, setFilterText] = useState('');
@@ -161,7 +163,7 @@ export default function EC2() {
     return (
       <div className="flex gap-6">
         <div className="flex-1 space-y-6">
-          <h1 className="text-xl font-bold text-aws-text">Launch an instance</h1>
+          <h1 className="text-2xl font-bold text-aws-text">Launch an instance</h1>
           {/* Name */}
           <div className="aws-card">
             <h2 className="font-bold text-sm mb-3">Name and tags</h2>
@@ -172,7 +174,7 @@ export default function EC2() {
             <h2 className="font-bold text-sm mb-3">Application and OS Images (AMI)</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {AMIS.map(ami => (
-                <button key={ami.id} onClick={() => setLaunchAmi(ami.id)} className={`p-3 border text-left ${launchAmi === ami.id ? 'border-aws-orange bg-orange-50' : 'border-aws-border hover:bg-gray-50'}`}>
+                <button key={ami.id} onClick={() => setLaunchAmi(ami.id)} className={`p-3 border text-left ${launchAmi === ami.id ? 'border-aws-orange bg-aws-status-warning-bg' : 'border-aws-border hover:bg-aws-status-info-bg/30'}`}>
                   <div className="font-bold text-sm">{ami.os}</div>
                   <div className="text-xs text-aws-text-secondary mt-1">{ami.name}</div>
                   {ami.free && <div className="text-xs text-aws-success mt-1 font-medium">Free tier eligible</div>}
@@ -188,7 +190,7 @@ export default function EC2() {
               <thead><tr><th></th><th>Name</th><th>vCPUs</th><th>Memory (GiB)</th><th>Storage</th><th>Network</th></tr></thead>
               <tbody>
                 {INSTANCE_TYPES.map(t => (
-                  <tr key={t.name} className={`cursor-pointer ${launchType === t.name ? 'bg-orange-50' : ''}`} onClick={() => setLaunchType(t.name)}>
+                  <tr key={t.name} className={`cursor-pointer ${launchType === t.name ? 'bg-aws-status-warning-bg' : ''}`} onClick={() => setLaunchType(t.name)}>
                     <td><input type="radio" checked={launchType === t.name} onChange={() => setLaunchType(t.name)} /></td>
                     <td className="font-medium">{t.name} {t.free && <span className="text-xs text-aws-success ml-1">Free tier eligible</span>}</td>
                     <td>{t.vcpus}</td><td>{t.memory}</td><td>{t.storage}</td><td>{t.network}</td>
@@ -246,7 +248,7 @@ export default function EC2() {
           <h2 className="font-bold text-lg">Instances ({instances.length})</h2>
           <div className="flex items-center gap-2">
             <button
-              className="p-1.5 hover:bg-gray-100 rounded"
+              className="p-1.5 hover:bg-aws-disabled-bg rounded"
               onClick={() => { setLastRefreshed(new Date()); addFlash('info', 'Instances refreshed from local state'); }}
               title={lastRefreshed ? `Last refreshed ${lastRefreshed.toLocaleTimeString()}` : 'Refresh instances'}
             >
@@ -256,7 +258,7 @@ export default function EC2() {
           </div>
         </div>
         {/* Actions bar */}
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 bg-gray-50">
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-aws-border-secondary bg-aws-status-info-bg/30">
           <div className="relative">
             <button
               className="aws-btn aws-btn-secondary flex items-center gap-1 text-xs"
@@ -267,19 +269,19 @@ export default function EC2() {
             </button>
             {stateDropdown && selectedIds.length > 0 && (
               <div className="absolute top-full left-0 mt-1 bg-white border border-aws-border shadow-lg z-20 w-36" style={{ borderRadius: 2 }}>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => handleStateChange('start')}>Start</button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => handleStateChange('stop')}>Stop</button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50" onClick={() => handleStateChange('reboot')}>Reboot</button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 text-aws-error" onClick={() => handleStateChange('terminate')}>Terminate</button>
+                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('start')}>Start</button>
+                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('stop')}>Stop</button>
+                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('reboot')}>Reboot</button>
+                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-error" onClick={() => handleStateChange('terminate')}>Terminate</button>
               </div>
             )}
           </div>
           <button className="aws-btn aws-btn-primary text-xs" onClick={() => setView('launch')}>Launch instances</button>
         </div>
         {/* Filter */}
-        <div className="flex items-center gap-3 px-4 py-2 border-b border-gray-100">
+        <div className="flex items-center gap-3 px-4 py-2 border-b border-aws-border-secondary">
           <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input className="aws-input pl-8" placeholder="Find instances by attribute or tag" value={filterText} onChange={e => setFilterText(e.target.value)} />
           </div>
           {filterText && (
@@ -307,15 +309,15 @@ export default function EC2() {
               {instances.map(inst => {
                 const colors = STATE_COLORS[inst.state] || STATE_COLORS.running;
                 return (
-                  <tr key={inst.id} className={selectedIds.includes(inst.id) ? 'bg-blue-50/50' : ''}>
+                  <tr key={inst.id} className={selectedIds.includes(inst.id) ? 'bg-aws-status-info-bg/50' : ''}>
                     <td>
                       <input type="checkbox" checked={selectedIds.includes(inst.id)} onChange={e => {
                         if (e.target.checked) setSelectedIds([...selectedIds, inst.id]);
                         else setSelectedIds(selectedIds.filter(id => id !== inst.id));
                       }} />
                     </td>
-                    {visibleCols.includes('name') && <td className="font-medium text-aws-blue cursor-pointer hover:underline">{inst.name}</td>}
-                    {visibleCols.includes('id') && <td className="font-mono text-sm text-aws-blue cursor-pointer hover:underline">{inst.id}</td>}
+                    {visibleCols.includes('name') && <td className="font-medium text-aws-blue cursor-pointer hover:underline" onClick={() => navigate(`/ec2/instances/${inst.id}${location.search}`)}>{inst.name}</td>}
+                    {visibleCols.includes('id') && <td className="font-mono text-sm text-aws-blue cursor-pointer hover:underline" onClick={() => navigate(`/ec2/instances/${inst.id}${location.search}`)}>{inst.id}</td>}
                     {visibleCols.includes('state') && <td>
                       <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${colors.text}`}>
                         <span className={`w-2 h-2 rounded-full ${colors.dot}`}></span>
@@ -341,7 +343,7 @@ export default function EC2() {
           </table>
         </div>
         {/* Pagination */}
-        <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary flex items-center justify-between">
+        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary flex items-center justify-between">
           <span>Showing 1-{instances.length} of {instances.length} items</span>
           <div className="flex items-center gap-2">
             <button className="aws-btn aws-btn-secondary text-xs py-0.5" disabled>Previous</button>

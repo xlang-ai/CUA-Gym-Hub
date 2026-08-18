@@ -73,7 +73,7 @@ export default function CloudTrailEventHistory() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Event history</h1>
+        <h1 className="text-2xl font-bold">Event history</h1>
         <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={() => addFlash('success', 'Refreshed')}>
           <RefreshCw size={12} /> Refresh
         </button>
@@ -103,8 +103,8 @@ export default function CloudTrailEventHistory() {
       </div>
 
       {/* Info banner */}
-      <div className="aws-card bg-blue-50 border-blue-200">
-        <p className="text-sm text-blue-800">
+      <div className="aws-card bg-aws-status-info-bg border-aws-blue-lighter">
+        <p className="text-sm text-aws-blue">
           Showing <strong>{events.length}</strong> event{events.length !== 1 ? 's' : ''}.
           CloudTrail records API activity for your account. Use the filters above to narrow results.
         </p>
@@ -121,7 +121,7 @@ export default function CloudTrailEventHistory() {
               <SortHeader col="userName">User name</SortHeader>
               <SortHeader col="eventSource">Event source</SortHeader>
               <SortHeader col="sourceIp">Source IP address</SortHeader>
-              <SortHeader col="region">AWS region</SortHeader>
+              <SortHeader col="region">XWS region</SortHeader>
             </tr>
           </thead>
           <tbody>
@@ -131,7 +131,7 @@ export default function CloudTrailEventHistory() {
               events.map(event => (
                 <React.Fragment key={event.eventId}>
                   <tr
-                    className="cursor-pointer hover:bg-gray-50"
+                    className="cursor-pointer hover:bg-aws-status-info-bg/30"
                     onClick={() => setExpandedEvent(expandedEvent === event.eventId ? null : event.eventId)}
                   >
                     <td>
@@ -149,7 +149,7 @@ export default function CloudTrailEventHistory() {
                   </tr>
                   {expandedEvent === event.eventId && (
                     <tr>
-                      <td colSpan={7} className="bg-gray-50 p-0">
+                      <td colSpan={7} className="bg-aws-status-info-bg/30 p-0">
                         <div className="p-4 space-y-3">
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
@@ -169,7 +169,7 @@ export default function CloudTrailEventHistory() {
                               <span className="ml-2 font-mono">{event.sourceIp}</span>
                             </div>
                             <div>
-                              <span className="text-aws-text-secondary">AWS region:</span>
+                              <span className="text-aws-text-secondary">XWS region:</span>
                               <span className="ml-2">{event.region}</span>
                             </div>
                             <div>

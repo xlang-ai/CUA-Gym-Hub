@@ -37,9 +37,9 @@ export default function DynamoDBTableDetail() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3">
-        <Link to="/dynamodb" className="p-1 hover:bg-gray-100 rounded"><ArrowLeft size={18} className="text-aws-text-secondary" /></Link>
-        <h1 className="text-xl font-bold text-aws-text">{table.name}</h1>
-        <span className={`aws-badge ${table.status === 'ACTIVE' ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>{table.status}</span>
+        <Link to="/dynamodb" className="p-1 hover:bg-aws-disabled-bg rounded"><ArrowLeft size={18} className="text-aws-text-secondary" /></Link>
+        <h1 className="text-2xl font-bold text-aws-text">{table.name}</h1>
+        <span className={`aws-badge ${table.status === 'ACTIVE' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{table.status}</span>
       </div>
 
       <div className="aws-card">
@@ -85,7 +85,7 @@ export default function DynamoDBTableDetail() {
             </div>
             <div className="flex items-center gap-2 mb-4">
               <div className="relative flex-1 max-w-xs">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
                 <input className="aws-input pl-8 text-sm" placeholder={`Filter by ${table.partitionKey}`} value={filterKey} onChange={e => setFilterKey(e.target.value)} />
               </div>
               {queryMode === 'query' && (
@@ -151,7 +151,7 @@ export default function DynamoDBTableDetail() {
                     <td className="font-medium">{idx.name}</td>
                     <td className="font-mono text-sm">{idx.partitionKey}</td>
                     <td className="font-mono text-sm">{idx.sortKey || '-'}</td>
-                    <td><span className="aws-badge bg-green-50 text-green-700">{idx.status}</span></td>
+                    <td><span className="aws-badge bg-aws-status-success-bg text-aws-success">{idx.status}</span></td>
                     <td>{idx.itemCount?.toLocaleString()}</td>
                   </tr>
                 ))}

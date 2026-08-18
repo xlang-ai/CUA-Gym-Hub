@@ -34,7 +34,7 @@ export default function IAMGroups() {
   if (showCreate) {
     return (
       <div className="max-w-2xl space-y-6">
-        <h1 className="text-xl font-bold">Create group</h1>
+        <h1 className="text-2xl font-bold">Create group</h1>
         <div className="aws-card space-y-4">
           <div>
             <label className="block text-sm font-bold mb-1">Group name *</label>
@@ -71,7 +71,7 @@ export default function IAMGroups() {
         <div className="flex items-center gap-2">
           <button className="text-aws-blue hover:underline text-sm" onClick={() => setSelectedGroup(null)}>User groups</button>
           <span className="text-aws-text-secondary">/</span>
-          <h1 className="text-xl font-bold">{group.name}</h1>
+          <h1 className="text-2xl font-bold">{group.name}</h1>
         </div>
         <div className="flex gap-4 border-b border-aws-border">
           {['Users', 'Permissions'].map(t => (
@@ -109,14 +109,14 @@ export default function IAMGroups() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">User groups ({state.iam.groups.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
-          <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selectedGroups.length} onClick={handleDeleteGroups}>Delete</button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selectedGroups.length} onClick={handleDeleteGroups}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create group</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter groups" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function IAMGroups() {
         </tr></thead>
         <tbody>
           {filteredGroups.map(g => (
-            <tr key={g.name} className={selectedGroups.includes(g.name) ? 'bg-blue-50/50' : ''}>
+            <tr key={g.name} className={selectedGroups.includes(g.name) ? 'bg-aws-status-info-bg/50' : ''}>
               <td><input type="checkbox" checked={selectedGroups.includes(g.name)} onChange={e => setSelectedGroupsList(e.target.checked ? [...selectedGroups, g.name] : selectedGroups.filter(n => n !== g.name))} /></td>
               <td><button className="text-aws-blue font-medium hover:underline" onClick={() => setSelectedGroup(g.name)}>{g.name}</button></td>
               <td>{g.users.length}</td>
@@ -138,7 +138,7 @@ export default function IAMGroups() {
           {filteredGroups.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-aws-text-secondary">No groups found</td></tr>}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
         Showing 1-{filteredGroups.length} of {filteredGroups.length} items
       </div>
     </div>

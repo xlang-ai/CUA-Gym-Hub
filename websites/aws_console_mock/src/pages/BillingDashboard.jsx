@@ -14,7 +14,7 @@ export default function BillingDashboard() {
     <div className="space-y-6">
       {/* Page header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">
+        <h1 className="text-2xl font-bold">
           Billing and Cost Management home <span className="text-aws-blue text-xs font-normal ml-1 cursor-pointer hover:underline">Info</span>
         </h1>
         <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export default function BillingDashboard() {
                 </div>
               </div>
             </div>
-            <div className="border-t border-gray-100 mt-4 pt-3">
+            <div className="border-t border-aws-border-secondary mt-4 pt-3">
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <div className="text-xs text-aws-text-secondary">Total forecasted cost for current month</div>
@@ -121,15 +121,15 @@ export default function BillingDashboard() {
                     const isOver = billing.currentMonth > b.limit;
                     return (
                       <div key={i}>
-                        <div className={`text-sm font-medium flex items-center gap-1 ${isOver ? 'text-red-600' : 'text-aws-success'}`}>
-                          <AlertCircle size={14} className={isOver ? 'text-red-600' : 'text-aws-success'} />
+                        <div className={`text-sm font-medium flex items-center gap-1 ${isOver ? 'text-aws-error' : 'text-aws-success'}`}>
+                          <AlertCircle size={14} className={isOver ? 'text-aws-error' : 'text-aws-success'} />
                           {isOver ? `Over budget` : 'On track'}
                         </div>
                         <div className="text-xs text-aws-text-secondary mt-0.5">
                           {b.name}: ${billing.currentMonth.toLocaleString()} / ${b.limit.toLocaleString()} ({pct}%)
                         </div>
-                        <div className="w-full bg-gray-100 h-2 rounded-full mt-1">
-                          <div className={`h-2 rounded-full ${isOver ? 'bg-red-500' : 'bg-green-500'}`} style={{ width: `${Math.min(Number(pct), 100)}%` }}></div>
+                        <div className="w-full bg-aws-disabled-bg h-2 rounded-full mt-1">
+                          <div className={`h-2 rounded-full ${isOver ? 'bg-aws-error' : 'bg-aws-success'}`} style={{ width: `${Math.min(Number(pct), 100)}%` }}></div>
                         </div>
                       </div>
                     );
@@ -197,7 +197,7 @@ export default function BillingDashboard() {
                 <td>${s.amount.toFixed(2)}</td>
                 <td>{s.percentage}%</td>
                 <td className="w-40">
-                  <div className="w-full bg-gray-100 h-2 rounded-full">
+                  <div className="w-full bg-aws-disabled-bg h-2 rounded-full">
                     <div className="h-2 rounded-full" style={{ width: `${s.percentage}%`, backgroundColor: s.color }}></div>
                   </div>
                 </td>
@@ -214,14 +214,14 @@ export default function BillingDashboard() {
           <thead><tr><th>Service</th><th>Usage type</th><th>Monthly limit</th><th>Current usage</th><th>Usage %</th></tr></thead>
           <tbody>
             {billing.freeTier.map(f => (
-              <tr key={f.service + f.usageType} className={f.percentage >= 100 ? 'bg-red-50' : f.percentage >= 80 ? 'bg-yellow-50' : ''}>
+              <tr key={f.service + f.usageType} className={f.percentage >= 100 ? 'bg-aws-status-error-bg' : f.percentage >= 80 ? 'bg-aws-status-warning-bg' : ''}>
                 <td>{f.service}</td>
                 <td className="text-xs text-aws-text-secondary">{f.usageType}</td>
                 <td>{f.limit}</td>
                 <td>{typeof f.used === 'number' ? f.used.toLocaleString() : f.used}</td>
                 <td>
                   <div className="flex items-center gap-2">
-                    <div className="w-20 bg-gray-100 h-2 rounded-full">
+                    <div className="w-20 bg-aws-disabled-bg h-2 rounded-full">
                       <div className={`h-2 rounded-full ${f.percentage >= 100 ? 'bg-aws-error' : f.percentage >= 80 ? 'bg-aws-warning' : 'bg-aws-success'}`} style={{ width: `${Math.min(f.percentage, 100)}%` }}></div>
                     </div>
                     <span className={`text-xs font-medium ${f.percentage >= 100 ? 'text-aws-error' : f.percentage >= 80 ? 'text-aws-warning' : ''}`}>{f.percentage}%</span>

@@ -4,19 +4,19 @@ import { RefreshCw, Database } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 
 const STATUS_COLORS = {
-  available: 'bg-green-50 text-green-800',
-  creating: 'bg-blue-50 text-blue-800',
-  deleting: 'bg-orange-50 text-orange-800',
-  stopped: 'bg-red-50 text-red-800',
-  stopping: 'bg-yellow-50 text-yellow-800',
-  starting: 'bg-blue-50 text-blue-800',
+  available: 'bg-aws-status-success-bg text-aws-success',
+  creating: 'bg-aws-status-info-bg text-aws-blue',
+  deleting: 'bg-aws-status-warning-bg text-aws-warning',
+  stopped: 'bg-aws-status-error-bg text-aws-error',
+  stopping: 'bg-aws-status-warning-bg text-aws-warning',
+  starting: 'bg-aws-status-info-bg text-aws-blue',
 };
 
 const ENGINES = [
   { id: 'mysql', name: 'MySQL', version: '8.0.35' },
   { id: 'postgres', name: 'PostgreSQL', version: '15.4' },
   { id: 'mariadb', name: 'MariaDB', version: '10.11.6' },
-  { id: 'aurora-mysql', name: 'Amazon Aurora (MySQL)', version: '3.04.1' },
+  { id: 'aurora-mysql', name: 'XWS Aurora (MySQL)', version: '3.04.1' },
 ];
 
 export default function RDS() {
@@ -100,13 +100,13 @@ export default function RDS() {
   if (showCreate) {
     return (
       <div className="max-w-3xl space-y-6">
-        <h1 className="text-xl font-bold">Create database</h1>
+        <h1 className="text-2xl font-bold">Create database</h1>
         {/* Engine */}
         <div className="aws-card">
           <h3 className="font-bold text-sm mb-3">Engine type</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {ENGINES.map(e => (
-              <button key={e.id} onClick={() => setEngine(e.id)} className={`p-3 border text-left ${engine === e.id ? 'border-aws-orange bg-orange-50' : 'border-aws-border hover:bg-gray-50'}`}>
+              <button key={e.id} onClick={() => setEngine(e.id)} className={`p-3 border text-left ${engine === e.id ? 'border-aws-orange bg-aws-status-warning-bg' : 'border-aws-border hover:bg-aws-status-info-bg/30'}`}>
                 <div className="font-bold text-sm">{e.name}</div>
                 <div className="text-xs text-aws-text-secondary mt-1">v{e.version}</div>
               </button>
@@ -120,7 +120,7 @@ export default function RDS() {
             {['Production', 'Dev/Test', 'Free tier'].map(t => {
               const val = t.toLowerCase().replace(/\s+/g, '-').replace('/', '-');
               return (
-                <label key={t} className={`flex items-center gap-2 p-3 border text-sm ${template === val ? 'border-aws-orange bg-orange-50' : 'border-aws-border'}`}>
+                <label key={t} className={`flex items-center gap-2 p-3 border text-sm ${template === val ? 'border-aws-orange bg-aws-status-warning-bg' : 'border-aws-border'}`}>
                   <input type="radio" checked={template === val} onChange={() => { setTemplate(val); if (val === 'free-tier') { setDbClass('db.t3.micro'); setStorageSize(20); } }} /> {t}
                 </label>
               );
@@ -191,12 +191,12 @@ export default function RDS() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Databases ({state.rds.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100"><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg"><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-primary text-xs" onClick={() => setShowCreate(true)}>Create database</button>
         </div>
       </div>
       {selectedIds.length > 0 && (
-        <div className="px-4 py-2 border-b border-gray-100 bg-gray-50 flex gap-2">
+        <div className="px-4 py-2 border-b border-aws-border-secondary bg-aws-status-info-bg/30 flex gap-2">
           <button className="aws-btn aws-btn-secondary text-xs" onClick={() => selectedDb && navigate(`/rds/${selectedDb.id}`)}>Modify</button>
           {selectedDb?.status === 'available' && <button className="aws-btn aws-btn-secondary text-xs" onClick={() => handleAction('stop')}>Stop</button>}
           {selectedDb?.status === 'stopped' && <button className="aws-btn aws-btn-secondary text-xs" onClick={() => handleAction('start')}>Start</button>}
@@ -207,14 +207,14 @@ export default function RDS() {
         <thead><tr><th className="w-8"><input type="checkbox" /></th><th>DB identifier</th><th>Engine</th><th>Status</th><th>Role</th><th>Size</th><th>Region</th><th>Multi-AZ</th></tr></thead>
         <tbody>
           {state.rds.map(db => (
-            <tr key={db.id} className={selectedIds.includes(db.id) ? 'bg-blue-50/50' : ''}>
+            <tr key={db.id} className={selectedIds.includes(db.id) ? 'bg-aws-status-info-bg/50' : ''}>
               <td><input type="checkbox" checked={selectedIds.includes(db.id)} onChange={e => {
                 if (e.target.checked) setSelectedIds([...selectedIds, db.id]);
                 else setSelectedIds(selectedIds.filter(i => i !== db.id));
               }} /></td>
               <td><Link to={`/rds/${db.id}`} className="text-aws-blue font-medium hover:underline">{db.id}</Link></td>
               <td>{db.engine}</td>
-              <td><span className={`aws-badge ${STATUS_COLORS[db.status] || 'bg-gray-100 text-gray-800'}`}>{db.status}</span></td>
+              <td><span className={`aws-badge ${STATUS_COLORS[db.status] || 'bg-aws-disabled-bg text-aws-text'}`}>{db.status}</span></td>
               <td>{db.role}</td>
               <td>{db.class}</td>
               <td>{db.az?.split('-').slice(0, -1).join('-') || state.user.region}</td>
@@ -223,7 +223,7 @@ export default function RDS() {
           ))}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
         Showing 1-{state.rds.length} of {state.rds.length} items
       </div>
     </div>

@@ -80,7 +80,7 @@ export default function EC2AutoScaling() {
             <thead><tr><th>Instance ID</th><th>Lifecycle</th><th>Health status</th></tr></thead>
             <tbody>
               {(currentAsg.instances || []).map(id => (
-                <tr key={id}><td className="font-mono text-sm">{id}</td><td>InService</td><td><span className="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Healthy</span></td></tr>
+                <tr key={id}><td className="font-mono text-sm">{id}</td><td>InService</td><td><span className="px-2 py-0.5 rounded text-xs font-medium bg-aws-status-success-bg text-aws-success">Healthy</span></td></tr>
               ))}
               {(currentAsg.instances || []).length === 0 && <tr><td colSpan={3} className="text-center py-6 text-aws-text-secondary">No instances</td></tr>}
             </tbody>
@@ -90,7 +90,7 @@ export default function EC2AutoScaling() {
         {showEdit && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white shadow-xl w-full max-w-sm border border-aws-border">
-              <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+              <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
                 <h3 className="font-bold">Edit group size</h3>
                 <button onClick={() => setShowEdit(false)}><X size={18} /></button>
               </div>
@@ -117,11 +117,11 @@ export default function EC2AutoScaling() {
           <h2 className="font-bold text-lg flex items-center gap-2"><Scaling size={18} /> Auto Scaling Groups ({asgs.length})</h2>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
               <input className="aws-input pl-7 text-sm w-56" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete</button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create Auto Scaling group</button>
           </div>
         </div>
@@ -132,7 +132,7 @@ export default function EC2AutoScaling() {
           </tr></thead>
           <tbody>
             {asgs.map(a => (
-              <tr key={a.name} className={selected.includes(a.name) ? 'bg-blue-50' : ''}>
+              <tr key={a.name} className={selected.includes(a.name) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(a.name)} onChange={() => toggleSelect(a.name)} /></td>
                 <td className="text-aws-blue font-medium cursor-pointer hover:underline" onClick={() => setDetail(a)}>{a.name}</td>
                 <td>{a.minSize}</td>
@@ -152,7 +152,7 @@ export default function EC2AutoScaling() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Create Auto Scaling group</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

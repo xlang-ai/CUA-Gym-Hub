@@ -29,20 +29,20 @@ export default function BillingBills() {
   };
 
   const mockCharges = [
-    { service: 'Amazon Elastic Compute Cloud', charge: 45.23 },
-    { service: 'Amazon Simple Storage Service', charge: 12.87 },
-    { service: 'Amazon Relational Database Service', charge: 28.50 },
-    { service: 'AWS Lambda', charge: 3.14 },
-    { service: 'Amazon CloudFront', charge: 5.67 },
-    { service: 'Amazon Route 53', charge: 1.50 },
-    { service: 'AWS Key Management Service', charge: 1.00 },
+    { service: 'XWS Elastic Compute Cloud', charge: 45.23 },
+    { service: 'XWS Simple Storage Service', charge: 12.87 },
+    { service: 'XWS Relational Database Service', charge: 28.50 },
+    { service: 'XWS Lambda', charge: 3.14 },
+    { service: 'XWS CloudFront', charge: 5.67 },
+    { service: 'XWS Route 53', charge: 1.50 },
+    { service: 'XWS Key Management Service', charge: 1.00 },
     { service: 'Tax', charge: 8.92 },
   ];
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Bills</h1>
+        <h1 className="text-2xl font-bold">Bills</h1>
         <div className="flex items-center gap-2">
           <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={() => addFlash('info', 'Bill download initiated.')}>
             <Download size={14} /> Download CSV
@@ -55,9 +55,9 @@ export default function BillingBills() {
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-sm">Date</h2>
           <div className="flex items-center gap-3">
-            <button className="p-1 hover:bg-gray-100 rounded" onClick={prevMonth}><ChevronLeft size={16} /></button>
+            <button className="p-1 hover:bg-aws-disabled-bg rounded" onClick={prevMonth}><ChevronLeft size={16} /></button>
             <span className="text-sm font-medium min-w-[140px] text-center">{MONTHS[selectedMonth]} {selectedYear}</span>
-            <button className="p-1 hover:bg-gray-100 rounded" onClick={nextMonth}><ChevronRight size={16} /></button>
+            <button className="p-1 hover:bg-aws-disabled-bg rounded" onClick={nextMonth}><ChevronRight size={16} /></button>
           </div>
         </div>
       </div>
@@ -72,7 +72,7 @@ export default function BillingBills() {
           </div>
           <div>
             <span className="text-aws-text-secondary block">Credits</span>
-            <span className="text-2xl font-bold text-green-600">-$0.00</span>
+            <span className="text-2xl font-bold text-aws-success">-$0.00</span>
           </div>
           <div>
             <span className="text-aws-text-secondary block">Total</span>
@@ -85,7 +85,7 @@ export default function BillingBills() {
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-sm">Charges by service</h2>
-          <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
         </div>
         <table className="aws-table">
           <thead>
@@ -98,7 +98,7 @@ export default function BillingBills() {
                 <td className="text-right font-mono">${c.charge.toFixed(2)}</td>
               </tr>
             ))}
-            <tr className="bg-gray-50 font-bold border-t-2 border-aws-border">
+            <tr className="bg-aws-status-info-bg/30 font-bold border-t-2 border-aws-border">
               <td>Total</td>
               <td className="text-right font-mono">${mockCharges.reduce((s, c) => s + c.charge, 0).toFixed(2)}</td>
             </tr>
@@ -110,7 +110,7 @@ export default function BillingBills() {
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-sm">All bills ({bills.length})</h2>
-          <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
         </div>
         <table className="aws-table">
           <thead><tr><th>Period</th><th>Total</th><th>Status</th><th>Due date</th><th>Paid date</th><th></th></tr></thead>

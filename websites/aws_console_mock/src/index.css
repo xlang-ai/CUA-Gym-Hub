@@ -1,3 +1,10 @@
+/* Self-hosted Open Sans — the mock must make no external network request. */
+@import '@fontsource/open-sans/300.css';
+@import '@fontsource/open-sans/400.css';
+@import '@fontsource/open-sans/600.css';
+@import '@fontsource/open-sans/700.css';
+@import '@fontsource/open-sans/800.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,7 +39,7 @@ body {
    ======================== */
 .aws-btn {
   @apply px-4 py-1.5 text-sm font-bold transition-all cursor-pointer inline-flex items-center justify-center gap-1;
-  border-radius: 20px;
+  border-radius: 8px;
   letter-spacing: 0.01em;
   line-height: 20px;
   min-height: 32px;
@@ -44,31 +51,31 @@ body {
   @apply outline-none ring-2 ring-aws-blue ring-offset-1;
 }
 .aws-btn-primary {
-  @apply bg-aws-blue text-white hover:bg-blue-700 border border-transparent;
+  @apply bg-aws-blue text-white hover:bg-aws-blue-hover border border-transparent;
 }
 .aws-btn-primary:active:not(:disabled) {
-  @apply bg-blue-800;
+  @apply bg-aws-blue-active;
 }
 .aws-btn-call-to-action {
-  @apply bg-aws-orange text-white hover:bg-aws-hover border border-transparent;
+  @apply bg-aws-blue text-white hover:bg-aws-blue-hover border border-transparent;
 }
 .aws-btn-secondary {
-  @apply bg-white text-aws-text border border-aws-border hover:bg-gray-50;
+  @apply bg-white text-aws-blue border border-aws-blue hover:bg-aws-blue-light;
 }
 .aws-btn-secondary:active:not(:disabled) {
-  @apply bg-gray-100;
+  @apply bg-aws-blue-lighter;
 }
 .aws-btn-danger {
-  @apply bg-white text-aws-error border border-aws-error hover:bg-red-50;
+  @apply bg-white text-aws-error border border-aws-error hover:bg-aws-status-error-bg;
 }
 .aws-btn-danger:active:not(:disabled) {
-  @apply bg-red-100;
+  @apply bg-aws-status-error-bg;
 }
 .aws-btn-link {
   @apply bg-transparent text-aws-blue hover:underline border-none px-1;
 }
 .aws-btn-icon {
-  @apply p-1.5 bg-transparent text-aws-text-secondary hover:bg-gray-100 border-none;
+  @apply p-1.5 bg-transparent text-aws-text-secondary hover:bg-aws-blue-light border-none;
   border-radius: 4px;
   min-height: auto;
 }
@@ -86,7 +93,7 @@ body {
   @apply outline-none border-aws-blue ring-1 ring-aws-blue;
 }
 .aws-input:disabled {
-  @apply bg-gray-50 text-aws-text-disabled cursor-not-allowed;
+  @apply bg-aws-disabled-bg text-aws-text-disabled border-aws-disabled-border cursor-not-allowed;
 }
 .aws-input::placeholder {
   @apply text-aws-text-disabled;
@@ -127,7 +134,7 @@ select.aws-input {
   @apply w-full text-sm text-left;
 }
 .aws-table thead {
-  @apply bg-gray-50/80 text-aws-text-secondary font-medium border-b border-aws-border;
+  @apply bg-aws-status-info-bg/40 text-aws-text-secondary font-medium border-b border-aws-border;
 }
 .aws-table th {
   @apply px-4 py-2.5 text-sm;
@@ -137,10 +144,10 @@ select.aws-input {
   @apply px-4 py-2.5;
 }
 .aws-table tbody tr {
-  @apply border-b border-gray-100 hover:bg-blue-50/30 transition-colors;
+  @apply border-b border-gray-100 hover:bg-aws-blue-light transition-colors;
 }
 .aws-table tbody tr.selected {
-  @apply bg-blue-50/50;
+  @apply bg-aws-blue-lighter;
 }
 
 /* ========================
@@ -158,19 +165,19 @@ select.aws-input {
   border-radius: 16px;
 }
 .aws-badge-success {
-  @apply bg-green-50 text-green-800 border border-green-200;
+  @apply bg-aws-status-success-bg text-aws-success border border-aws-success/30;
 }
 .aws-badge-error {
-  @apply bg-red-50 text-red-800 border border-red-200;
+  @apply bg-aws-status-error-bg text-aws-error border border-aws-error/30;
 }
 .aws-badge-warning {
-  @apply bg-yellow-50 text-yellow-800 border border-yellow-200;
+  @apply bg-aws-status-warning-bg text-aws-warning border border-aws-warning/30;
 }
 .aws-badge-info {
-  @apply bg-blue-50 text-blue-800 border border-blue-200;
+  @apply bg-aws-status-info-bg text-aws-blue border border-aws-blue-lighter;
 }
 .aws-badge-neutral {
-  @apply bg-gray-100 text-gray-700 border border-gray-200;
+  @apply bg-aws-disabled-bg text-aws-text-secondary border border-aws-border-secondary;
 }
 
 /* Status dot badges (inline) */
@@ -185,7 +192,7 @@ select.aws-input {
    Cloudscape Sidebar
    ======================== */
 .aws-sidebar-item {
-  @apply flex items-center gap-2 px-4 py-1.5 text-sm text-aws-text-secondary hover:bg-gray-50 cursor-pointer transition-colors;
+  @apply flex items-center gap-2 px-4 py-1.5 text-sm text-aws-text-secondary hover:bg-aws-blue-light cursor-pointer transition-colors;
   border-left: 3px solid transparent;
   font-weight: 400;
 }
@@ -225,19 +232,19 @@ select.aws-input {
    ======================== */
 .aws-alert {
   @apply flex items-start gap-3 p-4 text-sm border;
-  border-radius: 12px;
+  border-radius: 16px;
 }
 .aws-alert-success {
-  @apply bg-green-50 border-green-200 text-green-800;
+  @apply bg-aws-status-success-bg border-aws-success/30 text-aws-success;
 }
 .aws-alert-error {
-  @apply bg-red-50 border-red-200 text-red-800;
+  @apply bg-aws-status-error-bg border-aws-error/30 text-aws-error;
 }
 .aws-alert-warning {
-  @apply bg-yellow-50 border-yellow-200 text-yellow-800;
+  @apply bg-aws-status-warning-bg border-aws-warning/30 text-aws-warning;
 }
 .aws-alert-info {
-  @apply bg-blue-50 border-blue-200 text-blue-800;
+  @apply bg-aws-status-info-bg border-aws-blue-lighter text-aws-blue;
 }
 
 /* ========================
@@ -279,7 +286,7 @@ select.aws-input {
   @apply px-6 py-5;
 }
 .aws-modal-footer {
-  @apply flex justify-end gap-2 px-6 py-4 border-t border-aws-border bg-gray-50;
+  @apply flex justify-end gap-2 px-6 py-4 border-t border-aws-border bg-aws-status-info-bg/30;
   border-radius: 0 0 16px 16px;
 }
 
@@ -319,7 +326,7 @@ select.aws-input {
   @apply bg-aws-blue;
 }
 .aws-toggle-off {
-  @apply bg-gray-300;
+  @apply bg-aws-border;
 }
 .aws-toggle-dot {
   @apply inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform;
@@ -360,7 +367,7 @@ select.aws-input {
 
 /* Progress bar */
 .aws-progress {
-  @apply w-full bg-gray-100 overflow-hidden;
+  @apply w-full bg-aws-disabled-bg overflow-hidden;
   border-radius: 4px;
   height: 6px;
 }

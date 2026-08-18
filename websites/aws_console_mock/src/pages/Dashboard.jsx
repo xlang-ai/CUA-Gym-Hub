@@ -73,8 +73,8 @@ export default function Dashboard() {
               </button>
               {widgetMenuOpen === 'recent' && (
                 <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-aws-border shadow-lg z-20" style={{ borderRadius: 8 }}>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => removeWidget('recent')}>Remove widget</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', 'Widget moved'); setWidgetMenuOpen(null); }}>Move to top</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => removeWidget('recent')}>Remove widget</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', 'Widget moved'); setWidgetMenuOpen(null); }}>Move to top</button>
                 </div>
               )}
             </div>
@@ -88,7 +88,7 @@ export default function Dashboard() {
                   <Link
                     key={s.id}
                     to={s.path}
-                    className="flex items-center gap-3 py-2 px-1 hover:bg-gray-50 -mx-1 rounded transition-colors"
+                    className="flex items-center gap-3 py-2 px-1 hover:bg-aws-status-info-bg/30 -mx-1 rounded transition-colors"
                   >
                     {Icon && (
                       <div className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: svc.color + '15' }}>
@@ -99,7 +99,7 @@ export default function Dashboard() {
                   </Link>
                 );
               })}
-              <div className="pt-3 border-t border-gray-100 mt-2">
+              <div className="pt-3 border-t border-aws-border-secondary mt-2">
                 <Link to="/" className="text-sm text-aws-blue hover:underline">View all services</Link>
               </div>
             </div>
@@ -109,7 +109,7 @@ export default function Dashboard() {
                 <svg width="48" height="48" viewBox="0 0 48 48" className="mx-auto opacity-40"><rect x="8" y="12" width="32" height="24" rx="2" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M16 20h16M16 26h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
               </div>
               <p className="font-bold text-sm text-aws-text mb-1">No recently visited services</p>
-              <p className="text-sm text-aws-text-secondary">Explore one of these commonly visited AWS services.</p>
+              <p className="text-sm text-aws-text-secondary">Explore one of these commonly visited XWS services.</p>
               <div className="flex items-center justify-center gap-4 mt-3">
                 {['IAM', 'EC2', 'S3', 'RDS', 'Lambda'].map(name => {
                   const svc = Object.values(SERVICE_MAP).find(s => s.name === name);
@@ -121,12 +121,12 @@ export default function Dashboard() {
           )}
         </div>}
 
-        {/* Welcome to AWS */}
+        {/* Welcome to XWS */}
         {!hiddenWidgets.includes('welcome') && <div className="aws-card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-sm flex items-center gap-2">
               <GripVertical size={14} className="text-aws-text-disabled cursor-grab" />
-              Welcome to AWS
+              Welcome to XWS
             </h2>
             <div className="relative">
               <button className="text-aws-text-disabled hover:text-aws-text" onClick={() => setWidgetMenuOpen(widgetMenuOpen === 'welcome' ? null : 'welcome')}>
@@ -134,8 +134,8 @@ export default function Dashboard() {
               </button>
               {widgetMenuOpen === 'welcome' && (
                 <div className="absolute right-0 top-full mt-1 w-44 bg-white border border-aws-border shadow-lg z-20" style={{ borderRadius: 8 }}>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => removeWidget('welcome')}>Remove widget</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', 'Widget moved'); setWidgetMenuOpen(null); }}>Move to top</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => removeWidget('welcome')}>Remove widget</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', 'Widget moved'); setWidgetMenuOpen(null); }}>Move to top</button>
                 </div>
               )}
             </div>
@@ -143,20 +143,20 @@ export default function Dashboard() {
           <div className="space-y-4">
             <WelcomeItem
               icon="🚀"
-              title="Getting started with AWS"
-              desc="Learn the fundamentals and find valuable information to get the most out of AWS."
+              title="Getting started with XWS"
+              desc="Learn the fundamentals and find valuable information to get the most out of XWS."
             />
-            <hr className="border-gray-100" />
+            <hr className="border-aws-border-secondary" />
             <WelcomeItem
               icon="🎓"
               title="Training and certification"
-              desc="Learn from AWS experts and advance your skills and knowledge."
+              desc="Learn from XWS experts and advance your skills and knowledge."
             />
-            <hr className="border-gray-100" />
+            <hr className="border-aws-border-secondary" />
             <WelcomeItem
               icon="💡"
-              title="What's new with AWS?"
-              desc="Discover new AWS services, features, and Regions."
+              title="What's new with XWS?"
+              desc="Discover new XWS services, features, and Regions."
             />
           </div>
         </div>}
@@ -164,12 +164,12 @@ export default function Dashboard() {
 
       {/* Second row */}
       <div className="grid grid-cols-3 gap-6">
-        {/* AWS Health */}
+        {/* XWS Health */}
         {!hiddenWidgets.includes('health') && <div className="aws-card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-sm flex items-center gap-2">
               <GripVertical size={14} className="text-aws-text-disabled cursor-grab" />
-              AWS Health <span className="text-aws-blue text-xs font-normal ml-1 cursor-pointer hover:underline">Info</span>
+              XWS Health <span className="text-aws-blue text-xs font-normal ml-1 cursor-pointer hover:underline">Info</span>
             </h2>
           </div>
           <div className="space-y-2">
@@ -219,7 +219,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-gray-100">
+          <div className="mt-3 pt-3 border-t border-aws-border-secondary">
             <Link to="/billing" className="text-sm text-aws-blue hover:underline flex items-center gap-1">
               View bill <ExternalLink size={12} />
             </Link>
@@ -264,8 +264,8 @@ export default function Dashboard() {
             <div className="aws-modal-body space-y-3">
               {[
                 ['recent', 'Recently visited'],
-                ['welcome', 'Welcome to AWS'],
-                ['health', 'AWS Health'],
+                ['welcome', 'Welcome to XWS'],
+                ['health', 'XWS Health'],
                 ['cost', 'Cost and usage'],
               ].map(([id, label]) => (
                 <div key={id} className="flex items-center justify-between border border-aws-border rounded-md px-3 py-2">

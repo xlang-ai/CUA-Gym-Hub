@@ -4,9 +4,9 @@ import { RefreshCw, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 const STATUS_COLORS = {
-  available: 'bg-green-100 text-green-800',
-  creating: 'bg-blue-100 text-blue-800',
-  deleting: 'bg-orange-100 text-orange-800',
+  available: 'bg-aws-status-success-bg text-aws-success',
+  creating: 'bg-aws-blue-lighter text-aws-blue',
+  deleting: 'bg-aws-status-warning-bg text-aws-warning',
 };
 
 export default function RDSSnapshots() {
@@ -47,7 +47,7 @@ export default function RDSSnapshots() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Snapshots ({snapshots.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Take snapshot</button>
           </div>
         </div>
@@ -61,8 +61,8 @@ export default function RDSSnapshots() {
                 <td className="text-aws-blue font-medium">{s.id}</td>
                 <td>{s.dbInstance}</td>
                 <td>{s.engine}</td>
-                <td><span className={`aws-badge ${STATUS_COLORS[s.status] || 'bg-gray-100 text-gray-800'}`}>{s.status}</span></td>
-                <td><span className={`aws-badge ${s.type === 'automated' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800'}`}>{s.type}</span></td>
+                <td><span className={`aws-badge ${STATUS_COLORS[s.status] || 'bg-aws-disabled-bg text-aws-text'}`}>{s.status}</span></td>
+                <td><span className={`aws-badge ${s.type === 'automated' ? 'bg-aws-blue-lighter text-aws-blue' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{s.type}</span></td>
                 <td>{format(new Date(s.created), 'MMM d, yyyy h:mm a')}</td>
                 <td>{s.size} GiB</td>
                 <td>{s.encrypted ? 'Yes' : 'No'}</td>
@@ -76,7 +76,7 @@ export default function RDSSnapshots() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Take DB snapshot</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

@@ -15,31 +15,31 @@ export default function CloudWatchDashboard() {
   const recentAlarms = [...cw.alarms].sort((a, b) => new Date(b.updated) - new Date(a.updated)).slice(0, 5);
 
   const summaryCards = [
-    { label: 'Alarms', icon: Bell, path: '/cloudwatch/alarms', count: cw.alarms.length, color: 'text-red-600' },
-    { label: 'Log Groups', icon: FileText, path: '/cloudwatch/logs', count: cw.logGroups.length, color: 'text-blue-600' },
+    { label: 'Alarms', icon: Bell, path: '/cloudwatch/alarms', count: cw.alarms.length, color: 'text-aws-error' },
+    { label: 'Log Groups', icon: FileText, path: '/cloudwatch/logs', count: cw.logGroups.length, color: 'text-aws-blue' },
     { label: 'Dashboards', icon: LayoutDashboard, path: '/cloudwatch/dashboards', count: cw.dashboards.length, color: 'text-purple-600' },
   ];
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-aws-text">CloudWatch Dashboard</h1>
+      <h1 className="text-2xl font-bold text-aws-text">CloudWatch Dashboard</h1>
 
       <div className="aws-card">
         <h2 className="font-bold text-sm mb-4">Alarm Status Summary</h2>
         <div className="grid grid-cols-3 gap-4">
           <div className="border border-aws-border rounded p-4 text-center">
             <CheckCircle size={24} className="text-green-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-green-700">{okCount}</div>
+            <div className="text-2xl font-bold text-aws-success">{okCount}</div>
             <div className="text-sm text-aws-text-secondary">OK</div>
           </div>
           <div className="border border-aws-border rounded p-4 text-center">
-            <AlertTriangle size={24} className="text-red-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-red-700">{alarmCount}</div>
+            <AlertTriangle size={24} className="text-aws-error mx-auto mb-2" />
+            <div className="text-2xl font-bold text-aws-error">{alarmCount}</div>
             <div className="text-sm text-aws-text-secondary">In alarm</div>
           </div>
           <div className="border border-aws-border rounded p-4 text-center">
-            <HelpCircle size={24} className="text-gray-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-600">{insuffCount}</div>
+            <HelpCircle size={24} className="text-aws-text-disabled mx-auto mb-2" />
+            <div className="text-2xl font-bold text-aws-text-secondary">{insuffCount}</div>
             <div className="text-sm text-aws-text-secondary">Insufficient data</div>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function CloudWatchDashboard() {
               <tr key={a.name}>
                 <td className="font-medium text-aws-blue">{a.name}</td>
                 <td>
-                  <span className={`aws-badge ${a.state === 'OK' ? 'bg-green-50 text-green-700' : a.state === 'ALARM' ? 'bg-red-50 text-red-700' : 'bg-gray-100 text-gray-600'}`}>{a.state}</span>
+                  <span className={`aws-badge ${a.state === 'OK' ? 'bg-aws-status-success-bg text-aws-success' : a.state === 'ALARM' ? 'bg-aws-status-error-bg text-aws-error' : 'bg-aws-disabled-bg text-aws-text-secondary'}`}>{a.state}</span>
                 </td>
                 <td>{a.metric}</td>
                 <td>{a.namespace}</td>

@@ -58,12 +58,12 @@ export default function EC2AMIs() {
         {/* Toolbar */}
         <div className="flex items-center gap-2 px-4 py-3 border-b border-aws-border">
           <div className="relative">
-            <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
             <input className="aws-input pl-7 text-sm w-56" placeholder="Search AMIs..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-secondary text-xs" disabled={!selected.length} onClick={() => setShowLaunch(true)}>Launch instance from AMI</button>
-          <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={() => { selected.forEach(id => dispatch({ type: 'DELETE_AMI', payload: id })); addFlash('success', `${selected.length} AMI(s) deregistered.`); setSelected([]); }}>Deregister AMI</button>
+          <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={() => { selected.forEach(id => dispatch({ type: 'DELETE_AMI', payload: id })); addFlash('success', `${selected.length} AMI(s) deregistered.`); setSelected([]); }}>Deregister AMI</button>
         </div>
 
         {/* Tabs */}
@@ -80,14 +80,14 @@ export default function EC2AMIs() {
           </tr></thead>
           <tbody>
             {filtered.map(a => (
-              <tr key={a.id} className={selected.includes(a.id) ? 'bg-blue-50' : ''}>
+              <tr key={a.id} className={selected.includes(a.id) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(a.id)} onChange={() => toggleSelect(a.id)} /></td>
                 <td className="text-aws-blue font-medium">{a.name}</td>
                 <td className="font-mono text-sm">{a.id}</td>
-                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${a.owner === 'amazon' ? 'bg-orange-100 text-orange-800' : a.owner === '123456789012' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
+                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${a.owner === 'amazon' ? 'bg-aws-status-warning-bg text-aws-warning' : a.owner === '123456789012' ? 'bg-aws-blue-lighter text-aws-blue' : 'bg-aws-disabled-bg text-aws-text'}`}>
                   {a.owner === '123456789012' ? 'self' : a.owner}
                 </span></td>
-                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${a.state === 'available' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>{a.state}</span></td>
+                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${a.state === 'available' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{a.state}</span></td>
                 <td>{a.architecture}</td>
                 <td>{a.platform}</td>
                 <td>{a.rootDeviceType}</td>
@@ -102,12 +102,12 @@ export default function EC2AMIs() {
       {showLaunch && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border" style={{ borderRadius: 8 }}>
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Launch instance from AMI</h3>
               <button onClick={() => setShowLaunch(false)}><X size={18} /></button>
             </div>
             <div className="p-4 space-y-4">
-              <div className="text-sm text-aws-text-secondary bg-gray-50 p-2 rounded">
+              <div className="text-sm text-aws-text-secondary bg-aws-status-info-bg/30 p-2 rounded">
                 AMI: <span className="font-mono text-xs">{selected[0]}</span>
               </div>
               <div>

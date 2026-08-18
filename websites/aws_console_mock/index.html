@@ -1,36 +1,41 @@
-
-    <!doctype html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <title>XWS Console Mock</title>
-        <style>
-          #global-error {
-            display: none;
-            padding: 20px;
-            background: #fee;
-            color: #c00;
-            font-family: monospace;
-            white-space: pre-wrap;
-          }
-        </style>
-      </head>
-      <body>
-        <div id="global-error"></div>
-        <div id="root"></div>
-        <script>
-          window.onerror = function(msg, url, line, col, error) {
-            const el = document.getElementById('global-error');
-            el.style.display = 'block';
-            el.innerText = `Error: ${msg}\nLine: ${line}:${col}\nURL: ${url}\n${error?.stack || ''}`;
-          };
-        </script>
-        <script type="module" src="/src/main.jsx"></script>
-      </body>
-    </html>
-  
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      Favicon is an inline, self-drawn "XWS" mark. It must not reference a real
+      third-party trademark asset, and the mock must make zero external network
+      requests at runtime (fonts are self-hosted via @fontsource, imported in
+      src/index.css).
+    -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230f141a'/%3E%3Ctext x='32' y='38' font-family='Helvetica,Arial,sans-serif' font-size='22' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EXWS%3C/text%3E%3Cpath d='M12 46 Q32 55 52 46' stroke='%23FF9900' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XWS Console Mock</title>
+    <style>
+      #global-error {
+        display: none;
+        padding: 20px;
+        background: #fee;
+        color: #c00;
+        font-family: monospace;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="global-error"></div>
+    <div id="root"></div>
+    <script>
+      window.onerror = function(msg, url, line, col, error) {
+        const el = document.getElementById('global-error');
+        el.style.display = 'block';
+        el.innerText = `Error: ${msg}\nLine: ${line}:${col}\nURL: ${url}\n${error?.stack || ''}`;
+      };
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

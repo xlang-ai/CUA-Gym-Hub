@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Bell, HelpCircle, ChevronDown, ChevronRight, X, Server, HardDrive, Database, Zap, Shield, DollarSign, RefreshCw, Settings, Star, Info } from 'lucide-react';
+import { Search, Bell, HelpCircle, ChevronDown, ChevronRight, X, Server, HardDrive, Database, Zap, Shield, DollarSign, RefreshCw, Settings, Star, Info, Activity, Network, Table2, Send, Inbox, Globe, Cloud, ScrollText } from 'lucide-react';
 import { useStore } from '../store/StoreContext';
 import FlashMessages from './FlashMessages';
 
@@ -42,6 +42,20 @@ const SERVICE_CATEGORIES = [
   ]},
   { name: 'Database', items: [
     { id: 'rds', name: 'RDS', path: '/rds', icon: Database, color: '#3B48CC' },
+    { id: 'dynamodb', name: 'DynamoDB', path: '/dynamodb/tables', icon: Table2, color: '#2E73B8' },
+  ]},
+  { name: 'Networking & Content Delivery', items: [
+    { id: 'vpc', name: 'VPC', path: '/vpc', icon: Network, color: '#8C4FFF' },
+    { id: 'route53', name: 'Route 53', path: '/route53/hosted-zones', icon: Globe, color: '#8C4FFF' },
+    { id: 'cloudfront', name: 'CloudFront', path: '/cloudfront/distributions', icon: Cloud, color: '#8C4FFF' },
+  ]},
+  { name: 'Application Integration', items: [
+    { id: 'sns', name: 'SNS', path: '/sns/topics', icon: Send, color: '#E7157B' },
+    { id: 'sqs', name: 'SQS', path: '/sqs/queues', icon: Inbox, color: '#E7157B' },
+  ]},
+  { name: 'Management & Governance', items: [
+    { id: 'cloudwatch', name: 'CloudWatch', path: '/cloudwatch', icon: Activity, color: '#E7157B' },
+    { id: 'cloudtrail', name: 'CloudTrail', path: '/cloudtrail/events', icon: ScrollText, color: '#E7157B' },
   ]},
   { name: 'Security, Identity, & Compliance', items: [
     { id: 'iam', name: 'IAM', path: '/iam', icon: Shield, color: '#D13212' },
@@ -59,41 +73,41 @@ const SIDEBAR_CONFIG = {
     { label: 'All services', path: '/' },
   ],
   '/ec2': [
-    { label: 'Dashboard', path: '/ec2' },
+    { label: 'Dashboard', path: '/ec2/dashboard' },
     { label: 'Instances', path: '/ec2' },
-    { label: 'Instance Types', path: '/local/ec2/instance-types' },
-    { label: 'Launch Templates', path: '/local/ec2/launch-templates' },
-    { label: 'AMIs', path: '/local/ec2/amis' },
-    { label: 'Volumes', path: '/local/ec2/volumes' },
-    { label: 'Snapshots', path: '/local/ec2/snapshots' },
+    { label: 'Instance Types', path: '/ec2/instance-types' },
+    { label: 'Launch Templates', path: '/ec2/launch-templates' },
+    { label: 'AMIs', path: '/ec2/amis' },
+    { label: 'Volumes', path: '/ec2/volumes' },
+    { label: 'Snapshots', path: '/ec2/snapshots' },
     { label: 'Security Groups', path: '/ec2/security-groups' },
     { label: 'Key Pairs', path: '/ec2/key-pairs' },
-    { label: 'Elastic IPs', path: '/local/ec2/elastic-ips' },
-    { label: 'Load Balancers', path: '/local/ec2/load-balancers' },
-    { label: 'Target Groups', path: '/local/ec2/target-groups' },
-    { label: 'Auto Scaling Groups', path: '/local/ec2/auto-scaling-groups' },
+    { label: 'Elastic IPs', path: '/ec2/elastic-ips' },
+    { label: 'Load Balancers', path: '/ec2/load-balancers' },
+    { label: 'Target Groups', path: '/ec2/target-groups' },
+    { label: 'Auto Scaling Groups', path: '/ec2/auto-scaling-groups' },
   ],
   '/s3': [
     { label: 'Buckets', path: '/s3' },
-    { label: 'Access Points', path: '/local/s3/access-points' },
-    { label: 'Batch Operations', path: '/local/s3/batch-operations' },
-    { label: 'Storage Lens', path: '/local/s3/storage-lens' },
+    { label: 'Access Points', path: '/s3/access-points' },
+    { label: 'Batch Operations', path: '/s3/batch-operations' },
+    { label: 'Storage Lens', path: '/s3/storage-lens' },
   ],
   '/lambda': [
-    { label: 'Dashboard', path: '/local/lambda/dashboard' },
+    { label: 'Dashboard', path: '/lambda/dashboard' },
     { label: 'Functions', path: '/lambda' },
-    { label: 'Applications', path: '/local/lambda/applications' },
-    { label: 'Layers', path: '/local/lambda/layers' },
+    { label: 'Applications', path: '/lambda/applications' },
+    { label: 'Layers', path: '/lambda/layers' },
   ],
   '/rds': [
-    { label: 'Dashboard', path: '/local/rds/dashboard' },
+    { label: 'Dashboard', path: '/rds/dashboard' },
     { label: 'Databases', path: '/rds' },
-    { label: 'Query Editor', path: '/local/rds/query-editor' },
-    { label: 'Performance Insights', path: '/local/rds/performance-insights' },
-    { label: 'Snapshots', path: '/local/rds/snapshots' },
-    { label: 'Automated backups', path: '/local/rds/automated-backups' },
-    { label: 'Subnet groups', path: '/local/rds/subnet-groups' },
-    { label: 'Parameter groups', path: '/local/rds/parameter-groups' },
+    { label: 'Query Editor', path: '/rds/query-editor' },
+    { label: 'Performance Insights', path: '/rds/performance-insights' },
+    { label: 'Snapshots', path: '/rds/snapshots' },
+    { label: 'Automated backups', path: '/rds/automated-backups' },
+    { label: 'Subnet groups', path: '/rds/subnet-groups' },
+    { label: 'Parameter groups', path: '/rds/parameter-groups' },
   ],
   '/iam': [
     { label: 'Dashboard', path: '/iam' },
@@ -101,22 +115,60 @@ const SIDEBAR_CONFIG = {
     { label: 'User groups', path: '/iam/groups' },
     { label: 'Roles', path: '/iam/roles' },
     { label: 'Policies', path: '/iam/policies' },
-    { label: 'Identity providers', path: '/local/iam/identity-providers' },
-    { label: 'Account settings', path: '/local/iam/account-settings' },
+    { label: 'Identity providers', path: '/iam/identity-providers' },
+    { label: 'Account settings', path: '/iam/account-settings' },
   ],
   '/billing': [
     { label: 'Home', path: '/billing' },
-    { label: 'Bills', path: '/local/billing/bills' },
+    { label: 'Bills', path: '/billing/bills' },
     { label: 'Cost Explorer', path: '/billing/cost-explorer' },
-    { label: 'Budgets', path: '/local/billing/budgets' },
-    { label: 'Payment methods', path: '/local/billing/payment-methods' },
-    { label: 'Tax settings', path: '/local/billing/tax-settings' },
+    { label: 'Budgets', path: '/billing/budgets' },
+    { label: 'Payment methods', path: '/billing/payment-methods' },
+    { label: 'Tax settings', path: '/billing/tax-settings' },
+  ],
+  '/cloudwatch': [
+    { label: 'Overview', path: '/cloudwatch' },
+    { label: 'Alarms', path: '/cloudwatch/alarms' },
+    { label: 'Log groups', path: '/cloudwatch/logs' },
+    { label: 'Dashboards', path: '/cloudwatch/dashboards' },
+  ],
+  '/vpc': [
+    { label: 'VPC dashboard', path: '/vpc' },
+    { label: 'Your VPCs', path: '/vpc/vpcs' },
+    { label: 'Subnets', path: '/vpc/subnets' },
+    { label: 'Route tables', path: '/vpc/route-tables' },
+    { label: 'Internet gateways', path: '/vpc/internet-gateways' },
+    { label: 'NAT gateways', path: '/vpc/nat-gateways' },
+  ],
+  '/dynamodb': [
+    { label: 'Tables', path: '/dynamodb/tables' },
+  ],
+  '/sns': [
+    { label: 'Topics', path: '/sns/topics' },
+  ],
+  '/sqs': [
+    { label: 'Queues', path: '/sqs/queues' },
+  ],
+  '/route53': [
+    { label: 'Hosted zones', path: '/route53/hosted-zones' },
+  ],
+  '/cloudfront': [
+    { label: 'Distributions', path: '/cloudfront/distributions' },
+  ],
+  '/cloudtrail': [
+    { label: 'Event history', path: '/cloudtrail/events' },
   ],
 };
 
+const SIDEBAR_PREFIXES = [
+  '/ec2', '/s3', '/lambda', '/rds', '/iam', '/billing',
+  '/cloudwatch', '/vpc', '/dynamodb', '/sns', '/sqs',
+  '/route53', '/cloudfront', '/cloudtrail',
+];
+
 function getSidebarItems(pathname) {
   if (pathname === '/go') return [];
-  for (const prefix of ['/ec2', '/s3', '/lambda', '/rds', '/iam', '/billing']) {
+  for (const prefix of SIDEBAR_PREFIXES) {
     if (pathname.startsWith(prefix)) return SIDEBAR_CONFIG[prefix] || [];
   }
   return SIDEBAR_CONFIG['/'] || [];
@@ -129,6 +181,14 @@ function getServiceName(pathname) {
   if (pathname.startsWith('/rds')) return 'RDS';
   if (pathname.startsWith('/iam')) return 'IAM';
   if (pathname.startsWith('/billing')) return 'Billing';
+  if (pathname.startsWith('/cloudwatch')) return 'CloudWatch';
+  if (pathname.startsWith('/vpc')) return 'VPC';
+  if (pathname.startsWith('/dynamodb')) return 'DynamoDB';
+  if (pathname.startsWith('/sns')) return 'SNS';
+  if (pathname.startsWith('/sqs')) return 'SQS';
+  if (pathname.startsWith('/route53')) return 'Route 53';
+  if (pathname.startsWith('/cloudfront')) return 'CloudFront';
+  if (pathname.startsWith('/cloudtrail')) return 'CloudTrail';
   if (pathname === '/go') return 'State Inspector';
   return null;
 }
@@ -197,33 +257,33 @@ export default function Layout({ children }) {
 
   const HELP_CONTENT = {
     '/ec2': {
-      title: 'Amazon EC2',
-      content: 'Amazon Elastic Compute Cloud (Amazon EC2) provides resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. Amazon EC2 reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity, both up and down, as your computing requirements change.',
+      title: 'XWS EC2',
+      content: 'XWS Elastic Compute Cloud (XWS EC2) provides resizable compute capacity in the cloud. It is designed to make web-scale cloud computing easier for developers. XWS EC2 reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity, both up and down, as your computing requirements change.',
       links: ['EC2 User Guide', 'Instance Types', 'Security Groups', 'Key Pairs', 'Pricing']
     },
     '/s3': {
-      title: 'Amazon S3',
-      content: 'Amazon Simple Storage Service (Amazon S3) is an object storage service offering industry-leading scalability, data availability, security, and performance. You can use Amazon S3 to store and retrieve any amount of data at any time, from anywhere on the web.',
+      title: 'XWS S3',
+      content: 'XWS Simple Storage Service (XWS S3) is an object storage service offering industry-leading scalability, data availability, security, and performance. You can use XWS S3 to store and retrieve any amount of data at any time, from anywhere on the web.',
       links: ['S3 User Guide', 'Bucket Policies', 'Access Control Lists', 'Versioning', 'Pricing']
     },
     '/lambda': {
-      title: 'AWS Lambda',
-      content: 'AWS Lambda lets you run code without provisioning or managing servers. You pay only for the compute time you consume. With Lambda, you can run code for virtually any type of application or backend service. Just upload your code and Lambda takes care of everything required to run and scale your code with high availability.',
+      title: 'XWS Lambda',
+      content: 'XWS Lambda lets you run code without provisioning or managing servers. You pay only for the compute time you consume. With Lambda, you can run code for virtually any type of application or backend service. Just upload your code and Lambda takes care of everything required to run and scale your code with high availability.',
       links: ['Lambda Developer Guide', 'Function Configuration', 'Triggers', 'Layers', 'Pricing']
     },
     '/rds': {
-      title: 'Amazon RDS',
-      content: 'Amazon Relational Database Service (Amazon RDS) makes it easy to set up, operate, and scale a relational database in the cloud. It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching and backups.',
+      title: 'XWS RDS',
+      content: 'XWS Relational Database Service (XWS RDS) makes it easy to set up, operate, and scale a relational database in the cloud. It provides cost-efficient and resizable capacity while automating time-consuming administration tasks such as hardware provisioning, database setup, patching and backups.',
       links: ['RDS User Guide', 'DB Instance Classes', 'Multi-AZ Deployments', 'Read Replicas', 'Pricing']
     },
     '/iam': {
-      title: 'AWS IAM',
-      content: 'AWS Identity and Access Management (IAM) enables you to manage access to AWS services and resources securely. Using IAM, you can create and manage AWS users and groups, and use permissions to allow and deny their access to AWS resources.',
+      title: 'XWS IAM',
+      content: 'XWS Identity and Access Management (IAM) enables you to manage access to XWS services and resources securely. Using IAM, you can create and manage XWS users and groups, and use permissions to allow and deny their access to XWS resources.',
       links: ['IAM User Guide', 'Policies and Permissions', 'Roles', 'Best Practices', 'Access Analyzer']
     },
     '/billing': {
-      title: 'AWS Billing',
-      content: 'AWS Billing and Cost Management is the service that you use to pay your AWS bill, monitor your usage, and analyze and control your costs. AWS automatically charges the credit card that you provided when you signed up for a new account with AWS.',
+      title: 'XWS Billing',
+      content: 'XWS Billing and Cost Management is the service that you use to pay your XWS bill, monitor your usage, and analyze and control your costs. XWS automatically charges the credit card that you provided when you signed up for a new account with XWS.',
       links: ['Billing User Guide', 'Cost Explorer', 'Budgets', 'Cost Allocation Tags', 'Pricing']
     },
   };
@@ -264,10 +324,10 @@ export default function Layout({ children }) {
       {/* Top Navigation Bar */}
       <header className="bg-aws-squid text-white h-12 flex items-center px-4 justify-between z-50 fixed w-full top-0" style={{ minHeight: 48 }}>
         <div className="flex items-center gap-3">
-          {/* AWS Logo */}
+          {/* XWS Logo */}
           <Link to="/" className="flex items-center gap-1 hover:opacity-80 mr-1">
             <svg viewBox="0 0 60 36" className="h-6" style={{ width: 42 }}>
-              <text x="2" y="22" fill="white" fontSize="22" fontWeight="bold" fontFamily="'Helvetica Neue', Arial, sans-serif">aws</text>
+              <text x="2" y="22" fill="white" fontSize="22" fontWeight="bold" fontFamily="'Helvetica Neue', Arial, sans-serif">xws</text>
               <path d="M5 28 Q30 36 55 28" stroke="#FF9900" fill="none" strokeWidth="3" strokeLinecap="round"/>
             </svg>
           </Link>
@@ -275,7 +335,7 @@ export default function Layout({ children }) {
           {/* Services Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center gap-1 text-sm hover:text-aws-orange transition-colors px-2 py-1"
+            className="flex items-center gap-1 text-sm hover:text-white transition-colors px-2 py-1"
           >
             Services <ChevronDown size={12} />
           </button>
@@ -284,28 +344,28 @@ export default function Layout({ children }) {
         {/* Search Bar */}
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl mx-4 relative">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input
               ref={searchRef}
               type="text"
               placeholder="Search for services, features, blogs, docs, and more"
-              className="w-full text-white text-sm pl-9 pr-16 py-1.5 focus:outline-none focus:ring-1 focus:ring-aws-orange placeholder-gray-400"
-              style={{ background: '#1B2A3B', border: '1px solid #4a5568', borderRadius: 2 }}
+              className="w-full text-white text-sm pl-9 pr-16 py-1.5 focus:outline-none focus:ring-1 focus:ring-aws-blue placeholder-gray-400"
+              style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid #424650', borderRadius: 8 }}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
             />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">[Alt+S]</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-aws-text-secondary text-xs">[Alt+S]</span>
           </div>
           {/* Search Results Dropdown */}
           {searchFocused && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white text-aws-text shadow-lg border border-aws-border z-50 max-h-80 overflow-y-auto" style={{ borderRadius: 2 }}>
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white text-aws-text shadow-lg border border-aws-border z-50 max-h-80 overflow-y-auto" style={{ borderRadius: 8 }}>
               <div className="px-3 py-2 text-xs font-bold text-aws-text-secondary uppercase border-b">Services</div>
               {searchResults.map(s => (
                 <button
                   key={s.id}
-                  className="w-full flex items-center gap-3 px-3 py-2 hover:bg-blue-50 text-left"
+                  className="w-full flex items-center gap-3 px-3 py-2 hover:bg-aws-status-info-bg text-left"
                   onMouseDown={() => handleSearchNav(s.path)}
                 >
                   <s.icon size={16} style={{ color: s.color }} />
@@ -322,17 +382,17 @@ export default function Layout({ children }) {
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => { setNotifOpen(!notifOpen); setAccountOpen(false); setRegionOpen(false); }}
-              className="relative p-2 hover:text-aws-orange transition-colors"
+              className="relative p-2 hover:text-white transition-colors"
             >
               <Bell size={16} />
               {unreadCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 bg-aws-orange text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center" style={{ fontSize: 10 }}>
+                <span className="absolute top-0.5 right-0.5 bg-aws-error text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center" style={{ fontSize: 10 }}>
                   {unreadCount}
                 </span>
               )}
             </button>
             {notifOpen && (
-              <div className="absolute right-0 top-full mt-1 w-96 bg-white text-aws-text shadow-xl border border-aws-border z-50 max-h-96 overflow-y-auto" style={{ borderRadius: 2 }}>
+              <div className="absolute right-0 top-full mt-1 w-96 bg-white text-aws-text shadow-xl border border-aws-border z-50 max-h-96 overflow-y-auto" style={{ borderRadius: 8 }}>
                 <div className="flex items-center justify-between px-4 py-3 border-b">
                   <span className="font-bold text-sm">Notifications ({unreadCount} unread)</span>
                   <button
@@ -352,7 +412,7 @@ export default function Layout({ children }) {
                   state.notifications.map(n => (
                     <div
                       key={n.id}
-                      className={`flex items-start gap-3 px-4 py-3 border-b hover:bg-gray-50 cursor-pointer ${!n.read ? 'bg-blue-50/30' : ''}`}
+                      className={`flex items-start gap-3 px-4 py-3 border-b hover:bg-aws-status-info-bg/30 cursor-pointer ${!n.read ? 'bg-aws-status-info-bg/30' : ''}`}
                       onClick={() => dispatch({ type: 'MARK_NOTIFICATION_READ', payload: n.id })}
                     >
                       {!n.read && <div className="w-2 h-2 rounded-full bg-aws-blue mt-1.5 flex-shrink-0" />}
@@ -376,7 +436,7 @@ export default function Layout({ children }) {
           </div>
 
           {/* Help */}
-          <button className="p-2 hover:text-aws-orange transition-colors">
+          <button className="p-2 hover:text-white transition-colors">
             <HelpCircle size={16} />
           </button>
 
@@ -384,32 +444,32 @@ export default function Layout({ children }) {
           <div className="relative" ref={accountRef}>
             <button
               onClick={() => { setAccountOpen(!accountOpen); setNotifOpen(false); setRegionOpen(false); }}
-              className="flex items-center gap-1 px-2 py-1 hover:text-aws-orange transition-colors"
+              className="flex items-center gap-1 px-2 py-1 hover:text-white transition-colors"
             >
               <span className="text-sm">{state.user.name}</span>
               <ChevronDown size={12} />
             </button>
             {accountOpen && (
-              <div className="absolute right-0 top-full mt-1 w-72 bg-white text-aws-text shadow-xl border border-aws-border z-50" style={{ borderRadius: 2 }}>
-                <div className="px-4 py-3 border-b bg-gray-50">
+              <div className="absolute right-0 top-full mt-1 w-72 bg-white text-aws-text shadow-xl border border-aws-border z-50" style={{ borderRadius: 8 }}>
+                <div className="px-4 py-3 border-b bg-aws-status-info-bg/30">
                   <div className="text-xs text-aws-text-secondary">Account ID</div>
                   <div className="font-mono text-sm">{state.user.accountId}</div>
                   <div className="text-xs text-aws-text-secondary mt-1">{state.user.accountAlias}</div>
                 </div>
                 <div className="py-1">
-                  <Link to="/billing" onClick={() => setAccountOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 text-aws-blue">My Account</Link>
-                  <Link to="/billing" onClick={() => setAccountOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 text-aws-blue">My Billing Dashboard</Link>
-                  <Link to="/iam" onClick={() => setAccountOpen(false)} className="block px-4 py-2 text-sm hover:bg-gray-50 text-aws-blue">My Security Credentials</Link>
+                  <Link to="/billing" onClick={() => setAccountOpen(false)} className="block px-4 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-blue">My Account</Link>
+                  <Link to="/billing" onClick={() => setAccountOpen(false)} className="block px-4 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-blue">My Billing Dashboard</Link>
+                  <Link to="/iam" onClick={() => setAccountOpen(false)} className="block px-4 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-blue">My Security Credentials</Link>
                 </div>
                 <div className="border-t py-1">
                   <button
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-aws-blue"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-blue"
                     onClick={() => { dispatch({ type: 'ADD_FLASH', payload: { type: 'info', message: 'Switch role draft opened locally' } }); setAccountOpen(false); }}
                   >
                     Switch Role
                   </button>
                   <button
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-aws-blue"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-blue"
                     onClick={() => { dispatch({ type: 'ADD_FLASH', payload: { type: 'info', message: 'Signed out of this local sandbox session' } }); setAccountOpen(false); }}
                   >
                     Sign Out
@@ -423,27 +483,27 @@ export default function Layout({ children }) {
           <div className="relative" ref={regionRef}>
             <button
               onClick={() => { setRegionOpen(!regionOpen); setNotifOpen(false); setAccountOpen(false); }}
-              className="flex items-center gap-1 px-2 py-1 hover:text-aws-orange transition-colors"
+              className="flex items-center gap-1 px-2 py-1 hover:text-white transition-colors"
             >
               <span className="text-sm">{REGION_DISPLAY[state.user.region] || state.user.region}</span>
               <ChevronDown size={12} />
             </button>
             {regionOpen && (
-              <div className="absolute right-0 top-full mt-1 w-80 bg-aws-dark text-white shadow-xl border border-gray-700 z-50 max-h-96 overflow-y-auto" style={{ borderRadius: 2, background: '#1B2A3B' }}>
+              <div className="absolute right-0 top-full mt-1 w-80 bg-aws-dark text-white shadow-xl border border-gray-700 z-50 max-h-96 overflow-y-auto" style={{ borderRadius: 8, background: '#0f141a' }}>
                 {REGIONS.map(group => (
                   <div key={group.group}>
-                    <div className="px-3 py-1 text-xs text-gray-400 border-b border-gray-700">{group.group}</div>
+                    <div className="px-3 py-1 text-xs text-aws-text-disabled border-b border-gray-700">{group.group}</div>
                     {group.regions.map(r => (
                       <button
                         key={r.code}
-                        className={`w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-700 ${state.user.region === r.code ? 'text-aws-orange font-bold' : ''}`}
+                        className={`w-full flex items-center justify-between px-4 py-2 text-sm hover:bg-white/10 ${state.user.region === r.code ? 'text-white font-bold' : ''}`}
                         onClick={() => {
                           dispatch({ type: 'SET_REGION', payload: r.code });
                           setRegionOpen(false);
                         }}
                       >
                         <span>{r.name}</span>
-                        <span className="text-xs text-gray-400 font-mono">{r.code}</span>
+                        <span className="text-xs text-aws-text-disabled font-mono">{r.code}</span>
                       </button>
                     ))}
                   </div>
@@ -459,7 +519,7 @@ export default function Layout({ children }) {
         <div className="fixed inset-0 top-12 bg-black/50 z-40" onClick={() => setIsMenuOpen(false)}>
           <div className="bg-white shadow-xl border-r border-aws-border overflow-y-auto" style={{ width: 480, height: 'calc(100vh - 48px)' }} onClick={e => e.stopPropagation()}>
             <div className="p-4 border-b flex items-center gap-3">
-              <Search size={16} className="text-gray-400" />
+              <Search size={16} className="text-aws-text-disabled" />
               <input
                 className="flex-1 text-sm focus:outline-none"
                 placeholder="Search services..."
@@ -467,7 +527,7 @@ export default function Layout({ children }) {
                 onChange={e => setMenuSearch(e.target.value)}
                 autoFocus
               />
-              <button onClick={() => setIsMenuOpen(false)}><X size={18} className="text-gray-500" /></button>
+              <button onClick={() => setIsMenuOpen(false)}><X size={18} className="text-aws-text-secondary" /></button>
             </div>
             <div className="p-4 grid grid-cols-2 gap-6">
               {filteredCategories.map(cat => (
@@ -498,7 +558,7 @@ export default function Layout({ children }) {
           <aside className="w-56 bg-white border-r border-aws-border flex-shrink-0 overflow-y-auto fixed left-0 top-12" style={{ height: 'calc(100vh - 48px)', width: 220 }}>
             <nav className="py-2">
               {serviceName && (
-                <div className="px-4 py-2 text-sm font-bold text-aws-text border-b border-gray-100 mb-1">
+                <div className="px-4 py-2 text-sm font-bold text-aws-text border-b border-aws-border-secondary mb-1">
                   {serviceName}
                 </div>
               )}
@@ -527,7 +587,7 @@ export default function Layout({ children }) {
                       </div>
                     );
                   })}
-                  <div className="border-b border-gray-100 my-1" />
+                  <div className="border-b border-aws-border-secondary my-1" />
                 </>
               )}
               {sidebarItems.map((item, idx) => {
@@ -568,7 +628,7 @@ export default function Layout({ children }) {
           {serviceName && location.pathname !== '/' && (
             <div className="px-6 pt-4 pb-0 flex items-center justify-between text-sm">
               <div className="flex items-center gap-1">
-                <Link to="/" className="text-aws-blue hover:underline">AWS</Link>
+                <Link to="/" className="text-aws-blue hover:underline">XWS</Link>
                 <ChevronRight size={12} className="text-aws-text-secondary" />
                 {pageName ? (
                   <>
@@ -604,9 +664,9 @@ export default function Layout({ children }) {
               className="fixed right-0 top-12 bg-white border-l border-aws-border shadow-xl z-50 overflow-y-auto"
               style={{ width: 300, height: 'calc(100vh - 48px)', animation: 'slideInRight 0.2s ease-out' }}
             >
-              <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border bg-gray-50">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border bg-aws-status-info-bg/30">
                 <h3 className="font-bold text-sm">{helpContent.title}</h3>
-                <button onClick={() => setInfoOpen(false)} className="text-gray-500 hover:text-aws-text">
+                <button onClick={() => setInfoOpen(false)} className="text-aws-text-secondary hover:text-aws-text">
                   <X size={16} />
                 </button>
               </div>

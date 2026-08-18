@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { Database, HardDrive, Shield, Settings } from 'lucide-react';
 
 const STATUS_COLORS = {
-  available: 'bg-green-100 text-green-800',
-  stopped: 'bg-red-100 text-red-800',
-  creating: 'bg-blue-100 text-blue-800',
-  deleting: 'bg-orange-100 text-orange-800',
+  available: 'bg-aws-status-success-bg text-aws-success',
+  stopped: 'bg-aws-status-error-bg text-aws-error',
+  creating: 'bg-aws-blue-lighter text-aws-blue',
+  deleting: 'bg-aws-status-warning-bg text-aws-warning',
 };
 
 export default function RDSDashboard() {
@@ -36,7 +36,7 @@ export default function RDSDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold">Amazon RDS Dashboard</h1>
+      <h1 className="text-2xl font-bold">XWS RDS Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {resources.map(r => (
@@ -57,10 +57,10 @@ export default function RDSDashboard() {
               {Object.entries(statusCounts).map(([status, count]) => (
                 <div key={status} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className={`aws-badge ${STATUS_COLORS[status] || 'bg-gray-100 text-gray-800'}`}>{status}</span>
+                    <span className={`aws-badge ${STATUS_COLORS[status] || 'bg-aws-disabled-bg text-aws-text'}`}>{status}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-32 bg-gray-100 h-2 rounded-full">
+                    <div className="w-32 bg-aws-disabled-bg h-2 rounded-full">
                       <div className="h-2 rounded-full bg-aws-blue" style={{ width: `${(count / databases.length) * 100}%` }}></div>
                     </div>
                     <span className="text-sm font-medium w-6 text-right">{count}</span>
@@ -81,7 +81,7 @@ export default function RDSDashboard() {
                 <div key={engine} className="flex items-center justify-between">
                   <span className="text-sm font-medium capitalize">{engine}</span>
                   <div className="flex items-center gap-2">
-                    <div className="w-32 bg-gray-100 h-3 rounded-full">
+                    <div className="w-32 bg-aws-disabled-bg h-3 rounded-full">
                       <div className="h-3 rounded-full" style={{ width: `${(count / databases.length) * 100}%`, backgroundColor: engineColors[engine] || '#666' }}></div>
                     </div>
                     <span className="text-sm font-medium w-6 text-right">{count}</span>
@@ -100,8 +100,8 @@ export default function RDSDashboard() {
         ) : (
           <div className="space-y-2">
             {rdsNotifications.map((n, i) => (
-              <div key={i} className="flex items-start gap-3 py-2 border-b border-gray-100 last:border-0">
-                <span className={`aws-badge mt-0.5 ${n.type === 'success' ? 'bg-green-100 text-green-800' : n.type === 'error' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}`}>{n.type}</span>
+              <div key={i} className="flex items-start gap-3 py-2 border-b border-aws-border-secondary last:border-0">
+                <span className={`aws-badge mt-0.5 ${n.type === 'success' ? 'bg-aws-status-success-bg text-aws-success' : n.type === 'error' ? 'bg-aws-status-error-bg text-aws-error' : 'bg-aws-blue-lighter text-aws-blue'}`}>{n.type}</span>
                 <div>
                   <div className="text-sm font-medium">{n.title}</div>
                   <div className="text-xs text-aws-text-secondary">{n.message}</div>

@@ -54,18 +54,18 @@ export default function LambdaFunctions() {
   };
 
   const runtimeBadge = (rt) => {
-    if (rt.startsWith('nodejs')) return { label: 'Node.js', color: 'bg-green-100 text-green-800' };
-    if (rt.startsWith('python')) return { label: 'Python', color: 'bg-blue-100 text-blue-800' };
-    if (rt.startsWith('java')) return { label: 'Java', color: 'bg-red-100 text-red-800' };
+    if (rt.startsWith('nodejs')) return { label: 'Node.js', color: 'bg-aws-status-success-bg text-aws-success' };
+    if (rt.startsWith('python')) return { label: 'Python', color: 'bg-aws-blue-lighter text-aws-blue' };
+    if (rt.startsWith('java')) return { label: 'Java', color: 'bg-aws-status-error-bg text-aws-error' };
     if (rt.startsWith('go')) return { label: 'Go', color: 'bg-cyan-100 text-cyan-800' };
     if (rt.startsWith('dotnet')) return { label: '.NET', color: 'bg-purple-100 text-purple-800' };
-    return { label: rt, color: 'bg-gray-100 text-gray-800' };
+    return { label: rt, color: 'bg-aws-disabled-bg text-aws-text' };
   };
 
   if (showCreate) {
     return (
       <div className="max-w-3xl space-y-6">
-        <h1 className="text-xl font-bold">Create function</h1>
+        <h1 className="text-2xl font-bold">Create function</h1>
         <div className="aws-card space-y-6">
           <div>
             <h3 className="font-bold text-sm mb-3">Choose one of the following options</h3>
@@ -99,7 +99,7 @@ export default function LambdaFunctions() {
               <label className="flex items-center gap-2 text-sm"><input type="radio" checked={arch === 'arm64'} onChange={() => setArch('arm64')} /> arm64</label>
             </div>
           </div>
-          <div className="bg-gray-50 p-3 border border-gray-200 text-sm text-aws-text-secondary">
+          <div className="bg-aws-status-info-bg/30 p-3 border border-aws-border-secondary text-sm text-aws-text-secondary">
             Execution role: Create a new role with basic Lambda permissions
           </div>
           <div className="flex justify-end gap-2 pt-2">
@@ -116,13 +116,13 @@ export default function LambdaFunctions() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Functions ({state.lambda.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create function</button>
         </div>
       </div>
-      <div className="px-4 py-2 border-b border-gray-100">
+      <div className="px-4 py-2 border-b border-aws-border-secondary">
         <div className="relative max-w-sm">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
           <input className="aws-input pl-8" placeholder="Filter by function name" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
       </div>
@@ -144,7 +144,7 @@ export default function LambdaFunctions() {
           })}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
         Showing 1-{functions.length} of {functions.length} items
       </div>
     </div>

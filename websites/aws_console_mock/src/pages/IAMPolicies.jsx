@@ -14,7 +14,7 @@ export default function IAMPolicies() {
 
   const allPolicies = state.iam.policies;
   const policies = allPolicies.filter(p => {
-    if (filter === 'aws' && p.type !== 'AWS managed') return false;
+    if (filter === 'aws' && p.type !== 'XWS managed') return false;
     if (filter === 'customer' && p.type !== 'Customer managed') return false;
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
@@ -59,26 +59,26 @@ export default function IAMPolicies() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Policies ({allPolicies.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <div className="relative">
               <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" disabled={!selected.length} onClick={() => setPolicyActionsOpen(!policyActionsOpen)}>
                 Policy actions <ChevronDown size={12} />
               </button>
               {policyActionsOpen && selected.length > 0 && (
                 <div className="absolute right-0 top-full mt-1 w-52 bg-white border border-aws-border shadow-lg z-20" style={{ borderRadius: 8 }}>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', 'Attach entities dialog (simulated)'); setPolicyActionsOpen(false); }}>Attach</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', 'Detach entities dialog (simulated)'); setPolicyActionsOpen(false); }}>Detach</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', 'Set as permissions boundary (simulated)'); setPolicyActionsOpen(false); }}>Set permissions boundary</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', 'Attach entities dialog (simulated)'); setPolicyActionsOpen(false); }}>Attach</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', 'Detach entities dialog (simulated)'); setPolicyActionsOpen(false); }}>Detach</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', 'Set as permissions boundary (simulated)'); setPolicyActionsOpen(false); }}>Set permissions boundary</button>
                 </div>
               )}
             </div>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete</button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create policy</button>
           </div>
         </div>
         {/* Filter tabs */}
-        <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-4">
-          {[{ key: 'all', label: `All policies (${allPolicies.length})` }, { key: 'aws', label: `AWS managed (${allPolicies.filter(p=>p.type==='AWS managed').length})` }, { key: 'customer', label: `Customer managed (${allPolicies.filter(p=>p.type==='Customer managed').length})` }].map(f => (
+        <div className="px-4 py-2 border-b border-aws-border-secondary flex items-center gap-4">
+          {[{ key: 'all', label: `All policies (${allPolicies.length})` }, { key: 'aws', label: `XWS managed (${allPolicies.filter(p=>p.type==='XWS managed').length})` }, { key: 'customer', label: `Customer managed (${allPolicies.filter(p=>p.type==='Customer managed').length})` }].map(f => (
             <button
               key={f.key}
               onClick={() => { setFilter(f.key); setSelected([]); }}
@@ -88,9 +88,9 @@ export default function IAMPolicies() {
             </button>
           ))}
         </div>
-        <div className="px-4 py-2 border-b border-gray-100">
+        <div className="px-4 py-2 border-b border-aws-border-secondary">
           <div className="relative max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input className="aws-input pl-8" placeholder="Search by policy name" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
@@ -103,13 +103,13 @@ export default function IAMPolicies() {
           </thead>
           <tbody>
             {policies.map(p => (
-              <tr key={p.arn || p.name} className={`cursor-pointer ${selected.includes(p.arn) ? 'bg-blue-50/50' : ''}`} onClick={() => setDetailPolicy(p)}>
+              <tr key={p.arn || p.name} className={`cursor-pointer ${selected.includes(p.arn) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailPolicy(p)}>
                 <td onClick={e => e.stopPropagation()}>
                   <input type="checkbox" checked={selected.includes(p.arn)} onChange={() => toggleSelect(p.arn)} />
                 </td>
                 <td className="text-aws-blue font-medium hover:underline">{p.name}</td>
                 <td>
-                  <span className={`aws-badge ${p.type === 'AWS managed' ? 'bg-blue-50 text-blue-800' : 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`aws-badge ${p.type === 'XWS managed' ? 'bg-aws-status-info-bg text-aws-blue' : 'bg-aws-disabled-bg text-aws-text-secondary'}`}>
                     {p.type}
                   </span>
                 </td>
@@ -121,7 +121,7 @@ export default function IAMPolicies() {
             {policies.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-aws-text-secondary">No policies found</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
           Showing 1-{policies.length} of {policies.length} items
         </div>
       </div>
@@ -158,7 +158,7 @@ export default function IAMPolicies() {
             </div>
             <div className="aws-modal-body space-y-4">
               <div>
-                <label className="aws-form-label">Policy name <span className="text-red-500">*</span></label>
+                <label className="aws-form-label">Policy name <span className="text-aws-error">*</span></label>
                 <input className="aws-input mt-1" value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="MyCustomPolicy" />
               </div>
               <div>
@@ -185,9 +185,9 @@ export default function IAMPolicies() {
                   <input className="aws-input mt-1" value={form.resource} onChange={e => setForm({...form, resource: e.target.value})} placeholder="arn:aws:s3:::my-bucket/*" />
                 </div>
               </div>
-              <div className="bg-gray-50 rounded p-3">
+              <div className="bg-aws-status-info-bg/30 rounded p-3">
                 <h4 className="font-bold text-xs mb-1">Preview</h4>
-                <pre className="text-xs font-mono text-gray-700">{JSON.stringify({
+                <pre className="text-xs font-mono text-aws-text-secondary">{JSON.stringify({
                   Version: '2012-10-17',
                   Statement: [{ Effect: form.effect, Action: form.action, Resource: form.resource }]
                 }, null, 2)}</pre>

@@ -67,12 +67,12 @@ export default function EC2Volumes() {
           <h2 className="font-bold text-lg flex items-center gap-2"><HardDrive size={18} /> Volumes ({volumes.length})</h2>
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
               <input className="aws-input pl-7 text-sm w-56" placeholder="Search volumes..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            <button className="p-1.5 hover:bg-gray-100" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <button className="aws-btn aws-btn-secondary text-xs" disabled={!selected.length} onClick={handleDetach}>Detach</button>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete</button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create volume</button>
           </div>
         </div>
@@ -83,13 +83,13 @@ export default function EC2Volumes() {
           </tr></thead>
           <tbody>
             {volumes.map(v => (
-              <tr key={v.id} className={selected.includes(v.id) ? 'bg-blue-50' : ''}>
+              <tr key={v.id} className={selected.includes(v.id) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(v.id)} onChange={() => toggleSelect(v.id)} /></td>
                 <td className="text-aws-blue font-medium">{v.name}</td>
                 <td className="font-mono text-sm">{v.id}</td>
                 <td>{v.size} GiB</td>
                 <td><span className="text-xs font-mono">{v.volumeType}</span></td>
-                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${v.state === 'in-use' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>{v.state}</span></td>
+                <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${v.state === 'in-use' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-blue-lighter text-aws-blue'}`}>{v.state}</span></td>
                 <td>{v.iops || '-'}</td>
                 <td className="font-mono text-sm">{v.attachedTo || '-'}</td>
                 <td>{v.az}</td>
@@ -105,7 +105,7 @@ export default function EC2Volumes() {
       {showCreate && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white shadow-xl w-full max-w-md border border-aws-border">
-            <div className="flex items-center justify-between px-4 py-3 border-b bg-gray-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
               <h3 className="font-bold">Create volume</h3>
               <button onClick={() => setShowCreate(false)}><X size={18} /></button>
             </div>

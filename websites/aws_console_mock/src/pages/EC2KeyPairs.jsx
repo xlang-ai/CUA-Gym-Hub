@@ -83,30 +83,30 @@ export default function EC2KeyPairs() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Key Pairs ({state.keyPairs.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <div className="relative">
               <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" disabled={!selected.length} onClick={() => setActionsOpen(!actionsOpen)}>
                 Actions <ChevronDown size={12} />
               </button>
               {actionsOpen && selected.length > 0 && (
                 <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-aws-border shadow-lg z-20" style={{ borderRadius: 8 }}>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => {
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => {
                     const kp = state.keyPairs.find(item => item.name === selected[0]);
                     downloadPrivateKey(kp);
                     addFlash('success', `Private key downloaded for ${selected[0]}`);
                     setActionsOpen(false);
                   }}>Download private key</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50" onClick={() => { addFlash('info', `Copied key fingerprint`); setActionsOpen(false); }}>Copy fingerprint</button>
+                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', `Copied key fingerprint`); setActionsOpen(false); }}>Copy fingerprint</button>
                 </div>
               )}
             </div>
-            <button className="aws-btn aws-btn-secondary text-xs text-red-600" disabled={!selected.length} onClick={handleDelete}>Delete</button>
+            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create key pair</button>
           </div>
         </div>
-        <div className="px-4 py-2 border-b border-gray-100">
+        <div className="px-4 py-2 border-b border-aws-border-secondary">
           <div className="relative max-w-sm">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input className="aws-input pl-8" placeholder="Filter key pairs" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </div>
@@ -123,12 +123,12 @@ export default function EC2KeyPairs() {
           </thead>
           <tbody>
             {kps.map(kp => (
-              <tr key={kp.name} className={selected.includes(kp.name) ? 'bg-blue-50/50' : ''}>
+              <tr key={kp.name} className={selected.includes(kp.name) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(kp.name)} onChange={() => toggleSelect(kp.name)} /></td>
                 <td className="text-aws-blue font-medium">{kp.name}</td>
                 <td>
                   <span className="font-mono text-sm">{kp.id}</span>
-                  <button className="ml-1 text-gray-400 hover:text-gray-600" onClick={() => copyToClipboard(kp.id)}><Copy size={12} /></button>
+                  <button className="ml-1 text-aws-text-disabled hover:text-aws-text-secondary" onClick={() => copyToClipboard(kp.id)}><Copy size={12} /></button>
                 </td>
                 <td>{kp.type}</td>
                 <td className="font-mono text-xs text-aws-text-secondary max-w-xs truncate">{kp.fingerprint}</td>
@@ -138,7 +138,7 @@ export default function EC2KeyPairs() {
             {kps.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-aws-text-secondary">No key pairs found</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-gray-100 text-xs text-aws-text-secondary">
+        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
           Showing 1-{kps.length} of {kps.length} items
         </div>
       </div>
@@ -152,16 +152,16 @@ export default function EC2KeyPairs() {
             </div>
             <div className="aws-modal-body space-y-4">
               <div>
-                <label className="aws-form-label">Name <span className="text-red-500">*</span></label>
+                <label className="aws-form-label">Name <span className="text-aws-error">*</span></label>
                 <input className="aws-input mt-1" value={name} onChange={e => setName(e.target.value)} placeholder="my-key-pair" />
               </div>
               <div>
                 <label className="aws-form-label">Key pair type</label>
                 <div className="flex gap-4 mt-1">
-                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-aws-status-info-bg/30">
                     <input type="radio" checked={keyType === 'RSA'} onChange={() => setKeyType('RSA')} /> RSA
                   </label>
-                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-aws-status-info-bg/30">
                     <input type="radio" checked={keyType === 'ED25519'} onChange={() => setKeyType('ED25519')} /> ED25519
                   </label>
                 </div>
@@ -169,11 +169,11 @@ export default function EC2KeyPairs() {
               <div>
                 <label className="aws-form-label">Private key file format</label>
                 <div className="flex gap-4 mt-1">
-                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-aws-status-info-bg/30">
                     <input type="radio" checked={keyFormat === '.pem'} onChange={() => setKeyFormat('.pem')} /> .pem
                     <span className="text-xs text-aws-text-secondary">(OpenSSH)</span>
                   </label>
-                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-gray-50">
+                  <label className="flex items-center gap-2 text-sm border border-aws-border rounded px-3 py-2 cursor-pointer hover:bg-aws-status-info-bg/30">
                     <input type="radio" checked={keyFormat === '.ppk'} onChange={() => setKeyFormat('.ppk')} /> .ppk
                     <span className="text-xs text-aws-text-secondary">(PuTTY)</span>
                   </label>

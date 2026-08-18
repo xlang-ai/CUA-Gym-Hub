@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { Network, GitBranch, Route, Globe, ArrowUpRight, Shield } from 'lucide-react';
 
 const cards = [
-  { key: 'vpcs', label: 'VPCs', icon: Network, path: '/vpc/vpcs', color: 'text-blue-600' },
-  { key: 'subnets', label: 'Subnets', icon: GitBranch, path: '/vpc/subnets', color: 'text-green-600' },
+  { key: 'vpcs', label: 'VPCs', icon: Network, path: '/vpc/vpcs', color: 'text-aws-blue' },
+  { key: 'subnets', label: 'Subnets', icon: GitBranch, path: '/vpc/subnets', color: 'text-aws-success' },
   { key: 'routeTables', label: 'Route Tables', icon: Route, path: '/vpc/route-tables', color: 'text-purple-600' },
-  { key: 'internetGateways', label: 'Internet Gateways', icon: Globe, path: '/vpc/internet-gateways', color: 'text-orange-600' },
+  { key: 'internetGateways', label: 'Internet Gateways', icon: Globe, path: '/vpc/internet-gateways', color: 'text-aws-warning' },
   { key: 'natGateways', label: 'NAT Gateways', icon: ArrowUpRight, path: '/vpc/nat-gateways', color: 'text-teal-600' },
-  { key: 'networkAcls', label: 'Network ACLs', icon: Shield, path: '/vpc/network-acls', color: 'text-red-600' },
+  { key: 'networkAcls', label: 'Network ACLs', icon: Shield, path: '/vpc/network-acls', color: 'text-aws-error' },
 ];
 
 export default function VPCDashboard() {
@@ -18,7 +18,7 @@ export default function VPCDashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-aws-text">VPC Dashboard</h1>
+      <h1 className="text-2xl font-bold text-aws-text">VPC Dashboard</h1>
       <div className="aws-card">
         <h2 className="font-bold text-sm mb-1">Resources by Region</h2>
         <p className="text-xs text-aws-text-secondary mb-4">Region: {state.user.region}</p>
@@ -27,7 +27,7 @@ export default function VPCDashboard() {
             const Icon = c.icon;
             const count = (vpc[c.key] || []).length;
             return (
-              <Link key={c.key} to={c.path} className="border border-aws-border rounded p-4 hover:bg-gray-50 hover:border-aws-blue transition-colors cursor-pointer block">
+              <Link key={c.key} to={c.path} className="border border-aws-border rounded p-4 hover:bg-aws-status-info-bg/30 hover:border-aws-blue transition-colors cursor-pointer block">
                 <div className="flex items-center gap-3 mb-2">
                   <Icon size={20} className={c.color} />
                   <span className="text-sm font-medium text-aws-text">{c.label}</span>
@@ -49,7 +49,7 @@ export default function VPCDashboard() {
               <tr key={v.id}>
                 <td className="font-mono text-sm text-aws-blue">{v.id}</td>
                 <td className="font-medium">{v.name}</td>
-                <td><span className="aws-badge bg-green-50 text-green-700">{v.state}</span></td>
+                <td><span className="aws-badge bg-aws-status-success-bg text-aws-success">{v.state}</span></td>
                 <td className="font-mono text-sm">{v.cidr}</td>
                 <td>{v.isDefault ? 'Yes' : 'No'}</td>
               </tr>

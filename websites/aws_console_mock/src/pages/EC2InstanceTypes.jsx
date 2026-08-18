@@ -41,7 +41,7 @@ export default function EC2InstanceTypes() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg">Instance types ({filtered.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-gray-100 rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <button className="aws-btn aws-btn-secondary text-xs">Instance type finder</button>
             <div className="relative">
               <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1">
@@ -52,16 +52,16 @@ export default function EC2InstanceTypes() {
         </div>
 
         {/* Search */}
-        <div className="flex items-center gap-3 px-4 py-2 border-b border-gray-100">
+        <div className="flex items-center gap-3 px-4 py-2 border-b border-aws-border-secondary">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled w-4 h-4" />
             <input className="aws-input pl-8" placeholder="Find instance type by attribute" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <div className="flex items-center gap-2 text-xs text-aws-text-secondary ml-auto">
-            <button className="px-2 py-0.5 border border-aws-border rounded hover:bg-gray-50" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>&lt;</button>
+            <button className="px-2 py-0.5 border border-aws-border rounded hover:bg-aws-status-info-bg/30" disabled={page <= 1} onClick={() => setPage(p => Math.max(1, p - 1))}>&lt;</button>
             <span>{page} of {totalPages}</span>
-            <button className="px-2 py-0.5 border border-aws-border rounded hover:bg-gray-50" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>&gt;</button>
-            <button className="p-1.5 hover:bg-gray-100 rounded"><Settings size={14} className="text-aws-text-secondary" /></button>
+            <button className="px-2 py-0.5 border border-aws-border rounded hover:bg-aws-status-info-bg/30" disabled={page >= totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>&gt;</button>
+            <button className="p-1.5 hover:bg-aws-disabled-bg rounded"><Settings size={14} className="text-aws-text-secondary" /></button>
           </div>
         </div>
 
@@ -98,7 +98,7 @@ export default function EC2InstanceTypes() {
             </thead>
             <tbody>
               {paginated.map(t => (
-                <tr key={t.type} className={selectedTypes.includes(t.type) ? 'bg-blue-50/50' : ''}>
+                <tr key={t.type} className={selectedTypes.includes(t.type) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td>
                     <input type="checkbox" checked={selectedTypes.includes(t.type)} onChange={e => {
                       if (e.target.checked) setSelectedTypes([...selectedTypes, t.type]);
