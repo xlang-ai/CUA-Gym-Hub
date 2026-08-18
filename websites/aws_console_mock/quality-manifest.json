@@ -1,18 +1,21 @@
 {
   "app": "aws_console_mock",
   "display_name": "XWS Console Mock",
-  "app_version": "1.2.0",
+  "app_version": "1.2.1",
   "baseline_git_sha": "f9e1b06ccf680c59c388852641221426899cb7de",
   "reference": {
     "product": "AWS Management Console",
     "design_system": "Cloudscape Design System",
-    "reference_kind": "design-tokens",
-    "note": "Cloudscape is open source, so visual fidelity is measured against pinned token values rather than screenshots of the live product. Token generation is pinned to a single release; the previous palette mixed two."
+    "reference_kind": "frozen structural + capability specification",
+    "reference_file": "reference/console-reference.2026-08.yaml",
+    "reference_version": "2026-08",
+    "ownership": "supervisor-owned; repair agents must not edit it, because capability recall divides by it",
+    "note": "Deliberately not scraped from the live product: it changes underneath us, scraping raises compliance questions, and image search returned unusable results. A frozen spec is both stable and machine-checkable."
   },
   "gates": {
     "runner": "node quality.contract.mjs --base http://localhost:5273",
-    "passed": 15,
-    "total": 15,
+    "passed": 18,
+    "total": 18,
     "blocking_failures": 0,
     "detail": {
       "G1.1_state_diff_clean_on_partial_inject": "PASS",
@@ -29,7 +32,10 @@
       "H3_no_undesensitized_trademarks_in_prose": "PASS",
       "H4_design_tokens_instead_of_raw_palette": "PASS",
       "G1.3_transient_ui_state_excluded_from_diff": "PASS",
-      "H5_derived_iam_counts_consistent": "PASS"
+      "H5_derived_iam_counts_consistent": "PASS",
+      "A1_reference_routes_all_implemented": "PASS",
+      "A2_required_services_reachable_from_nav": "PASS",
+      "A3_design_tokens_match_pinned_reference": "PASS"
     }
   },
   "metrics": {
@@ -157,6 +163,14 @@
         "before": "all rules rendered as Custom/All",
         "after": "protocol and port resolved from either field name"
       }
+    },
+    "authenticity": {
+      "reference_routes_required": 62,
+      "reference_routes_implemented": 62,
+      "required_services": 14,
+      "services_reachable_from_nav": 14,
+      "pinned_tokens_verified": 11,
+      "pinned_tokens_mismatched": 0
     }
   },
   "verification": {
@@ -184,19 +198,20 @@
     }
   },
   "authenticity": {
-    "status": "PARTIALLY_MEASURED",
+    "status": "MEASURED_STRUCTURALLY",
     "measured": [
-      "design token conformance to pinned Cloudscape values",
+      "route coverage vs frozen reference (62/62)",
+      "required-service navigation reachability (14/14)",
+      "design token conformance to pinned Cloudscape values (11 tokens)",
       "typography scale conformance",
       "component radius and status-color conformance",
       "brand-color usage rule (orange is logo-only)"
     ],
     "not_measured": [
-      "visual structure similarity against captured reference screenshots",
-      "workflow-step parity against the real console",
-      "capability recall against a frozen reference capability list"
+      "pixel- or bounding-box-level comparison against captured screenshots of the live console",
+      "workflow step-count parity against the real console"
     ],
-    "note": "Token-level fidelity is machine-checked. Structural/workflow fidelity still needs a frozen reference capability+layout spec per service; that spec does not exist yet and is the main remaining gap toward 'no visible difference from the real console'."
+    "blocked": "Screenshot-level comparison needs a clean corpus of real-console captures. The repo image-search skill returns unrelated content and is unusable; no compliant capture source has been identified."
   },
   "residual_risks": [
     "A session that never receives POST action=set has no frozen baseline: /go falls back to initial = current, so state_diff stays empty. Real tasks always inject first, so this is latent, but first set_current arguably should freeze a baseline. Not changed here because set_current explicitly promises never to touch .initial.json (golden_patch semantics).",

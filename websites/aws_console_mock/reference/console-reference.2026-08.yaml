@@ -1,0 +1,267 @@
+# Frozen structural + capability reference for the XWS Console mock.
+#
+# WHY THIS FILE EXISTS
+# Authenticity ("does it look and behave like the real console?") cannot be scored
+# without a reference, and the reference cannot be the live product: it changes under
+# us, scraping it is a compliance problem, and image search returns unusable results.
+# So the reference is this document — a deliberately frozen description of the real
+# AWS Management Console's structure and capabilities as of the stated version.
+#
+# OWNERSHIP RULE (important)
+# This file is supervisor-owned. Repair agents may NOT edit it. Capability recall is
+# `implemented / required`, so an agent able to edit the denominator could raise its
+# score by deleting requirements instead of implementing them. Any change here must be
+# a deliberate, reviewed update to what we claim the real console does.
+#
+# Scored by: node quality.contract.mjs (gates A1-A3)
+
+reference_version: "2026-08"
+product: AWS Management Console
+design_system: Cloudscape Design System
+scope_note: >
+  The real console exposes 200+ services. This mock deliberately targets the subset that
+  computer-use tasks actually exercise. `services.required` is that committed subset —
+  it is the recall denominator. Services outside it are out of scope, not failures.
+
+# ---------------------------------------------------------------- global chrome
+layout:
+  top_navigation:
+    required_elements:
+      - logo_home_link
+      - services_menu
+      - global_search
+      - notifications
+      - help
+      - account_menu
+      - region_selector
+    rules:
+      - id: brand-color-scope
+        description: Orange is the logo mark only. No interactive or active state uses it.
+      - id: dark-surface
+        description: Top navigation sits on the dark squid surface, not white.
+  side_navigation:
+    description: Per-service secondary nav, present on every service route.
+    rules:
+      - id: every-entry-live
+        description: Every sidebar entry resolves to a real page. No placeholders.
+  content:
+    required_elements:
+      - breadcrumb
+      - page_header_h1
+    rules:
+      - id: h1-scale
+        description: Page titles use the Cloudscape H1 scale (24px/30px bold).
+  table_convention:
+    required_elements:
+      - selection_column
+      - filter_input
+      - item_count_summary
+    optional_elements:
+      - pagination
+      - preferences_gear
+
+# ---------------------------------------------------------------- services
+# `capabilities` are the operations a task could plausibly ask an agent to perform.
+# Each maps to a route that must exist and be reachable from navigation.
+services:
+  required:
+    ec2:
+      display_name: EC2
+      routes:
+        - /ec2
+        - /ec2/dashboard
+        - /ec2/instances/:instanceId
+        - /ec2/instance-types
+        - /ec2/launch-templates
+        - /ec2/amis
+        - /ec2/volumes
+        - /ec2/snapshots
+        - /ec2/security-groups
+        - /ec2/key-pairs
+        - /ec2/elastic-ips
+        - /ec2/load-balancers
+        - /ec2/target-groups
+        - /ec2/auto-scaling-groups
+      capabilities:
+        - list_instances
+        - view_instance_detail
+        - launch_instance
+        - stop_start_reboot_instance
+        - terminate_instance
+        - manage_security_group_rules
+        - create_delete_security_group
+        - create_delete_key_pair
+        - create_delete_volume
+        - create_snapshot
+        - allocate_associate_elastic_ip
+    s3:
+      display_name: S3
+      routes: [/s3, "/s3/:bucketName", /s3/access-points, /s3/batch-operations, /s3/storage-lens]
+      capabilities:
+        - list_buckets
+        - create_delete_bucket
+        - browse_objects
+        - upload_object
+        - download_object
+        - delete_object
+        - create_folder
+    lambda:
+      display_name: Lambda
+      routes: [/lambda, /lambda/dashboard, /lambda/layers, /lambda/applications, "/lambda/:functionName"]
+      capabilities:
+        - list_functions
+        - create_delete_function
+        - edit_function_code
+        - edit_function_configuration
+        - manage_layers
+    rds:
+      display_name: RDS
+      routes:
+        - /rds
+        - /rds/dashboard
+        - /rds/snapshots
+        - /rds/subnet-groups
+        - /rds/parameter-groups
+        - /rds/query-editor
+        - /rds/performance-insights
+        - /rds/automated-backups
+        - "/rds/:dbId"
+      capabilities:
+        - list_databases
+        - create_delete_instance
+        - stop_start_instance
+        - create_snapshot
+        - run_query
+        - view_performance_insights
+    iam:
+      display_name: IAM
+      routes:
+        - /iam
+        - /iam/users
+        - /iam/groups
+        - /iam/roles
+        - /iam/policies
+        - /iam/identity-providers
+        - /iam/account-settings
+      capabilities:
+        - list_users
+        - create_delete_user
+        - manage_group_membership
+        - attach_detach_user_policy
+        - create_delete_policy
+        - manage_access_keys
+    vpc:
+      display_name: VPC
+      routes: [/vpc, /vpc/vpcs, /vpc/subnets, /vpc/route-tables, /vpc/internet-gateways, /vpc/nat-gateways]
+      capabilities:
+        - create_delete_vpc
+        - create_delete_subnet
+        - manage_route_tables
+        - manage_gateways
+    cloudwatch:
+      display_name: CloudWatch
+      routes: [/cloudwatch, /cloudwatch/alarms, /cloudwatch/logs, /cloudwatch/dashboards]
+      capabilities:
+        - create_delete_alarm
+        - view_log_groups
+        - manage_dashboards
+    dynamodb:
+      display_name: DynamoDB
+      routes: [/dynamodb/tables, "/dynamodb/tables/:tableName"]
+      capabilities: [list_tables, create_delete_table, view_table_detail]
+    sns:
+      display_name: SNS
+      routes: [/sns/topics]
+      capabilities: [create_delete_topic, manage_subscriptions]
+    sqs:
+      display_name: SQS
+      routes: [/sqs/queues]
+      capabilities: [create_delete_queue, send_message, purge_queue]
+    route53:
+      display_name: Route 53
+      routes: [/route53/hosted-zones]
+      capabilities: [create_delete_hosted_zone, manage_records]
+    cloudfront:
+      display_name: CloudFront
+      routes: [/cloudfront/distributions]
+      capabilities: [create_delete_distribution]
+    cloudtrail:
+      display_name: CloudTrail
+      routes: [/cloudtrail/events]
+      capabilities: [view_event_history]
+    billing:
+      display_name: Billing
+      routes:
+        - /billing
+        - /billing/cost-explorer
+        - /billing/bills
+        - /billing/budgets
+        - /billing/payment-methods
+        - /billing/tax-settings
+      capabilities:
+        - view_cost_summary
+        - explore_costs
+        - view_bills
+        - create_budget
+        - add_payment_method
+        - edit_tax_settings
+
+  # Present in the real console, deliberately not modelled. Listed so the omission is a
+  # recorded decision rather than an unnoticed gap.
+  out_of_scope:
+    - ECS / EKS / Fargate
+    - Step Functions / EventBridge / API Gateway
+    - SageMaker / Bedrock
+    - Secrets Manager / KMS / ACM / Certificate Manager
+    - Systems Manager / Config / Organizations / Control Tower
+    - Athena / Glue / EMR / Redshift
+    - Cognito / Amplify / AppSync
+
+# ---------------------------------------------------------------- design tokens
+# Pinned Cloudscape values. A single generation — mixing releases is what made the
+# earlier build read as "not quite AWS".
+design_tokens:
+  color_background_home_header: "#0f141a"
+  color_background_layout_main: "#ffffff"
+  color_text_body_default: "#0f141a"
+  color_text_body_secondary: "#424650"
+  color_text_disabled: "#b4b4bb"
+  color_text_form_secondary: "#656871"
+  color_border_divider_default: "#c6c6cd"
+  color_border_divider_secondary: "#ebebf0"
+  color_border_input_default: "#8c8c94"
+  color_background_button_primary_default: "#006ce0"
+  color_background_button_primary_hover: "#002b66"
+  color_background_button_normal_hover: "#f0fbff"
+  color_background_button_normal_active: "#d1f1ff"
+  color_text_status_success: "#00802f"
+  color_text_status_error: "#db0000"
+  color_text_status_warning: "#855900"
+  color_text_status_info: "#006ce0"
+  color_background_status_success: "#effff1"
+  color_background_status_error: "#fff5f5"
+  color_background_status_warning: "#fffef0"
+  color_background_status_info: "#f0fbff"
+  color_background_control_disabled: "#ebebf0"
+  color_border_control_disabled: "#b4b4bb"
+  brand_accent_logo_only: "#FF9900"
+
+typography:
+  font_family_base: Open Sans
+  scale:
+    h1: { size: 24px, line_height: 30px, weight: 700 }
+    h2: { size: 20px, line_height: 24px, weight: 700 }
+    h3: { size: 18px, line_height: 22px, weight: 700 }
+    h4: { size: 16px, line_height: 20px, weight: 700 }
+    h5: { size: 14px, line_height: 18px, weight: 700 }
+    body: { size: 14px, line_height: 20px, weight: 400 }
+    small: { size: 12px, line_height: 16px, weight: 400 }
+
+geometry:
+  border_radius:
+    button: 8px
+    input: 8px
+    tile: 8px
+    container: 16px
+    badge: 4px
+  spacing_base: 4px

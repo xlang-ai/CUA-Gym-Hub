@@ -4,6 +4,33 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.2.1
+
+Makes visual/structural authenticity measurable. No change to app behaviour.
+
+### Added
+
+- `reference/console-reference.2026-08.yaml` — a frozen structural and capability
+  specification of the real AWS Management Console. Authenticity cannot be scored without
+  a reference, and the reference cannot be the live product: it moves underneath us,
+  scraping it raises compliance questions, and image search returns unusable results. A
+  version-frozen spec is stable, reviewable, and machine-checkable.
+  The file is **supervisor-owned — repair agents must not edit it**, because capability
+  recall divides by it and an agent able to edit the denominator could raise its score by
+  deleting requirements rather than implementing them.
+- Three authenticity gates: `A1` every reference route is implemented (62/62), `A2` every
+  required service is reachable from navigation (14/14), `A3` design tokens match the
+  pinned Cloudscape values (11 tokens, 0 mismatches).
+- The reference records which real-console services are deliberately **out of scope** (ECS,
+  Step Functions, SageMaker, Secrets Manager, Athena, Cognito, …) so the omission is a
+  recorded decision rather than an unnoticed gap.
+
+### Quality gates
+
+18/18 pass. Authenticity status moves from `NOT_MEASURED` to `MEASURED_STRUCTURALLY`.
+Still unmeasured, and now explicitly recorded as blocked: pixel-level comparison against
+captured screenshots of the live console, and workflow step-count parity.
+
 ## 1.2.0
 
 Closes the functional gaps that survived 1.1.0, plus two more reward-signal defects

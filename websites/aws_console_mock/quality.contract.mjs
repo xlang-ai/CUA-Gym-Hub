@@ -215,6 +215,93 @@ await check('H5', 'derived IAM counts match actual references', async () => {
   return `${(iam.policies || []).length} policies, all counts consistent`;
 });
 
+
+// ------------------------------------------------- A: authenticity vs frozen reference
+// The reference is reference/console-reference.<version>.yaml — a supervisor-owned,
+// version-frozen description of the real console. It is deliberately NOT scraped from
+// the live product. Repair agents must not edit it: capability recall divides by it.
+function loadReference() {
+  const dir = path.join(ROOT, 'reference');
+  const file = fs.readdirSync(dir).filter((f) => f.endsWith('.yaml')).sort().pop();
+  const text = fs.readFileSync(path.join(dir, file), 'utf8');
+  return { file, text };
+}
+
+// Minimal extraction: we only need route lists, service ids and the token table, so a
+// targeted parse beats pulling in a YAML dependency for a checker that must stay
+// runnable with zero install.
+function referenceRoutes(text) {
+  const routes = new Set();
+  for (const m of text.matchAll(/^\s*-\s+(\/[A-Za-z0-9/:._-]+)\s*$/gm)) routes.add(m[1]);
+  for (const m of text.matchAll(/routes:\s*\[([^\]]+)\]/g)) {
+    for (const r of m[1].split(',')) {
+      const v = r.trim().replace(/^["']|["']$/g, '');
+      if (v.startsWith('/')) routes.add(v);
+    }
+  }
+  return [...routes];
+}
+function referenceTokens(text) {
+  const out = {};
+  const start = text.indexOf('design_tokens:');
+  const end = text.indexOf('typography:', start);
+  for (const m of text.slice(start, end).matchAll(/^\s{2}([a-z_0-9]+):\s*"(#[0-9a-fA-F]{6})"/gm)) {
+    out[m[1]] = m[2].toLowerCase();
+  }
+  return out;
+}
+
+await check('A1', 'every route the reference requires exists in the route table', () => {
+  const { file, text } = loadReference();
+  const app = read('src/App.jsx');
+  const declared = new Set(
+    [...app.matchAll(/<Route\s+path="([^"]+)"/g)].map((m) => m[1])
+  );
+  const missing = referenceRoutes(text).filter((r) => !declared.has(r));
+  assert(missing.length === 0, `${missing.length} reference routes not implemented: ${missing.slice(0, 8).join(', ')}`);
+  return `${referenceRoutes(text).length} reference routes, all present (${file})`;
+});
+
+await check('A2', 'every required service is reachable from navigation', () => {
+  const { text } = loadReference();
+  const block = text.slice(text.indexOf('  required:'), text.indexOf('  out_of_scope:'));
+  const services = [...block.matchAll(/^    ([a-z0-9]+):$/gm)].map((m) => m[1]);
+  const layout = read('src/components/Layout.jsx');
+  const unreachable = services.filter((id) => !new RegExp(`id: '${id}'`).test(layout) && !new RegExp(`'/${id}'`).test(layout));
+  assert(unreachable.length === 0, `${unreachable.length} services have no nav entry: ${unreachable.join(', ')}`);
+  return `${services.length} required services, all in navigation`;
+});
+
+await check('A3', 'design tokens match the pinned Cloudscape values', () => {
+  const { text } = loadReference();
+  const want = referenceTokens(text);
+  const cfg = read('tailwind.config.js').toLowerCase();
+  const map = {
+    color_background_home_header: 'squid',
+    color_text_body_default: 'text:',
+    color_text_body_secondary: "'text-secondary'",
+    color_text_disabled: "'text-disabled'",
+    color_border_divider_default: 'border:',
+    color_border_divider_secondary: "'border-secondary'",
+    color_border_input_default: "'border-input'",
+    color_background_button_primary_default: 'blue:',
+    color_text_status_success: 'success:',
+    color_text_status_error: 'error:',
+    color_text_status_warning: 'warning:',
+  };
+  const wrong = [];
+  for (const [tokenKey, needle] of Object.entries(map)) {
+    const expected = want[tokenKey];
+    if (!expected) continue;
+    const idx = cfg.indexOf(needle);
+    if (idx === -1) { wrong.push(`${tokenKey}: no '${needle}' entry in config`); continue; }
+    const found = cfg.slice(idx, idx + 60).match(/#[0-9a-f]{6}/);
+    if (!found || found[0] !== expected) wrong.push(`${tokenKey}: want ${expected}, config has ${found ? found[0] : 'none'}`);
+  }
+  assert(wrong.length === 0, wrong.join('; '));
+  return `${Object.keys(map).length} pinned tokens verified against the reference`;
+});
+
 // ---------------------------------------------------------------- report
 const pass = results.filter((r) => r.ok).length;
 const fail = results.length - pass;
