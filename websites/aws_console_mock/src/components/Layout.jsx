@@ -226,6 +226,19 @@ export default function Layout({ children }) {
   const accountRef = useRef(null);
   const regionRef = useRef(null);
 
+  // The reducer implements ADD_RECENT_SERVICE but nothing ever dispatched it, so the
+  // "Recently visited" panel was frozen to seed data no matter where the agent went.
+  useEffect(() => {
+    const svc = ALL_SERVICES.find(x =>
+      location.pathname === x.path || location.pathname.startsWith('/' + x.id)
+    );
+    if (!svc) return;
+    const current = state.recentServices?.[0];
+    if (current && current.id === svc.id) return;
+    dispatch({ type: 'ADD_RECENT_SERVICE', payload: { id: svc.id, name: svc.name, path: svc.path } });
+  }, [location.pathname]);
+
+
   const unreadCount = state.notifications.filter(n => !n.read).length;
   const sidebarItems = getSidebarItems(location.pathname);
   const serviceName = getServiceName(location.pathname);

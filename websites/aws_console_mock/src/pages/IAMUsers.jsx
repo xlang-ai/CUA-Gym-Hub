@@ -10,6 +10,8 @@ export default function IAMUsers() {
   const [selectedGroups, setSelectedGroups] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [detailTab, setDetailTab] = useState('Permissions');
+  const [attachOpen, setAttachOpen] = useState(false);
+  const [attachPick, setAttachPick] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -120,8 +122,24 @@ export default function IAMUsers() {
         <div className="aws-card">
           {detailTab === 'Permissions' && (
             <div className="text-sm">
-              <h3 className="font-bold mb-2">Attached policies</h3>
-              {user.policies.length > 0 ? user.policies.map(p => <div key={p} className="py-1 text-aws-blue">{p}</div>) : <p className="text-aws-text-secondary">No directly attached policies</p>}
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="font-bold">Attached policies</h3>
+                <div className="flex gap-2">
+                  <button className="aws-btn aws-btn-secondary text-xs" onClick={() => { setAttachPick([]); setAttachOpen(true); }}>Add permissions</button>
+                </div>
+              </div>
+              {user.policies.length > 0 ? user.policies.map(p => (
+                <div key={p} className="py-1 flex items-center justify-between border-b border-aws-border-secondary last:border-0">
+                  <span className="text-aws-blue">{p}</span>
+                  <button
+                    className="aws-btn aws-btn-secondary text-xs text-aws-error"
+                    onClick={() => {
+                      dispatch({ type: 'DETACH_USER_POLICY', payload: { userName: user.name, policyName: p } });
+                      addFlash('success', `Removed ${p} from ${user.name}`);
+                    }}
+                  >Remove</button>
+                </div>
+              )) : <p className="text-aws-text-secondary">No directly attached policies</p>}
               <h3 className="font-bold mt-4 mb-2">Policies from groups</h3>
               {user.groups.map(gName => {
                 const group = state.iam.groups.find(g => g.name === gName);
@@ -241,6 +259,57 @@ export default function IAMUsers() {
       <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
         Showing 1-{filteredUsers.length} of {filteredUsers.length} items
       </div>
+
+      {attachOpen && user && (
+        <div className="aws-modal-overlay">
+          <div className="aws-modal max-w-2xl">
+            <div className="aws-modal-header">
+              <h3 className="font-bold">Attach policies to {user.name}</h3>
+              <button onClick={() => setAttachOpen(false)}><X size={18} /></button>
+            </div>
+            <div className="aws-modal-body">
+              <p className="text-xs text-aws-text-secondary mb-3">
+                Select one or more policies to attach directly to this user. Policies already
+                granted through a group are not listed.
+              </p>
+              <table className="aws-table">
+                <thead><tr><th className="w-8"></th><th>Policy name</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  {(state.iam.policies || [])
+                    .filter(pol => !user.policies.includes(pol.name))
+                    .map(pol => (
+                      <tr key={pol.name}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={attachPick.includes(pol.name)}
+                            onChange={e => setAttachPick(prev => e.target.checked ? [...prev, pol.name] : prev.filter(x => x !== pol.name))}
+                          />
+                        </td>
+                        <td className="text-aws-blue">{pol.name}</td>
+                        <td className="text-xs">{pol.type || 'Customer managed'}</td>
+                        <td className="text-xs text-aws-text-secondary">{pol.description || '-'}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="aws-modal-footer">
+              <button className="aws-btn aws-btn-secondary" onClick={() => setAttachOpen(false)}>Cancel</button>
+              <button
+                className="aws-btn aws-btn-primary"
+                disabled={attachPick.length === 0}
+                onClick={() => {
+                  attachPick.forEach(name => dispatch({ type: 'ATTACH_USER_POLICY', payload: { userName: user.name, policyName: name } }));
+                  addFlash('success', `Attached ${attachPick.length} polic${attachPick.length === 1 ? 'y' : 'ies'} to ${user.name}`);
+                  setAttachOpen(false);
+                  setAttachPick([]);
+                }}
+              >Add permissions</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

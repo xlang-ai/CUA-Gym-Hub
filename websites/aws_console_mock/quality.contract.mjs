@@ -75,6 +75,21 @@ await check('G1.2', 'initial_state and current_state share one baseline', async 
   return `${i} keys on both sides`;
 });
 
+
+await check('G1.3', 'transient UI state is excluded from state_diff', async () => {
+  const s = sid('g1c');
+  await post(`/post?sid=${s}`, { action: 'set', state: { user: { name: 'Contract' } } });
+  const base = await api(`/go?sid=${s}`);
+  const cur = JSON.parse(JSON.stringify(base.current_state));
+  cur.flash = [{ id: 'f1', type: 'success', message: 'toast' }];
+  await post(`/post?sid=${s}`, { action: 'set_current', state: cur });
+  const after = await api(`/go?sid=${s}`);
+  const keys = Object.keys(after.state_diff || {});
+  assert(!keys.includes('flash'), 'auto-dismissing toast state leaks into state_diff');
+  assert(Array.isArray(after.current_state.flash), 'flash was removed from current_state — shape changed');
+  return 'flash excluded from diff, retained in current_state';
+});
+
 // ---------------------------------------------------------------- G2
 await check('G2.1', 'every dispatched action has a reducer case', () => {
   const dispatched = new Set(
@@ -183,6 +198,21 @@ await check('H4', 'design tokens are used instead of raw palette values', () => 
   const palette = Number(sh(`grep -rhoE "\\b(bg|text|border)-(green|red|yellow|orange|blue|slate|emerald|amber)-[0-9]{2,3}" src/index.css | wc -l`));
   assert(palette <= 2, `${palette} raw Tailwind palette classes remain in index.css`);
   return `${hex} literal hex, ${palette} palette classes in index.css`;
+});
+
+
+await check('H5', 'derived IAM counts match actual references', async () => {
+  const mod = await import(path.join(ROOT, 'src/store/dataManager.js'));
+  const iam = mod.getDefaultData().iam;
+  const refs = {};
+  for (const coll of ['users', 'roles', 'groups']) {
+    for (const e of iam[coll] || []) for (const p of e.policies || []) refs[p] = (refs[p] || 0) + 1;
+  }
+  const bad = (iam.policies || [])
+    .filter((p) => p.attachedEntities !== (refs[p.name] || 0))
+    .map((p) => `${p.name}: declared ${p.attachedEntities}, actual ${refs[p.name] || 0}`);
+  assert(bad.length === 0, `${bad.length} policies with wrong attachedEntities: ${bad.join('; ')}`);
+  return `${(iam.policies || []).length} policies, all counts consistent`;
 });
 
 // ---------------------------------------------------------------- report

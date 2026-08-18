@@ -726,6 +726,42 @@ function reducer(prev, action) {
         }
       };
       break;
+    case 'UPDATE_SECURITY_GROUP_RULES': {
+      const { id, direction, rules } = action.payload;
+      const key = direction === 'outbound' ? 'outboundRules' : 'inboundRules';
+      newState.securityGroups = prev.securityGroups.map(sg =>
+        sg.id === id ? { ...sg, [key]: rules.map(r => ({ ...r })) } : sg
+      );
+      break;
+    }
+    case 'ATTACH_USER_POLICY': {
+      const { userName, policyName } = action.payload;
+      newState.iam = {
+        ...prev.iam,
+        users: prev.iam.users.map(u =>
+          u.name === userName && !(u.policies || []).includes(policyName)
+            ? { ...u, policies: [...(u.policies || []), policyName] }
+            : u
+        ),
+        policies: prev.iam.policies.map(p =>
+          p.name === policyName ? { ...p, attachedEntities: (p.attachedEntities || 0) + 1 } : p
+        ),
+      };
+      break;
+    }
+    case 'DETACH_USER_POLICY': {
+      const { userName, policyName } = action.payload;
+      newState.iam = {
+        ...prev.iam,
+        users: prev.iam.users.map(u =>
+          u.name === userName ? { ...u, policies: (u.policies || []).filter(x => x !== policyName) } : u
+        ),
+        policies: prev.iam.policies.map(p =>
+          p.name === policyName ? { ...p, attachedEntities: Math.max(0, (p.attachedEntities || 0) - 1) } : p
+        ),
+      };
+      break;
+    }
     default:
       return prev;
   }

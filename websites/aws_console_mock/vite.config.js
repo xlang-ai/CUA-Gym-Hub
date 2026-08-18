@@ -57,9 +57,21 @@ function readInitialState(sid) {
   return null
 }
 
+/**
+ * Transient UI state that must never reach state_diff.
+ *
+ * `flash` holds toast messages that auto-dismiss on a 5s timer, so including it makes
+ * the diff depend on *when* the reward function polls /go, and every single action
+ * appends an entry. A reward function asserting "only the expected key changed" would
+ * fail on timing alone. These keys stay in current_state (the shape is unchanged) —
+ * they are only excluded from the derived diff.
+ */
+const EPHEMERAL_STATE_KEYS = new Set(['flash'])
+
 function calculateStateDiff(initial, current) {
   const diff = {}
   for (const key in current) {
+    if (EPHEMERAL_STATE_KEYS.has(key)) continue
     if (!initial || JSON.stringify(current[key]) !== JSON.stringify(initial[key])) {
       if (!diff[key]) diff[key] = {}
       if (!initial || !initial[key]) {

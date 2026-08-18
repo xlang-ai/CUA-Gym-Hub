@@ -4,6 +4,51 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.2.0
+
+Closes the functional gaps that survived 1.1.0, plus two more reward-signal defects
+found while exercising the newly-reachable pages.
+
+### Added
+
+- **Security group rule editing.** Inbound and outbound rules were read-only tables with
+  no way to add, edit, or remove a rule — the single most common real EC2 task ("open
+  port 22 to a CIDR") had no affordance at all. There is now an "Edit inbound/outbound
+  rules" editor with AWS's named rule types (SSH, HTTP, HTTPS, MySQL/Aurora, PostgreSQL,
+  RDP, Custom TCP/UDP) that pin protocol and port, plus per-rule source and description.
+- **Direct IAM policy attach/detach.** Permissions could previously only be granted through
+  group membership; attaching a policy straight to a user was impossible. The user
+  Permissions tab now has "Add permissions" (multi-select over available policies,
+  excluding ones already attached) and per-policy "Remove". `attachedEntities` is kept in
+  sync by the reducer.
+
+### Fixed
+
+- **Toast state polluted every reward signal.** `flash` holds auto-dismissing toasts on a
+  5s timer, so `state_diff` contained a `flash` entry after every single action *and*
+  varied with when the reward function happened to poll `/go`. Ephemeral keys are now
+  excluded from the derived diff while remaining in `current_state`, so the stored shape
+  is unchanged.
+- **Clicking any security group crashed the page** with `ruleTab is not defined` — the tab
+  state was referenced but never declared. Latent because the detail pane only renders
+  after a row is clicked.
+- **Security group rules displayed "Custom / All" for every rule.** Seed data stores
+  `port`; the UI read `portRange`, so HTTP/443/SSH rules all rendered as unrestricted
+  custom rules. The UI now accepts either field and the editor writes both, so no seed
+  rename was needed and tasks reading `inboundRules[].port` keep working.
+- **`iam.policies[].attachedEntities` disagreed with reality** for 4 of 10 policies
+  (AdministratorAccess 1→2, AmazonS3FullAccess 1→2, AmazonS3ReadOnlyAccess 2→4,
+  DataAnalystPolicy 1→0). A reward function trusting the denormalized count — as the real
+  console's UI does — got wrong answers from episode one.
+- **"Recently visited" was frozen to seed data.** `ADD_RECENT_SERVICE` was fully
+  implemented in the reducer but never dispatched; navigation now updates it, and the
+  change is observable in `state_diff`.
+
+### Quality gates
+
+15/15 pass. New gates: `G1.3` (transient UI state never reaches `state_diff`) and `H5`
+(derived IAM counts match actual references).
+
 ## 1.1.0
 
 Reachability, reward-signal correctness, and Cloudscape visual alignment.

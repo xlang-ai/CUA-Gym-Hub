@@ -2,6 +2,37 @@ import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, ChevronDown, Plus, Copy } from 'lucide-react';
 
+
+// Real console offers named types that pin protocol + port. "Custom TCP" frees the port.
+const RULE_TYPES = [
+  { label: 'All traffic', protocol: '-1', portRange: 'All' },
+  { label: 'SSH', protocol: 'tcp', portRange: '22' },
+  { label: 'HTTP', protocol: 'tcp', portRange: '80' },
+  { label: 'HTTPS', protocol: 'tcp', portRange: '443' },
+  { label: 'MySQL/Aurora', protocol: 'tcp', portRange: '3306' },
+  { label: 'PostgreSQL', protocol: 'tcp', portRange: '5432' },
+  { label: 'RDP', protocol: 'tcp', portRange: '3389' },
+  { label: 'Custom TCP', protocol: 'tcp', portRange: '' },
+  { label: 'Custom UDP', protocol: 'udp', portRange: '' },
+];
+
+
+const rulePort = (r) => r.portRange ?? r.port ?? 'All';
+const ruleProto = (r) => {
+  const p = (r.protocol ?? '').toString();
+  if (p === '-1' || p.toLowerCase() === 'all') return 'All';
+  return p.toUpperCase() || 'TCP';
+};
+const ruleTypeLabel = (r) => {
+  if (r.type) return r.type;
+  const port = String(rulePort(r));
+  const proto = ruleProto(r);
+  if (proto === 'All') return 'All traffic';
+  const known = { '22': 'SSH', '80': 'HTTP', '443': 'HTTPS', '3306': 'MySQL/Aurora', '5432': 'PostgreSQL', '3389': 'RDP' };
+  if (proto === 'TCP' && known[port]) return known[port];
+  return proto === 'UDP' ? 'Custom UDP' : 'Custom TCP';
+};
+
 export default function EC2SecurityGroups() {
   const { state, dispatch, addFlash } = useStore();
   const [search, setSearch] = useState('');
@@ -10,6 +41,8 @@ export default function EC2SecurityGroups() {
   const [detailId, setDetailId] = useState(null);
   const [form, setForm] = useState({ name: '', description: '', vpcId: 'vpc-0abc1234def56789' });
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [ruleTab, setRuleTab] = useState('inbound');
+  const [editRules, setEditRules] = useState(null); // { direction, rules: [] }
 
   const sgs = (state.securityGroups || []).filter(sg =>
     !search || sg.name.toLowerCase().includes(search.toLowerCase()) || sg.id.toLowerCase().includes(search.toLowerCase())
@@ -17,6 +50,38 @@ export default function EC2SecurityGroups() {
 
   const toggleSelect = (id) => setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   const toggleAll = () => setSelected(selected.length === sgs.length ? [] : sgs.map(sg => sg.id));
+
+
+  const openRuleEditor = (direction) => {
+    if (!detail) return;
+    const src = direction === 'inbound' ? detail.inboundRules : detail.outboundRules;
+    setEditRules({ direction, rules: src.map(r => ({ ...r, type: ruleTypeLabel(r), portRange: String(rulePort(r)) })) });
+  };
+
+  const updateDraftRule = (idx, patch) => setEditRules(prev => ({
+    ...prev,
+    rules: prev.rules.map((r, i) => (i === idx ? { ...r, ...patch } : r)),
+  }));
+
+  const addDraftRule = () => setEditRules(prev => ({
+    ...prev,
+    rules: [...prev.rules, { type: 'Custom TCP', protocol: 'tcp', portRange: '', port: '', source: '0.0.0.0/0', description: '' }],
+  }));
+
+  const removeDraftRule = (idx) => setEditRules(prev => ({
+    ...prev,
+    rules: prev.rules.filter((_, i) => i !== idx),
+  }));
+
+  const saveRules = () => {
+    if (!editRules || !detail) return;
+    dispatch({
+      type: 'UPDATE_SECURITY_GROUP_RULES',
+      payload: { id: detail.id, direction: editRules.direction, rules: editRules.rules },
+    });
+    addFlash('success', `${editRules.direction === 'inbound' ? 'Inbound' : 'Outbound'} rules updated for ${detail.id}`);
+    setEditRules(null);
+  };
 
   const handleCreate = () => {
     if (!form.name.trim()) return;
@@ -134,6 +199,10 @@ export default function EC2SecurityGroups() {
           </div>
           <div className="p-4">
             {ruleTab === 'inbound' && (
+              <>
+              <div className="flex justify-end mb-2">
+                <button className="aws-btn aws-btn-secondary text-xs" onClick={() => openRuleEditor('inbound')}>Edit inbound rules</button>
+              </div>
               <table className="aws-table">
                 <thead><tr><th>IP version</th><th>Type</th><th>Protocol</th><th>Port range</th><th>Source</th><th>Description</th></tr></thead>
                 <tbody>
@@ -142,17 +211,22 @@ export default function EC2SecurityGroups() {
                   ) : detail.inboundRules.map((r, i) => (
                     <tr key={i}>
                       <td>{r.source?.includes(':') ? 'IPv6' : 'IPv4'}</td>
-                      <td>{r.type || (r.protocol === 'tcp' && r.portRange === '22' ? 'SSH' : r.protocol === 'tcp' && r.portRange === '80' ? 'HTTP' : r.protocol === 'tcp' && r.portRange === '443' ? 'HTTPS' : 'Custom')}</td>
-                      <td>{r.protocol || 'TCP'}</td>
-                      <td>{r.portRange || 'All'}</td>
+                      <td>{ruleTypeLabel(r)}</td>
+                      <td>{ruleProto(r)}</td>
+                      <td>{rulePort(r)}</td>
                       <td className="font-mono text-xs">{r.source}</td>
                       <td className="text-xs text-aws-text-secondary">{r.description || '-'}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              </>
             )}
             {ruleTab === 'outbound' && (
+              <>
+              <div className="flex justify-end mb-2">
+                <button className="aws-btn aws-btn-secondary text-xs" onClick={() => openRuleEditor('outbound')}>Edit outbound rules</button>
+              </div>
               <table className="aws-table">
                 <thead><tr><th>IP version</th><th>Type</th><th>Protocol</th><th>Port range</th><th>Destination</th><th>Description</th></tr></thead>
                 <tbody>
@@ -161,15 +235,16 @@ export default function EC2SecurityGroups() {
                   ) : detail.outboundRules.map((r, i) => (
                     <tr key={i}>
                       <td>{r.source?.includes(':') ? 'IPv6' : 'IPv4'}</td>
-                      <td>{r.protocol === '-1' ? 'All traffic' : r.type || 'Custom'}</td>
-                      <td>{r.protocol === '-1' ? 'All' : r.protocol || 'TCP'}</td>
-                      <td>{r.portRange || 'All'}</td>
+                      <td>{ruleTypeLabel(r)}</td>
+                      <td>{ruleProto(r)}</td>
+                      <td>{rulePort(r)}</td>
                       <td className="font-mono text-xs">{r.source || '0.0.0.0/0'}</td>
                       <td className="text-xs text-aws-text-secondary">{r.description || '-'}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              </>
             )}
             {ruleTab === 'tags' && (
               <div className="text-sm text-aws-text-secondary">
@@ -217,6 +292,99 @@ export default function EC2SecurityGroups() {
             <div className="aws-modal-footer">
               <button className="aws-btn aws-btn-secondary" onClick={() => setShowCreate(false)}>Cancel</button>
               <button className="aws-btn aws-btn-primary" onClick={handleCreate} disabled={!form.name.trim()}>Create security group</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editRules && detail && (
+        <div className="aws-modal-overlay">
+          <div className="aws-modal" style={{ maxWidth: '56rem' }}>
+            <div className="aws-modal-header">
+              <h3 className="font-bold">
+                Edit {editRules.direction} rules — {detail.name} ({detail.id})
+              </h3>
+              <button onClick={() => setEditRules(null)}><X size={18} /></button>
+            </div>
+            <div className="aws-modal-body">
+              <p className="text-xs text-aws-text-secondary mb-3">
+                {editRules.direction === 'inbound'
+                  ? 'Inbound rules control the traffic that is allowed to reach resources associated with this security group.'
+                  : 'Outbound rules control the traffic that is allowed to leave resources associated with this security group.'}
+              </p>
+              <table className="aws-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Protocol</th>
+                    <th>Port range</th>
+                    <th>{editRules.direction === 'inbound' ? 'Source' : 'Destination'}</th>
+                    <th>Description</th>
+                    <th className="w-16"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {editRules.rules.length === 0 ? (
+                    <tr><td colSpan={6} className="text-center text-aws-text-secondary py-4">No rules. Traffic is denied by default.</td></tr>
+                  ) : editRules.rules.map((r, i) => {
+                    const preset = RULE_TYPES.find(t => t.label === r.type);
+                    const portLocked = !!preset && preset.portRange !== '';
+                    return (
+                      <tr key={i}>
+                        <td>
+                          <select
+                            className="aws-input text-xs"
+                            value={r.type || ruleTypeLabel(r)}
+                            onChange={e => {
+                              const t = RULE_TYPES.find(x => x.label === e.target.value);
+                              const pr = t.portRange || r.portRange || r.port || '';
+                              updateDraftRule(i, { type: t.label, protocol: t.protocol, portRange: pr, port: pr });
+                            }}
+                          >
+                            {RULE_TYPES.map(t => <option key={t.label} value={t.label}>{t.label}</option>)}
+                          </select>
+                        </td>
+                        <td className="text-xs font-mono">{r.protocol === '-1' ? 'All' : (r.protocol || 'tcp').toUpperCase()}</td>
+                        <td>
+                          <input
+                            className="aws-input text-xs w-24"
+                            value={r.portRange ?? r.port ?? ''}
+                            disabled={portLocked || r.protocol === '-1'}
+                            placeholder="e.g. 8080"
+                            onChange={e => updateDraftRule(i, { portRange: e.target.value, port: e.target.value })}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="aws-input text-xs font-mono"
+                            value={r.source || ''}
+                            placeholder="0.0.0.0/0"
+                            onChange={e => updateDraftRule(i, { source: e.target.value })}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            className="aws-input text-xs"
+                            value={r.description || ''}
+                            placeholder="Optional"
+                            onChange={e => updateDraftRule(i, { description: e.target.value })}
+                          />
+                        </td>
+                        <td>
+                          <button className="aws-btn aws-btn-danger text-xs" onClick={() => removeDraftRule(i)}>Delete</button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <button className="aws-btn aws-btn-secondary text-xs mt-3" onClick={addDraftRule}>
+                <Plus size={14} /> Add rule
+              </button>
+            </div>
+            <div className="aws-modal-footer">
+              <button className="aws-btn aws-btn-secondary" onClick={() => setEditRules(null)}>Cancel</button>
+              <button className="aws-btn aws-btn-primary" onClick={saveRules}>Save rules</button>
             </div>
           </div>
         </div>

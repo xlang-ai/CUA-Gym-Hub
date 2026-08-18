@@ -1,7 +1,7 @@
 {
   "app": "aws_console_mock",
   "display_name": "XWS Console Mock",
-  "app_version": "1.1.0",
+  "app_version": "1.2.0",
   "baseline_git_sha": "f9e1b06ccf680c59c388852641221426899cb7de",
   "reference": {
     "product": "AWS Management Console",
@@ -11,8 +11,8 @@
   },
   "gates": {
     "runner": "node quality.contract.mjs --base http://localhost:5273",
-    "passed": 13,
-    "total": 13,
+    "passed": 15,
+    "total": 15,
     "blocking_failures": 0,
     "detail": {
       "G1.1_state_diff_clean_on_partial_inject": "PASS",
@@ -27,38 +27,107 @@
       "H1_default_state_deterministic": "PASS",
       "H2_no_external_network_requests": "PASS",
       "H3_no_undesensitized_trademarks_in_prose": "PASS",
-      "H4_design_tokens_instead_of_raw_palette": "PASS"
+      "H4_design_tokens_instead_of_raw_palette": "PASS",
+      "G1.3_transient_ui_state_excluded_from_diff": "PASS",
+      "H5_derived_iam_counts_consistent": "PASS"
     }
   },
   "metrics": {
     "reward_signal": {
-      "state_diff_entries_on_untouched_episode": { "before": 31, "after": 0 },
-      "dispatched_action_types": { "before": 105, "after": 114 },
-      "actions_silently_dropped": { "before": 70, "after": 0 },
-      "reducer_cases": { "before": 38, "after": 122 }
+      "state_diff_entries_on_untouched_episode": {
+        "before": 31,
+        "after": 0
+      },
+      "dispatched_action_types": {
+        "before": 105,
+        "after": 114
+      },
+      "actions_silently_dropped": {
+        "before": 70,
+        "after": 0
+      },
+      "reducer_cases": {
+        "before": 38,
+        "after": 122
+      },
+      "ephemeral_keys_leaking_into_diff": {
+        "before": 1,
+        "after": 0
+      }
     },
     "reachability": {
-      "page_components": { "before": 59, "after": 66 },
-      "components_routed": { "before": 19, "after": 66 },
-      "components_orphaned": { "before": 40, "after": 0 },
-      "orphaned_lines_of_code": { "before": 5777, "after": 0 },
-      "sidebar_entries_hitting_placeholder": { "before": 28, "after": 0 },
-      "declared_routes": { "before": 21, "after": 74 },
-      "services_in_navigation": { "before": 6, "after": 14 }
+      "page_components": {
+        "before": 59,
+        "after": 66
+      },
+      "components_routed": {
+        "before": 19,
+        "after": 66
+      },
+      "components_orphaned": {
+        "before": 40,
+        "after": 0
+      },
+      "orphaned_lines_of_code": {
+        "before": 5777,
+        "after": 0
+      },
+      "sidebar_entries_hitting_placeholder": {
+        "before": 28,
+        "after": 0
+      },
+      "declared_routes": {
+        "before": 21,
+        "after": 74
+      },
+      "services_in_navigation": {
+        "before": 6,
+        "after": 14
+      }
     },
     "visual_fidelity": {
-      "design_token_generations_mixed": { "before": 2, "after": 1 },
-      "primary_cta_color": { "before": "#FF9900", "after": "#006ce0" },
-      "button_border_radius": { "before": "20px", "after": "8px" },
-      "body_text_color": { "before": "#000716", "after": "#0f141a" },
-      "font_family": { "before": "Noto Sans (remote)", "after": "Open Sans (self-hosted)" },
-      "h1_elements_off_scale": { "before": 40, "after": 0 },
-      "raw_tailwind_palette_classes_in_pages": { "before": 685, "after": 13 },
-      "raw_tailwind_palette_classes_in_index_css": { "before": 13, "after": 1 }
+      "design_token_generations_mixed": {
+        "before": 2,
+        "after": 1
+      },
+      "primary_cta_color": {
+        "before": "#FF9900",
+        "after": "#006ce0"
+      },
+      "button_border_radius": {
+        "before": "20px",
+        "after": "8px"
+      },
+      "body_text_color": {
+        "before": "#000716",
+        "after": "#0f141a"
+      },
+      "font_family": {
+        "before": "Noto Sans (remote)",
+        "after": "Open Sans (self-hosted)"
+      },
+      "h1_elements_off_scale": {
+        "before": 40,
+        "after": 0
+      },
+      "raw_tailwind_palette_classes_in_pages": {
+        "before": 685,
+        "after": 13
+      },
+      "raw_tailwind_palette_classes_in_index_css": {
+        "before": 13,
+        "after": 1
+      }
     },
     "compliance": {
-      "runtime_external_network_references": { "before": 3, "after": 0 },
-      "undesensitized_trademark_strings_in_prose": { "before": 127, "after": 0 },
+      "runtime_external_network_references": {
+        "before": 3,
+        "after": 0
+      },
+      "undesensitized_trademark_strings_in_prose": {
+        "before": 127,
+        "after": 0
+      },
       "arn_identifiers_preserved": true,
       "amazonaws_dns_preserved": true
     },
@@ -66,6 +135,28 @@
       "clean_build": "PASS",
       "build_time_s": 2.59,
       "known_warning": "single chunk >500kB (pre-existing, not introduced by this release)"
+    },
+    "functional_completeness": {
+      "security_group_rule_editing": {
+        "before": "absent",
+        "after": "add/edit/remove with AWS named rule types"
+      },
+      "iam_direct_policy_attach": {
+        "before": "absent (group-mediated only)",
+        "after": "attach + detach with count sync"
+      },
+      "recently_visited_tracking": {
+        "before": "frozen to seed data",
+        "after": "updates on navigation, observable in state_diff"
+      },
+      "iam_attachedEntities_mismatches": {
+        "before": 4,
+        "after": 0
+      },
+      "security_group_rule_display": {
+        "before": "all rules rendered as Custom/All",
+        "after": "protocol and port resolved from either field name"
+      }
     }
   },
   "verification": {
@@ -82,7 +173,13 @@
     },
     "backward_compatibility": {
       "legacy_urls_mapped": 29,
-      "legacy_redirect_spot_checks": ["/local/s3/access-points", "/local/rds/query-editor", "/local/lambda/applications", "/local/ec2/volumes", "/local/billing/bills"],
+      "legacy_redirect_spot_checks": [
+        "/local/s3/access-points",
+        "/local/rds/query-editor",
+        "/local/lambda/applications",
+        "/local/ec2/volumes",
+        "/local/billing/bills"
+      ],
       "all_landed_on_real_pages": true
     }
   },
@@ -104,8 +201,6 @@
   "residual_risks": [
     "A session that never receives POST action=set has no frozen baseline: /go falls back to initial = current, so state_diff stays empty. Real tasks always inject first, so this is latent, but first set_current arguably should freeze a baseline. Not changed here because set_current explicitly promises never to touch .initial.json (golden_patch semantics).",
     "SCHEMA.md still drifts from the code in several places (rdsSnapshots type/storage, billing.taxSettings shape, budgets id, dynamodb tableSize/lsi/ttl, sns subscriptionCount). Documentation-side fix, deliberately out of scope for this release since changing the seed shape would break old tasks.",
-    "iam.policies[].attachedEntities denormalized counts disagree with actual references for 4 of 10 policies.",
-    "Security-group inbound-rule editing and direct IAM policy attach still have no UI.",
     "The state-injection default-fill bug (G1) also exists in shared/secureMockApiPlugin.mjs and therefore likely affects other hub mocks; only this app's vite.config.js was fixed."
   ]
 }
