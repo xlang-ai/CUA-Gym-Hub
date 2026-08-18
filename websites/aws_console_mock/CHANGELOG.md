@@ -4,6 +4,46 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.3.0
+
+Completes trademark desensitization and closes the gate blind spot that hid it.
+
+### Fixed
+
+- **38 real trademark strings were still rendering on 4 routes.** The 1.1.0 sweep and its
+  `H3` gate only inspected `src/pages` and `src/components`, but the strings live in
+  `src/store/dataManager.js` seed data and only become visible once rendered — IAM role
+  trust policies (`AWS service: ec2.amazonaws.com`), policy type labels and descriptions
+  (`AWS managed`, `Provides full access to AWS services`), the billing cost breakdown
+  (`Amazon EC2`, `Amazon RDS`, `Amazon S3`, `AWS Lambda`) and CloudWatch alarm rows.
+  Found by sweeping rendered `innerText` across 27 routes in a live browser rather than
+  grepping source. Now 0.
+
+- **`H3` hardened** to inspect seed data as well, plus a meta-gate `H3b` that fails if the
+  gate ever narrows back to pages/components only.
+
+### Compatibility note — read this before writing tasks against seed strings
+
+This release **changes seed display values**, which no previous release did. Object shapes,
+field names and types are unchanged, and no key was renamed or removed, but a task whose
+reward function matched on the literal string `"Amazon EC2"` in the billing breakdown will
+need updating. This was judged the correct trade: desensitization is a compliance
+commitment the hub README makes explicitly, including a takedown policy.
+
+Deliberately **preserved** because they are API-shaped identifiers rather than branding,
+and reward functions do match on them:
+
+- `arn:aws:*` resource ARNs (58 lines)
+- `*.amazonaws.com` service DNS (19 lines)
+- `AWS/<Namespace>` CloudWatch metric namespaces (`AWS/EC2`, `AWS/RDS`, `AWS/Lambda`,
+  `AWS/ApplicationELB`, `AWS/Billing`)
+- `aws-sdk` / `AWS.S3()` in the Lambda sample code shown in the code editor — rewriting
+  these would make the sample code wrong
+
+### Quality gates
+
+19/19 pass.
+
 ## 1.2.1
 
 Makes visual/structural authenticity measurable. No change to app behaviour.

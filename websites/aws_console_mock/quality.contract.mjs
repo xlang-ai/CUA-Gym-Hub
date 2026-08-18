@@ -187,10 +187,30 @@ await check('H2', 'no external network requests at runtime', () => {
   return '0 external requests (markup, css, fetch)';
 });
 
-await check('H3', 'no un-desensitized trademark strings in user-visible prose', () => {
-  const out = sh(`grep -rhoE "\\b(AWS|Amazon)\\b" src/pages src/components --include='*.jsx' | grep -v amazonaws | sort -u || true`);
+await check('H3', 'no un-desensitized trademark strings in anything the user sees', () => {
+  // Seed data in dataManager.js renders into tables (IAM role trust policies, policy
+  // descriptions, billing service breakdown), so checking only pages/components misses
+  // them — that gap let 38 occurrences through on 4 routes.
+  //
+  // Deliberately preserved because they are API-shaped identifiers, not branding:
+  //   arn:aws:*            resource ARNs, matched on by reward functions
+  //   *.amazonaws.com      service DNS
+  //   AWS/<Namespace>      CloudWatch metric namespaces
+  //   aws-sdk / AWS.S3()   realistic SDK sample code shown in the Lambda editor
+  const strip = [
+    's/arn:aws:[^"]*//g',
+    's#[a-z0-9.-]*amazonaws\\.com##g',
+    's#AWS/[A-Za-z0-9]*##g',
+    's/aws-sdk//g',
+    's/AWS\\.S3()//g',
+    's/const AWS = require//g',
+  ].join('; ');
+  const out = sh(
+    `cat src/pages/*.jsx src/components/*.jsx src/store/dataManager.js ` +
+    `| sed '${strip}' | grep -ohE "\\b(AWS|Amazon)\\b" | sort -u || true`
+  );
   assert(out === '', `found: ${out.split('\n').join(', ')}`);
-  return '0 occurrences';
+  return '0 occurrences across pages, components and seed data';
 });
 
 await check('H4', 'design tokens are used instead of raw palette values', () => {
@@ -215,6 +235,16 @@ await check('H5', 'derived IAM counts match actual references', async () => {
   return `${(iam.policies || []).length} policies, all counts consistent`;
 });
 
+
+
+await check('H3b', 'the trademark gate actually inspects seed data', () => {
+  // Guards against the gate silently narrowing again: H3 previously scanned only
+  // pages/components and missed 38 rendered occurrences coming from dataManager.js.
+  const contract = read('quality.contract.mjs');
+  assert(/dataManager\.js/.test(contract.slice(contract.indexOf("check('H3'"), contract.indexOf("check('H4'"))),
+    'H3 no longer inspects src/store/dataManager.js');
+  return 'H3 covers pages, components and seed data';
+});
 
 // ------------------------------------------------- A: authenticity vs frozen reference
 // The reference is reference/console-reference.<version>.yaml — a supervisor-owned,
