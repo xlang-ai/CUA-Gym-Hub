@@ -1,0 +1,23 @@
+{
+  "reference_version": "2026-08",
+  "method": "Each workflow walked end to end against a live dev server, counting committed interactions (a navigation click, a field entry, or a submit). Completion asserted from /go current_state, not from the UI's own success toast.",
+  "note": "Tabs that are already selected on open (IAM Permissions, security-group Inbound rules) are not counted as steps, matching the real console where they are the default.",
+  "workflows": [
+    { "id": "create_vpc", "declared": 4, "measured": 4, "completed": true,
+      "evidence": "vpc.vpcs 2 -> 3, new entry named parity-check-vpc" },
+    { "id": "create_s3_bucket", "declared": 4, "measured": 4, "completed": true,
+      "evidence": "s3 buckets 5 -> 6, new entry wf-parity-bucket" },
+    { "id": "create_cloudwatch_alarm", "declared": 5, "measured": 5, "completed": true,
+      "evidence": "cloudwatch.alarms 5 -> 6, new entry wf-parity-alarm" },
+    { "id": "attach_iam_policy_to_user", "declared": 5, "measured": 5, "completed": true,
+      "evidence": "jane.developer.policies gained AmazonS3ReadOnlyAccess; policy attachedEntities synced 4 -> 5" },
+    { "id": "launch_ec2_instance", "declared": 5, "measured": 5, "completed": true,
+      "evidence": "ec2 5 -> 6, new instance wf-parity-instance t2.micro running on XWS Linux 2023 AMI" },
+    { "id": "create_security_group_rule", "declared": 6, "measured": 6, "completed": true,
+      "evidence": "web-server-sg inboundRules 3 -> 4, HTTPS/443 from 203.0.113.0/24, written with both port and portRange for compatibility" }
+  ],
+  "defects_found_during_walkthrough": [
+    "IAM 'Add permissions' modal was placed in the user-list return branch, so the feature shipped in 1.2.0 never rendered on the detail page where its button lives. Build and every static gate passed because none of them clicked it.",
+    "S3Buckets bucket-name input carried pattern=\"[a-z0-9.-]+\", which the browser rejects under the v flag (bare - inside a character class), throwing on every render of the create dialog."
+  ]
+}

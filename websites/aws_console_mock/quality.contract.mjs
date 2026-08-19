@@ -383,6 +383,28 @@ await check('S3', 'core workflow step counts are declared and bounded', () => {
   return `${flows.length} workflows declared (${flows.map((f) => f.join(':')).join(', ')})`;
 });
 
+
+await check('S4', 'every declared workflow has a completed end-to-end walkthrough', () => {
+  // A source-level gate cannot see a control rendered in the wrong branch: the IAM
+  // "Add permissions" modal shipped in 1.2.0 passed build and every static gate while
+  // being unreachable, because nothing clicked it. This gate requires recorded evidence
+  // that each declared workflow was actually walked and actually completed.
+  const ev = JSON.parse(read('reference/workflow-evidence.json'));
+  const { text } = loadReference();
+  const block = text.slice(text.indexOf('workflows:'));
+  const declared = [...block.matchAll(/^  ([a-z0-9_]+):\n\s+steps:\s*(\d+)/gm)].map((m) => [m[1], Number(m[2])]);
+  const byId = new Map(ev.workflows.map((w) => [w.id, w]));
+  const problems = [];
+  for (const [id, steps] of declared) {
+    const w = byId.get(id);
+    if (!w) { problems.push(`${id}: no walkthrough evidence`); continue; }
+    if (!w.completed) problems.push(`${id}: walkthrough did not complete`);
+    if (w.measured !== steps) problems.push(`${id}: declared ${steps} steps, measured ${w.measured}`);
+  }
+  assert(problems.length === 0, problems.join('; '));
+  return `${declared.length} workflows, all walked and completed at the declared step count`;
+});
+
 // ---------------------------------------------------------------- report
 const pass = results.filter((r) => r.ok).length;
 const fail = results.length - pass;

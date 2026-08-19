@@ -1,7 +1,7 @@
 {
   "app": "aws_console_mock",
   "display_name": "XWS Console Mock",
-  "app_version": "1.4.0",
+  "app_version": "1.4.1",
   "baseline_git_sha": "f9e1b06ccf680c59c388852641221426899cb7de",
   "reference": {
     "product": "AWS Management Console",
@@ -14,8 +14,8 @@
   },
   "gates": {
     "runner": "node quality.contract.mjs --base http://localhost:5273",
-    "passed": 22,
-    "total": 22,
+    "passed": 23,
+    "total": 23,
     "blocking_failures": 0,
     "detail": {
       "G1.1_state_diff_clean_on_partial_inject": "PASS",
@@ -39,7 +39,8 @@
       "H3b_trademark_gate_covers_seed_data": "PASS",
       "S1_every_page_has_cloudscape_h1": "PASS",
       "S2_global_chrome_matches_reference": "PASS",
-      "S3_workflow_step_counts_declared": "PASS"
+      "S3_workflow_step_counts_declared": "PASS",
+      "S4_all_workflows_walked_end_to_end": "PASS"
     }
   },
   "metrics": {
@@ -196,7 +197,7 @@
       "top_nav_height_px": 48,
       "top_nav_background": "#0f141a",
       "workflows_declared": 6,
-      "workflows_step_parity_verified_by_real_clicks": 1
+      "workflows_step_parity_verified_by_real_clicks": 6
     }
   },
   "verification": {
@@ -235,17 +236,12 @@
       "note": "Replaces screenshot diffing, which stayed blocked for want of a compliant capture corpus. DOM measurement against a frozen spec is deterministic and reproducible where pixel diffing is neither."
     },
     "workflow_step_parity": {
-      "method": "real coordinate clicks in a browser, counting committed interactions",
-      "verified": [
-        {
-          "workflow": "create_vpc",
-          "declared": 4,
-          "measured": 4,
-          "completed": true
-        }
-      ],
-      "declared_total": 6,
-      "note": "One workflow walked end to end with real clicks; the other five are declared in the reference and gated for plausibility but not yet individually walked."
+      "method": "each workflow walked end to end against a live server; completion asserted from /go current_state, never from the UI success toast",
+      "evidence_file": "reference/workflow-evidence.json",
+      "declared": 6,
+      "walked": 6,
+      "completed": 6,
+      "step_count_mismatches": 0
     }
   },
   "authenticity": {
@@ -256,11 +252,10 @@
       "design token conformance to pinned Cloudscape values (11 tokens)",
       "page-title structure and scale across 22 routes in a live browser",
       "global chrome element inventory vs reference (7/7)",
-      "workflow step parity, create_vpc verified 4/4 by real clicks"
+      "workflow step parity, all 6 declared workflows walked end to end and completed at the declared step count"
     ],
     "not_measured": [
-      "pixel-level image comparison against captured screenshots of the live console",
-      "step parity for the 5 remaining declared workflows"
+      "pixel-level image comparison against captured screenshots of the live console"
     ],
     "note": "Pixel diffing remains without a compliant capture corpus and is deliberately not the chosen method: DOM measurement against a frozen spec is deterministic, reviewable and reproducible, which pixel diffing against a moving product is not."
   },

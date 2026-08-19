@@ -189,7 +189,7 @@ export default function S3Buckets() {
             <form onSubmit={handleCreate} className="aws-modal-body space-y-4">
               <div>
                 <label className="block text-sm font-bold mb-1">Bucket name</label>
-                <input className="aws-input" value={newName} onChange={e => setNewName(e.target.value)} placeholder="my-new-bucket" required pattern="[a-z0-9.-]+" />
+                <input className="aws-input" value={newName} onChange={e => setNewName(e.target.value)} placeholder="my-new-bucket" required pattern="[a-z0-9.\\-]+" />
                 <p className="text-xs text-aws-text-disabled mt-1">Must be globally unique, lowercase, no spaces.</p>
               </div>
               <div>

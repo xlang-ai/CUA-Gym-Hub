@@ -4,6 +4,43 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.4.1
+
+Walks every declared workflow end to end, which found two defects no static gate could see.
+
+### Fixed
+
+- **The "Add permissions" feature shipped in 1.2.0 never rendered.** Its modal was placed
+  in the user-*list* return branch, while the button that opens it lives in the user-*detail*
+  branch, so clicking it did nothing. Build passed, the reducer gate passed, the trademark
+  gate passed — none of them clicked the control. Moved into the detail branch and verified
+  by completing the workflow.
+- **The S3 create-bucket dialog threw on every render.** `pattern="[a-z0-9.-]+"` is not a
+  valid regular expression under the browser's `v` flag: a bare `-` inside a character
+  class is a syntax error. Escaped.
+
+### Added
+
+- `reference/workflow-evidence.json` — recorded end-to-end walkthroughs for all six declared
+  workflows, each asserting completion from `/go` `current_state` rather than from the UI's
+  own success toast. All six completed at exactly the declared step count.
+
+  | workflow | declared | measured | completed |
+  |---|---|---|---|
+  | create_vpc | 4 | 4 | yes |
+  | create_s3_bucket | 4 | 4 | yes |
+  | create_cloudwatch_alarm | 5 | 5 | yes |
+  | attach_iam_policy_to_user | 5 | 5 | yes |
+  | launch_ec2_instance | 5 | 5 | yes |
+  | create_security_group_rule | 6 | 6 | yes |
+
+- Gate `S4` requires that evidence to exist, to show completion, and to match the declared
+  step count — so a control that renders in the wrong branch cannot pass again.
+
+### Quality gates
+
+23/23 pass. Workflow step parity moves from one verified workflow to all six.
+
 ## 1.4.0
 
 Closes the last two authenticity gaps by measuring them, rather than leaving them blocked.
