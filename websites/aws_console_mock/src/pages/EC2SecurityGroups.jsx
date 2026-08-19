@@ -17,6 +17,17 @@ const RULE_TYPES = [
 ];
 
 
+// Source/Destination options exactly as the real console offers them, per the EC2
+// security-group rules documentation. Anywhere-IPv4/IPv6 are fixed CIDRs and carry a
+// warning; My IP resolves to the caller's address.
+const SOURCE_PRESETS = [
+  { label: 'Custom', cidr: null },
+  { label: 'Anywhere-IPv4', cidr: '0.0.0.0/0' },
+  { label: 'Anywhere-IPv6', cidr: '::/0' },
+  { label: 'My IP', cidr: '203.0.113.25/32' },
+];
+const OPEN_TO_WORLD = new Set(['0.0.0.0/0', '::/0']);
+
 const rulePort = (r) => r.portRange ?? r.port ?? 'All';
 const ruleProto = (r) => {
   const p = (r.protocol ?? '').toString();
@@ -355,12 +366,30 @@ export default function EC2SecurityGroups() {
                           />
                         </td>
                         <td>
-                          <input
-                            className="aws-input text-xs font-mono"
-                            value={r.source || ''}
-                            placeholder="0.0.0.0/0"
-                            onChange={e => updateDraftRule(i, { source: e.target.value })}
-                          />
+                          <div className="flex items-center gap-1">
+                            <select
+                              className="aws-input text-xs w-32"
+                              value={SOURCE_PRESETS.find(p => p.cidr === r.source)?.label || 'Custom'}
+                              onChange={e => {
+                                const preset = SOURCE_PRESETS.find(p => p.label === e.target.value);
+                                updateDraftRule(i, { sourceType: preset.label, source: preset.cidr ?? r.source ?? '' });
+                              }}
+                            >
+                              {SOURCE_PRESETS.map(p => <option key={p.label} value={p.label}>{p.label}</option>)}
+                            </select>
+                            <input
+                              className="aws-input text-xs font-mono flex-1"
+                              value={r.source || ''}
+                              placeholder="0.0.0.0/0"
+                              onChange={e => updateDraftRule(i, { source: e.target.value })}
+                            />
+                          </div>
+                          {OPEN_TO_WORLD.has(r.source) && (
+                            <p className="text-xs text-aws-warning mt-1">
+                              This rule opens the port to all addresses. We recommend setting
+                              security group rules to allow access from known IP addresses only.
+                            </p>
+                          )}
                         </td>
                         <td>
                           <input

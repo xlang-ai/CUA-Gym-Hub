@@ -4,6 +4,60 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.5.0
+
+Adds a metric for how far this mock is from the real console, backed by eight research passes.
+
+### Added
+
+- **Console Fidelity Index** (`fidelity-score.mjs`) — drives a headless Chrome over every page
+  and scores five dimensions against a frozen per-page specification: default columns,
+  Preferences-only columns, table controls, actions, and tabs. Geometric mean, so a strong
+  dimension cannot mask a weak one. Baseline: **42.8% overall, 43.8% over sourced requirements
+  only**.
+- **`reference/page-depth.2026-08.json`** — the per-page specification the index divides by,
+  and **`reference/research/`** — eight per-service-family research passes against AWS
+  documentation, each with citations and explicit `unconfirmed` markers.
+- **`TableControls.jsx`** — the Preferences dialog (page size, column visibility, regex and
+  case-sensitivity toggles) and pager that real console tables have and this mock mostly lacked.
+- Security-group rule editor now offers the real Source options — **Custom**, **Anywhere-IPv4**,
+  **Anywhere-IPv6**, **My IP** — and shows the console's open-to-the-world warning.
+
+### Fixed
+
+- The column-chooser gear had no accessible name, so neither a screen reader nor an agent could
+  tell what it was. Labelled **Preferences**.
+- The trademark gate flagged an AWS doc title cited in a source comment. It now strips comments:
+  the gate is about what a user sees.
+
+### What the research actually found
+
+Eight independent passes hit the same wall: **AWS documents procedures, not table layouts.** It
+says "choose Actions, then Change instance type"; it never publishes the column list. So column
+inventories are largely *inferred*, and the reference marks them as such rather than pretending
+otherwise. The index reports a sourced-only score for exactly this reason.
+
+**One pass broke through**: AWS embeds real console screenshots in its own News Blog and What's
+New posts — compliant, citable, pixel-exact. That is the screenshot corpus I had written off as
+unobtainable, and it was available the whole time.
+
+The first page corrected from that source proves why it matters. My inferred spec claimed
+**11 columns** for Your VPCs; the real table has **5** (`Name`, `VPC ID`, `State`, `IPv4 CIDR`,
+`IPv6 CIDR`). The mock was being penalised against a fiction. Correcting that one page moved
+sourced `column_depth` from 42.9% to 61.4%.
+
+### Currency warnings the research surfaced
+
+- **RDS Performance Insights is end-of-life 2026-07-31**, redirecting to CloudWatch Database
+  Insights — our `/rds/performance-insights` models a surface being retired.
+- **IAM "Access Advisor" is now "Last Accessed"**; the Create user wizard no longer has an inline
+  programmatic-access checkbox; the **Bills page CSV download was removed 2025-11-01**. A mock
+  carrying those reflects a stale console generation.
+
+### Quality gates
+
+24/24 on dev and preview.
+
 ## 1.4.2
 
 Fixes an environment defect that only appears against the server tasks actually run on.

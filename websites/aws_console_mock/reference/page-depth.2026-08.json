@@ -1,0 +1,1521 @@
+{
+  "reference_version": "2026-08",
+  "status": "Column inventories are largely INFERRED: eight independent research passes against AWS documentation all found that AWS documents procedures, not table layouts. Tabs, primary buttons and table controls are far better sourced because docs name them inside step-by-step instructions. fidelity-score.mjs reports a sourced-only score alongside the overall one; the sourced-only number is the defensible one.",
+  "ownership": "supervisor-owned. Repair agents must not edit this file: every fidelity score divides by it, so an agent able to shrink the denominator could raise its score by deleting requirements instead of implementing them.",
+  "scoring": "See fidelity-score.mjs. column_depth / optional_depth / control_coverage / action_coverage / tab_coverage, combined with a geometric mean.",
+  "pages": {
+    "/ec2": {
+      "title": "Instances",
+      "columns_default": [
+        "Name",
+        "Instance ID",
+        "Instance state",
+        "Instance type",
+        "Status check",
+        "Alarm status",
+        "Availability Zone",
+        "Public IPv4 DNS",
+        "Public IPv4 address",
+        "Elastic IP",
+        "Monitoring"
+      ],
+      "columns_optional": [
+        "Private IPv4 addresses",
+        "IPv6 IPs",
+        "Key name",
+        "Launch time",
+        "Platform",
+        "Security group name",
+        "VPC ID",
+        "Subnet ID",
+        "Root device type",
+        "AMI ID",
+        "IAM instance profile",
+        "Tenancy",
+        "Lifecycle",
+        "Owner"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Launch instances",
+        "Connect",
+        "Instance state",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Connect",
+        "View details",
+        "Manage instance state",
+        "Instance settings",
+        "Networking",
+        "Security",
+        "Image and templates",
+        "Monitor and troubleshoot"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/volumes": {
+      "title": "Volumes",
+      "columns_default": [
+        "Name",
+        "Volume ID",
+        "Type",
+        "Size",
+        "IOPS",
+        "Throughput",
+        "Snapshot",
+        "Created",
+        "Availability Zone",
+        "Volume state",
+        "Alarm status",
+        "Attached resources",
+        "Volume status",
+        "Encryption"
+      ],
+      "columns_optional": [
+        "KMS key ID",
+        "Fast snapshot restored",
+        "Multi-Attach enabled",
+        "Outpost ARN"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create volume",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Modify volume",
+        "Create snapshot",
+        "Attach volume",
+        "Detach volume",
+        "Force detach volume",
+        "Delete volume",
+        "Manage tags",
+        "Manage fast snapshot restore"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/snapshots": {
+      "title": "Snapshots",
+      "columns_default": [
+        "Name",
+        "Snapshot ID",
+        "Size",
+        "Description",
+        "Storage tier",
+        "Snapshot status",
+        "Started",
+        "Progress",
+        "Encryption",
+        "Volume ID",
+        "Owner"
+      ],
+      "columns_optional": [
+        "KMS key ID",
+        "Fast snapshot restore",
+        "Outpost ARN",
+        "Data transfer progress"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create snapshot",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Create volume from snapshot",
+        "Create image from snapshot",
+        "Copy snapshot",
+        "Modify permissions",
+        "Manage fast snapshot restore",
+        "Delete snapshot",
+        "Manage tags"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/security-groups": {
+      "title": "Security Groups",
+      "columns_default": [
+        "Name",
+        "Security group ID",
+        "Security group name",
+        "VPC ID",
+        "Description",
+        "Owner",
+        "Inbound rules count",
+        "Outbound rules count"
+      ],
+      "columns_optional": [
+        "Security group ARN"
+      ],
+      "tabs": [
+        "Inbound rules",
+        "Outbound rules",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create security group",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Edit inbound rules",
+        "Edit outbound rules",
+        "Manage tags",
+        "Copy to new security group",
+        "Delete security groups"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/amis": {
+      "title": "AMIs",
+      "columns_default": [
+        "Name",
+        "AMI name",
+        "AMI ID",
+        "Source",
+        "Owner",
+        "Visibility",
+        "Status",
+        "Creation date",
+        "Platform",
+        "Root device type",
+        "Architecture",
+        "Virtualization"
+      ],
+      "columns_optional": [
+        "Block devices",
+        "Product codes",
+        "Deprecation time",
+        "Boot mode",
+        "Usage operation"
+      ],
+      "tabs": [
+        "Owned by me",
+        "Private images",
+        "Public images"
+      ],
+      "primary_actions": [
+        "Launch instance from AMI",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Deregister AMI",
+        "Copy AMI",
+        "Edit AMI permissions",
+        "Manage tags",
+        "Modify boot volume setting"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/key-pairs": {
+      "title": "Key Pairs",
+      "columns_default": [
+        "Name",
+        "ID",
+        "Type",
+        "Fingerprint",
+        "Created"
+      ],
+      "columns_optional": [
+        "Public key material",
+        "ARN"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create key pair",
+        "Actions",
+        "Import key pair"
+      ],
+      "actions_menu": [
+        "Delete",
+        "Manage tags"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/elastic-ips": {
+      "title": "Elastic IP addresses",
+      "columns_default": [
+        "Name",
+        "Allocated IPv4 address",
+        "Type",
+        "Allocation ID",
+        "Reverse DNS record",
+        "Associated instance ID",
+        "Private IP address",
+        "Association ID",
+        "Network interface owner account ID",
+        "Scope"
+      ],
+      "columns_optional": [
+        "NAT gateway ID",
+        "Customer owned IP",
+        "Network border group"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Allocate Elastic IP address",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Associate Elastic IP address",
+        "Disassociate Elastic IP address",
+        "Release Elastic IP addresses",
+        "Update reverse DNS",
+        "Manage tags"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/load-balancers": {
+      "title": "Load balancers",
+      "columns_default": [
+        "Name",
+        "DNS name",
+        "State",
+        "VPC ID",
+        "Availability Zones",
+        "Type",
+        "Date created"
+      ],
+      "columns_optional": [
+        "Hosted zone",
+        "Load balancer ARN",
+        "Scheme",
+        "IP address type"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create load balancer",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Edit subnets",
+        "Edit security groups",
+        "Edit IP address type",
+        "Edit attributes",
+        "Manage tags",
+        "Delete load balancer"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/target-groups": {
+      "title": "Target groups",
+      "columns_default": [
+        "Name",
+        "ARN",
+        "Port",
+        "Protocol",
+        "Target type",
+        "Load balancer",
+        "VPC ID"
+      ],
+      "columns_optional": [
+        "Protocol version",
+        "IP address type",
+        "Health check protocol"
+      ],
+      "tabs": [
+        "Targets",
+        "Monitoring",
+        "Health checks",
+        "Attributes",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create target group",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Register targets",
+        "Edit health check settings",
+        "Edit attributes",
+        "Manage tags",
+        "Delete"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/auto-scaling-groups": {
+      "title": "Auto Scaling groups",
+      "columns_default": [
+        "Name",
+        "Launch template/configuration",
+        "Instance management",
+        "Desired capacity",
+        "Min",
+        "Max",
+        "Availability Zones",
+        "Status"
+      ],
+      "columns_optional": [
+        "Instances",
+        "Default cooldown",
+        "Health check grace period",
+        "Created time"
+      ],
+      "tabs": [
+        "Details",
+        "Activity",
+        "Automatic scaling",
+        "Instance management",
+        "Monitoring",
+        "Instance refresh"
+      ],
+      "primary_actions": [
+        "Create Auto Scaling group",
+        "Actions",
+        "Edit"
+      ],
+      "actions_menu": [
+        "Edit",
+        "Delete",
+        "Update instances",
+        "Suspend processes",
+        "Resume processes"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/instance-types": {
+      "title": "Instance types",
+      "columns_default": [
+        "Instance type",
+        "vCPUs",
+        "Architecture",
+        "Memory (GiB)",
+        "Storage",
+        "Storage type",
+        "Network performance",
+        "EBS optimization",
+        "Current generation",
+        "On-Demand Linux pricing"
+      ],
+      "columns_optional": [
+        "GPUs",
+        "Local instance storage",
+        "Instance store volumes",
+        "IPv6 support",
+        "Burstable performance"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Actions",
+        "Launch instance"
+      ],
+      "actions_menu": [
+        "Compare instance types",
+        "Launch instance"
+      ],
+      "controls": [
+        "filter",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/ec2/launch-templates": {
+      "title": "Launch templates",
+      "columns_default": [
+        "Name",
+        "Launch template ID",
+        "Default version",
+        "Latest version",
+        "Created by",
+        "Created time"
+      ],
+      "columns_optional": [
+        "Description",
+        "Template tags"
+      ],
+      "tabs": [
+        "Details",
+        "Versions",
+        "Auto Scaling groups",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create launch template",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Launch instance from template",
+        "Modify template (Create new version)",
+        "Set default version",
+        "Delete template",
+        "Manage tags"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/s3": {
+      "title": "Buckets",
+      "columns_default": [
+        "Name",
+        "AWS Region",
+        "IAM Access Analyzer",
+        "Creation date"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "General purpose buckets",
+        "Directory buckets"
+      ],
+      "primary_actions": [
+        "Create bucket",
+        "Copy ARN",
+        "Empty",
+        "Delete"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences",
+        "tabs"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/lambda": {
+      "title": "Functions",
+      "columns_default": [
+        "Function name",
+        "Description",
+        "Package type",
+        "Runtime",
+        "Last modified"
+      ],
+      "columns_optional": [
+        "Code size",
+        "Memory",
+        "Timeout",
+        "Architecture",
+        "Ephemeral storage",
+        "State"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create function",
+        "Actions"
+      ],
+      "actions_menu": [
+        "View details",
+        "Test",
+        "Delete",
+        "Export function"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/rds": {
+      "title": "Databases",
+      "columns_default": [
+        "DB identifier",
+        "Status",
+        "Role",
+        "Engine",
+        "Region & AZ",
+        "Size",
+        "Actions"
+      ],
+      "columns_optional": [
+        "VPC",
+        "Multi-AZ",
+        "Class",
+        "Certificate authority",
+        "Maintenance",
+        "CPU",
+        "Current activity"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create database",
+        "Restore from S3",
+        "Actions",
+        "Modify"
+      ],
+      "actions_menu": [
+        "Stop temporarily",
+        "Reboot",
+        "Delete",
+        "Take snapshot",
+        "Restore to point in time",
+        "Create read replica",
+        "Promote",
+        "Convert to Multi-AZ DB cluster",
+        "Upgrade now"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/iam/users": {
+      "title": "Users",
+      "columns_default": [
+        "User name",
+        "Groups",
+        "Last activity",
+        "MFA",
+        "Password age",
+        "Console last sign-in",
+        "Access key ID",
+        "Active key age",
+        "Access key last used"
+      ],
+      "columns_optional": [
+        "ARN",
+        "Creation time",
+        "Path"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create user",
+        "Delete"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/iam/roles": {
+      "title": "Roles",
+      "columns_default": [
+        "Role name",
+        "Trusted entities",
+        "Last activity"
+      ],
+      "columns_optional": [
+        "Creation time",
+        "ARN",
+        "Description",
+        "Max session duration"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create role",
+        "Delete"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/iam/policies": {
+      "title": "Policies",
+      "columns_default": [
+        "Policy name",
+        "Type",
+        "Used as",
+        "Description"
+      ],
+      "columns_optional": [
+        "Attachment count",
+        "Creation time",
+        "Edited time",
+        "ARN"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create policy",
+        "Actions",
+        "Delete"
+      ],
+      "actions_menu": [
+        "Attach",
+        "Detach",
+        "Edit",
+        "Delete",
+        "Set as default version"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/vpc/vpcs": {
+      "title": "Your VPCs",
+      "columns_default": [
+        "Name",
+        "VPC ID",
+        "State",
+        "IPv4 CIDR",
+        "IPv6 CIDR"
+      ],
+      "columns_optional": [
+        "IPv6 pool",
+        "Network border group",
+        "Firewall rule group associations"
+      ],
+      "tabs": [
+        "Details",
+        "Resource map",
+        "CIDRs",
+        "Flow logs",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create VPC",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Edit CIDRs",
+        "Delete VPC",
+        "Create flow log",
+        "Manage tags"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "sourced",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      },
+      "source": "Official AWS console screenshots embedded in the AWS News Blog VPC Resource Map GA post."
+    },
+    "/vpc/subnets": {
+      "title": "Subnets",
+      "columns_default": [
+        "Name",
+        "Subnet ID",
+        "State",
+        "VPC",
+        "IPv4 CIDR",
+        "IPv6 CIDR",
+        "Available IPv4 addresses",
+        "Availability Zone",
+        "Route table",
+        "Network ACL",
+        "Default subnet",
+        "Auto-assign public IPv4 address"
+      ],
+      "columns_optional": [
+        "Owner ID",
+        "Availability Zone ID",
+        "Customer-owned IPv4 pool"
+      ],
+      "tabs": [
+        "Details",
+        "Route table",
+        "Network ACL",
+        "CIDR reservations",
+        "Sharing",
+        "Flow logs",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create subnet",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Edit subnet settings",
+        "Edit route table association",
+        "Edit network ACL association",
+        "Manage tags",
+        "Delete subnet"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/vpc/route-tables": {
+      "title": "Route tables",
+      "columns_default": [
+        "Name",
+        "Route table ID",
+        "Explicit subnet associations",
+        "Edge associations",
+        "Main",
+        "VPC",
+        "Owner ID"
+      ],
+      "columns_optional": [
+        "Propagated routes"
+      ],
+      "tabs": [
+        "Details",
+        "Routes",
+        "Subnet associations",
+        "Edge associations",
+        "Route propagation",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create route table",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Set main route table",
+        "Edit routes",
+        "Edit subnet associations",
+        "Manage tags",
+        "Delete route table"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/vpc/internet-gateways": {
+      "title": "Internet gateways",
+      "columns_default": [
+        "Name",
+        "Internet gateway ID",
+        "State",
+        "VPC ID",
+        "Owner"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "Details",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create internet gateway",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Attach to VPC",
+        "Detach from VPC",
+        "Manage tags",
+        "Delete internet gateway"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/vpc/nat-gateways": {
+      "title": "NAT gateways",
+      "columns_default": [
+        "Name",
+        "NAT gateway ID",
+        "Connectivity type",
+        "State",
+        "Elastic IP address",
+        "Private IP address",
+        "Network interface ID",
+        "VPC",
+        "Subnet"
+      ],
+      "columns_optional": [
+        "Primary private IPv4 address",
+        "Created",
+        "Deleted"
+      ],
+      "tabs": [
+        "Details",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create NAT gateway",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Delete NAT gateway",
+        "Manage tags"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/cloudwatch/alarms": {
+      "title": "Alarms",
+      "columns_default": [
+        "Name",
+        "State",
+        "Last state update",
+        "Conditions",
+        "Actions"
+      ],
+      "columns_optional": [
+        "Namespace",
+        "Metric name",
+        "Threshold",
+        "Datapoints to alarm",
+        "Period"
+      ],
+      "tabs": [
+        "All alarms",
+        "In alarm",
+        "Insufficient data",
+        "OK"
+      ],
+      "primary_actions": [
+        "Create alarm",
+        "Actions",
+        "Hide Auto Scaling alarms"
+      ],
+      "actions_menu": [
+        "Edit",
+        "Copy",
+        "Delete",
+        "Enable actions",
+        "Disable actions",
+        "Add to dashboard"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences",
+        "tabs"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/cloudwatch/logs": {
+      "title": "Log groups",
+      "columns_default": [
+        "Log group",
+        "Retention",
+        "Metric filters",
+        "Subscription filters",
+        "Contributor Insights rules",
+        "Data protection",
+        "Stored bytes"
+      ],
+      "columns_optional": [
+        "ARN",
+        "Creation time",
+        "KMS key ID",
+        "Log class"
+      ],
+      "tabs": [
+        "Log streams",
+        "Metric filters",
+        "Subscription filters",
+        "Contributor Insights",
+        "Tags",
+        "Data protection"
+      ],
+      "primary_actions": [
+        "Create log group",
+        "Actions",
+        "View in Logs Insights"
+      ],
+      "actions_menu": [
+        "Edit retention setting",
+        "Create metric filter",
+        "Create subscription filter",
+        "Export data to Amazon S3",
+        "Delete log group(s)"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "sourced",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/dynamodb/tables": {
+      "title": "Tables",
+      "columns_default": [
+        "Name",
+        "Status",
+        "Partition key",
+        "Sort key",
+        "Indexes",
+        "Deletion protection",
+        "Read capacity mode",
+        "Write capacity mode",
+        "Size",
+        "Items"
+      ],
+      "columns_optional": [
+        "Table class",
+        "Encryption type",
+        "Stream",
+        "Time to live",
+        "Global table"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create table",
+        "Actions",
+        "Delete",
+        "Explore items",
+        "Update settings"
+      ],
+      "actions_menu": [
+        "Update settings",
+        "Delete table",
+        "Create backup",
+        "Restore to point in time",
+        "Export to S3"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/sqs/queues": {
+      "title": "Queues",
+      "columns_default": [
+        "Name",
+        "Type",
+        "Created",
+        "Messages available",
+        "Messages in flight",
+        "Encryption",
+        "Content-based deduplication"
+      ],
+      "columns_optional": [
+        "ARN",
+        "URL",
+        "Visibility timeout",
+        "Message retention period",
+        "Maximum message size",
+        "Delivery delay"
+      ],
+      "tabs": [
+        "Details",
+        "Send and receive messages",
+        "Monitoring",
+        "Dead-letter queue",
+        "Lambda triggers",
+        "Access policy",
+        "Encryption",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create queue",
+        "Actions",
+        "Send and receive messages",
+        "Delete",
+        "Purge",
+        "Edit"
+      ],
+      "actions_menu": [
+        "Edit",
+        "Delete",
+        "Purge",
+        "Configure dead-letter queue redrive",
+        "Subscribe to Amazon SNS topic"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/sns/topics": {
+      "title": "Topics",
+      "columns_default": [
+        "Name",
+        "ARN",
+        "Display name"
+      ],
+      "columns_optional": [
+        "Type",
+        "Created",
+        "Subscriptions confirmed",
+        "Subscriptions pending"
+      ],
+      "tabs": [
+        "Subscriptions",
+        "Access policy",
+        "Delivery retry policy",
+        "Delivery status logging",
+        "Encryption",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create topic",
+        "Actions",
+        "Delete",
+        "Edit",
+        "Publish message"
+      ],
+      "actions_menu": [
+        "Edit",
+        "Delete",
+        "Publish message",
+        "Create subscription"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/route53/hosted-zones": {
+      "title": "Hosted zones",
+      "columns_default": [
+        "Hosted zone name",
+        "Type",
+        "Created by",
+        "Record count",
+        "Description",
+        "Hosted zone ID"
+      ],
+      "columns_optional": [
+        "Comment",
+        "Owner"
+      ],
+      "tabs": [
+        "Records",
+        "Hosted zone details",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create hosted zone",
+        "Actions",
+        "Delete zone",
+        "Edit hosted zone",
+        "Test record"
+      ],
+      "actions_menu": [
+        "Edit hosted zone",
+        "Delete zone",
+        "Create record",
+        "Import zone file",
+        "Test record"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/cloudfront/distributions": {
+      "title": "Distributions",
+      "columns_default": [
+        "ID",
+        "Domain name",
+        "Alternate domain names",
+        "Origin",
+        "Last modified",
+        "Status"
+      ],
+      "columns_optional": [
+        "Description",
+        "Price class",
+        "State",
+        "Web ACL"
+      ],
+      "tabs": [
+        "General",
+        "Origins",
+        "Behaviors",
+        "Error pages",
+        "Geographic restrictions",
+        "Invalidations",
+        "Tags"
+      ],
+      "primary_actions": [
+        "Create distribution",
+        "Actions",
+        "Enable",
+        "Disable",
+        "Delete"
+      ],
+      "actions_menu": [
+        "Enable",
+        "Disable",
+        "Delete",
+        "Create invalidation",
+        "Move to another account"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/cloudtrail/events": {
+      "title": "Event history",
+      "columns_default": [
+        "Event name",
+        "Event time",
+        "User name",
+        "Event source",
+        "Resource type",
+        "Resource name"
+      ],
+      "columns_optional": [
+        "Event ID",
+        "AWS access key",
+        "AWS region",
+        "Error code",
+        "Request ID",
+        "Source IP address"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Download events",
+        "Create Athena table",
+        "Actions"
+      ],
+      "actions_menu": [
+        "Download as CSV",
+        "Download as JSON",
+        "Create Athena table"
+      ],
+      "controls": [
+        "filter",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    "/billing/bills": {
+      "title": "Bills",
+      "columns_default": [
+        "Service",
+        "Amount"
+      ],
+      "columns_optional": [
+        "Region",
+        "Usage type",
+        "Tax"
+      ],
+      "tabs": [
+        "Charges by service",
+        "Charges by account",
+        "Savings"
+      ],
+      "primary_actions": [
+        "Download CSV",
+        "Print"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "filter",
+        "pagination"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    }
+  },
+  "research": "reference/research/ \u2014 eight per-service-family passes with citations and explicit unconfirmed markers.",
+  "note_on_screenshots": "AWS publishes real console screenshots inside its own News Blog and What's New posts. Those are compliant, citable and pixel-exact \u2014 the screenshot corpus previously written off as unobtainable. The /vpc/vpcs entry is the first corrected from that source, and it shows why this matters: the inferred list claimed 11 columns where the real table has 5, so the mock was being penalised against a fiction."
+}

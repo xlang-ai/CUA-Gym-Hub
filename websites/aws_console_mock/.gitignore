@@ -5,3 +5,6 @@
 
 # Session-scoped quality scratch (evidence lives in quality-manifest.json)
 .quality/
+
+# Fidelity measurement scratch
+.quality/

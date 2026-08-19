@@ -1,7 +1,7 @@
 {
   "app": "aws_console_mock",
   "display_name": "XWS Console Mock",
-  "app_version": "1.4.2",
+  "app_version": "1.5.0",
   "baseline_git_sha": "f9e1b06ccf680c59c388852641221426899cb7de",
   "reference": {
     "product": "AWS Management Console",
@@ -269,5 +269,26 @@
     "A session that never receives POST action=set has no frozen baseline: /go falls back to initial = current, so state_diff stays empty. Real tasks always inject first, so this is latent, but first set_current arguably should freeze a baseline. Not changed here because set_current explicitly promises never to touch .initial.json (golden_patch semantics).",
     "SCHEMA.md still drifts from the code in several places (rdsSnapshots type/storage, billing.taxSettings shape, budgets id, dynamodb tableSize/lsi/ttl, sns subscriptionCount). Documentation-side fix, deliberately out of scope for this release since changing the seed shape would break old tasks.",
     "The state-injection default-fill bug (G1) also exists in shared/secureMockApiPlugin.mjs and therefore likely affects other hub mocks; only this app's vite.config.js was fixed."
-  ]
+  ],
+  "fidelity": {
+    "runner": "node fidelity-score.mjs --base http://127.0.0.1:5273",
+    "reference": "reference/page-depth.2026-08.json",
+    "cfi_all_requirements": 0.428,
+    "cfi_sourced_only": 0.438,
+    "dimensions": {
+      "column_depth": 0.713,
+      "optional_depth": 0.256,
+      "control_coverage": 0.48,
+      "action_coverage": 0.334,
+      "tab_coverage": 0.49
+    },
+    "note": "Two scores. The overall one divides partly by inferred requirements and is directional; the sourced-only one divides only by requirements an AWS document or official screenshot names verbatim, and is the defensible figure. Geometric mean so a strong dimension cannot mask a weak one.",
+    "widest_gaps": [
+      "/cloudwatch/logs",
+      "/sqs/queues",
+      "/vpc/route-tables",
+      "/vpc/subnets",
+      "/billing/bills"
+    ]
+  }
 }

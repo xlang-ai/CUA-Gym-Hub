@@ -205,8 +205,11 @@ await check('H3', 'no un-desensitized trademark strings in anything the user see
     's/AWS\\.S3()//g',
     's/const AWS = require//g',
   ].join('; ');
+  // Strip comments first: the gate is about what a user sees, and citing an AWS doc
+  // title in a source comment is legitimate. perl handles both // and /* */ forms.
   const out = sh(
     `cat src/pages/*.jsx src/components/*.jsx src/store/dataManager.js ` +
+    `| perl -0777 -pe 's{/\\*.*?\\*/}{}gs; s{^\\s*//.*$}{}gm' ` +
     `| sed '${strip}' | grep -ohE "\\b(AWS|Amazon)\\b" | sort -u || true`
   );
   assert(out === '', `found: ${out.split('\n').join(', ')}`);

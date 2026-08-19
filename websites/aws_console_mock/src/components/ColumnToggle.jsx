@@ -39,6 +39,8 @@ export default function ColumnToggle({ tableName, columns, visibleColumns, onTog
   return (
     <div className="relative" ref={ref}>
       <button
+        aria-label="Preferences"
+        title="Preferences"
         className="p-1.5 hover:bg-aws-disabled-bg rounded"
         onClick={() => setOpen(!open)}
         title="Toggle column visibility"
