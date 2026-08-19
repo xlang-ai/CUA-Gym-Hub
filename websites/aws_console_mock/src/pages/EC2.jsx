@@ -4,6 +4,12 @@ import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { format } from 'date-fns';
 import ColumnToggle, { useColumnVisibility } from '../components/ColumnToggle';
+import ActionsMenu from '../components/ActionsMenu';
+import InstanceActionDialog from '../components/InstanceActionDialog';
+import {
+  TOP_LEVEL, INSTANCE_SETTINGS, NETWORKING_SETTINGS, SECURITY_SETTINGS,
+  STORAGE_SETTINGS, MONITOR_SETTINGS, STATE_COMMANDS, unavailableReason,
+} from '../lib/instanceActions';
 
 const STATE_COLORS = {
   running: { dot: 'bg-aws-success', text: 'text-aws-success', bg: 'bg-aws-status-success-bg' },
@@ -45,6 +51,7 @@ export default function EC2() {
   const [detailTab, setDetailTab] = useState('Details');
   const [stateDropdown, setStateDropdown] = useState(false);
   const [lastRefreshed, setLastRefreshed] = useState(null);
+  const [actionDialog, setActionDialog] = useState(null);
 
   const EC2_COLUMNS = [
     { key: 'name', label: 'Name' },
@@ -88,6 +95,52 @@ export default function EC2() {
     return sortDir === 'asc' ? <ChevronUp size={12} /> : <ChevronDown size={12} />;
   };
 
+  // Exactly one instance drives the Actions menu, matching the console: the settings
+  // dialogs act on a single resource.
+  const selectedInstances = state.ec2.filter(i => selectedIds.includes(i.id));
+  const one = selectedInstances.length === 1 ? selectedInstances[0] : null;
+
+  const openDialog = (item) => setActionDialog({ item, instance: one });
+
+  const toItem = (d) => {
+    const reason = one ? unavailableReason(d, one)
+      : (selectedIds.length === 0 ? 'Select an instance' : 'Select exactly one instance');
+    return {
+      label: d.label,
+      disabled: !!reason,
+      reason,
+      danger: d.danger,
+      onSelect: () => {
+        if (d.to && d.kind === 'link') { navigate(d.to); return; }
+        if (d.to && !d.kind) { handleStateCommand(d); return; }
+        openDialog(d);
+      },
+    };
+  };
+
+  const stateMenuItems = STATE_COMMANDS.map(toItem);
+
+  const actionsMenuItems = [
+    ...TOP_LEVEL.map(toItem),
+    { separator: true },
+    ...STATE_COMMANDS.map(toItem),
+    { separator: true },
+    { label: 'Instance settings', items: INSTANCE_SETTINGS.map(toItem) },
+    { label: 'Networking', items: NETWORKING_SETTINGS.map(toItem) },
+    { label: 'Security', items: SECURITY_SETTINGS.map(toItem) },
+    { label: 'Storage', items: STORAGE_SETTINGS.map(toItem) },
+    { label: 'Monitor and troubleshoot', items: MONITOR_SETTINGS.map(toItem) },
+  ];
+
+  const handleStateCommand = (cmd) => {
+    const reason = unavailableReason(cmd, one);
+    if (reason) { addFlash('error', `${cmd.label}: ${reason}`); return; }
+    handleStateChange(
+      cmd.label.startsWith('Start') ? 'start'
+      : cmd.label.startsWith('Stop') || cmd.label.startsWith('Hibernate') ? 'stop'
+      : cmd.label.startsWith('Reboot') ? 'reboot' : 'terminate');
+  };
+
   const handleStateChange = (action) => {
     selectedIds.forEach(id => {
       const inst = state.ec2.find(i => i.id === id);
@@ -118,6 +171,12 @@ export default function EC2() {
           dispatch({ type: 'ADD_NOTIFICATION', payload: { title: 'Instance terminated', message: `${inst.name} (${id}) has been terminated`, type: 'warning', service: 'EC2' } });
           setTimeout(() => dispatch({ type: 'TERMINATE_INSTANCE', payload: id }), 5000);
         }, 3000);
+      }
+      else {
+        // Unreachable through the menu, which disables mismatched commands. Kept because a
+        // silent fall-through here is what made "Start" on a running instance look like it
+        // worked: menu closed, nothing changed, no message.
+        addFlash('error', `Cannot ${action} ${id}: instance is ${inst.state}`);
       }
     });
     setSelectedIds([]);
@@ -257,25 +316,13 @@ export default function EC2() {
             <ColumnToggle tableName="ec2_instances" columns={EC2_COLUMNS} visibleColumns={visibleCols} onToggle={setVisibleCols} />
           </div>
         </div>
-        {/* Actions bar */}
+        {/* Actions bar. Enablement comes from src/lib/instanceActions.js, which encodes the
+            live console's gating; gate S6 replays the captured matrix against it. The
+            triggers stay enabled with nothing selected, as the console does — the items
+            inside carry the reason instead. */}
         <div className="flex items-center gap-2 px-4 py-2 border-b border-aws-border-secondary bg-aws-status-info-bg/30">
-          <div className="relative">
-            <button
-              className="aws-btn aws-btn-secondary flex items-center gap-1 text-xs"
-              disabled={selectedIds.length === 0}
-              onClick={() => setStateDropdown(!stateDropdown)}
-            >
-              Instance state <ChevronDown size={12} />
-            </button>
-            {stateDropdown && selectedIds.length > 0 && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-aws-border shadow-lg z-20 w-36" style={{ borderRadius: 2 }}>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('start')}>Start</button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('stop')}>Stop</button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => handleStateChange('reboot')}>Reboot</button>
-                <button className="w-full text-left px-3 py-2 text-sm hover:bg-aws-status-info-bg/30 text-aws-error" onClick={() => handleStateChange('terminate')}>Terminate</button>
-              </div>
-            )}
-          </div>
+          <ActionsMenu label="Instance state" width="w-72" items={stateMenuItems} />
+          <ActionsMenu label="Actions" width="w-72" items={actionsMenuItems} />
           <button className="aws-btn aws-btn-primary text-xs" onClick={() => setView('launch')}>Launch instances</button>
         </div>
         {/* Filter */}
@@ -406,6 +453,24 @@ export default function EC2() {
           )}
         </div>
       )}
+
+      {/* The dialog for whichever Actions item was chosen. Added after the first pass shipped
+          the state without ever rendering it — the same shape as the IAM "Add permissions"
+          modal that lived in the wrong branch and never appeared. Build and static gates
+          cannot see this; only clicking can. */}
+      {actionDialog && actionDialog.instance && (
+        <InstanceActionDialog
+          item={actionDialog.item}
+          instance={state.ec2.find(i => i.id === actionDialog.instance.id) || actionDialog.instance}
+          store={state}
+          onClose={() => setActionDialog(null)}
+          onApply={(fields, message) => {
+            dispatch({ type: 'UPDATE_INSTANCE', payload: { id: actionDialog.instance.id, ...fields } });
+            addFlash('success', message);
+          }}
+        />
+      )}
+
     </div>
   );
 }

@@ -10,7 +10,8 @@
     "gates": "node quality.contract.mjs",
     "fidelity": "node fidelity-score.mjs",
     "walk:vpc": "node walkthroughs/vpc-actions.mjs",
-    "depth": "node depth-report.mjs"
+    "depth": "node depth-report.mjs",
+    "walk:ec2": "node walkthroughs/ec2-actions.mjs"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",

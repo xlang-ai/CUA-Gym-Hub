@@ -51,6 +51,14 @@ function reducer(prev, action) {
     case 'TERMINATE_INSTANCE':
       newState.ec2 = prev.ec2.filter(i => i.id !== action.payload);
       break;
+    case 'UPDATE_INSTANCE': {
+      // Generic field write for the Instance settings dialogs. Keeping these as one case
+      // rather than twenty keeps the reducer honest: every settings dialog either lands here
+      // and changes state, or it is not implemented.
+      const { id, ...fields } = action.payload;
+      newState.ec2 = prev.ec2.map(i => i.id === id ? { ...i, ...fields } : i);
+      break;
+    }
     case 'UPDATE_INSTANCE_STATE':
       newState.ec2 = prev.ec2.map(i =>
         i.id === action.payload.id

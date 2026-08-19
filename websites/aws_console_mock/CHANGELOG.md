@@ -4,6 +4,67 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.6.0
+
+The EC2 Actions menu, rebuilt from the live console — and state gating, which is the part
+that was actually missing.
+
+### The reframe
+
+Earlier releases chased what the fidelity index could measure, and two of its five dimensions
+score columns. So the work drifted toward column inventories. Reading the real console showed
+that was never the gap. The console's EC2 instance Actions menu holds **71 entries across six
+nested submenus**, and enablement is **state-dependent**: `Change instance type`, `Change CPU
+options` and `Modify instance placement` are offered only while the instance is **stopped**;
+`Connect`, `Stop`, `Reboot` and `Replace root volume` only while it **runs**.
+
+That is what makes resizing an instance a task at all — stop, wait for the transition, change,
+start. A mock that accepts the change at any moment collapses it to one click and removes the
+signal along with the difficulty.
+
+### Added
+
+- `src/lib/instanceActions.js` — the menu as **data**: 51 descriptors across six submenus, each
+  with the state it requires and the capability it needs. Enablement stops being `if`
+  statements scattered through a page, so it can be asserted.
+- Nested submenus in `ActionsMenu`, and `InstanceActionDialog`, a descriptor-driven dialog.
+  Every kind renders something real: `Connect` prints the SSH and Session Manager commands
+  built from this instance's key pair and address, `Get system log` is derived deterministically
+  from the instance so the same instance always shows the same boot log, and `Instance
+  diagnostics` genuinely inspects the store — including whether a security group actually opens
+  port 22.
+- Gate **S6**: replays the captured console matrix through the mock's own rules. 23 state-gated
+  actions must agree with what the real console did against a stopped and a running instance.
+- `walkthroughs/ec2-actions.mjs` (`npm run walk:ec2`) — walks the refusal, the stop, the
+  now-permitted change, and asserts the type really changed and reached `state_diff`. 7/7 on dev
+  and preview.
+- `reference/capture/` — structure read from the live console, read-only. Screenshots and page
+  dumps are gitignored; they carry the account id and real resource names. Only structure is
+  committed, and each file is leak-checked.
+
+### Fixed
+
+- **`Start` on a running instance silently did nothing.** The handler read
+  `if (action === 'start' && inst.state === 'stopped')` and returned quietly otherwise: the menu
+  closed, no flash appeared, nothing changed. To an agent that is indistinguishable from
+  success. Mismatched commands are now disabled with the reason, and the fall-through raises an
+  error instead of returning.
+- The `Instance state` trigger was disabled whenever nothing was selected. The real console
+  leaves it enabled and disables the items, which keeps the vocabulary discoverable.
+
+### Caught while building this
+
+`Change instance type` and its dialog shipped in the first pass with the dialog state added but
+**never rendered** — the same shape as the IAM "Add permissions" modal in 1.2.0. `npm run build`
+passed, and so did all 25 static gates. Only clicking it found it, which is why the walkthrough
+exists.
+
+### Where the reference was wrong
+
+Doc-derived research had EC2 at 11 default columns; the console shows 17. `Alarm status` was
+specified as a default column and is optional and off. VPC detail pages were recorded as having
+no tabs; they have six.
+
 ## 1.5.2
 
 The Actions menu, starting with VPC — and a fix to the instrument that was hiding it.

@@ -443,6 +443,55 @@ await check('S5', 'every dispatched action has a matching reducer case', () => {
 });
 
 
+await check('S6', 'instance action gating matches the live console capture', async () => {
+  // The capture is a contract, not a note. reference/capture/extracted/ec2-instance-
+  // interactions.json records, for every Actions item, whether the real console enabled it
+  // against a stopped instance and against a running one. This replays that matrix through
+  // the mock's own rules, so a divergence fails the build instead of being discovered by an
+  // agent mid-task.
+  //
+  // This is the dimension that actually separates the mock from the console. Column counts
+  // are easy to measure and were never the gap: "Change instance type" being refused while
+  // an instance runs is what makes resizing a multi-step task at all.
+  const cap = JSON.parse(read('reference/capture/extracted/ec2-instance-interactions.2026-08-18.json'));
+  const m = await import('./src/lib/instanceActions.js');
+  const items = [...m.TOP_LEVEL, ...m.INSTANCE_SETTINGS, ...m.NETWORKING_SETTINGS, ...m.SECURITY_SETTINGS,
+                 ...m.STORAGE_SETTINGS, ...m.MONITOR_SETTINGS, ...m.STATE_COMMANDS];
+  const byLabel = new Map(items.map((i) => [i.label, i]));
+  // The capture truncates labels to four words; match on that prefix.
+  const find = (label) => byLabel.get(label) ||
+    items.find((i) => i.label.split(' ').slice(0, 4).join(' ') === label);
+
+  const stopped = { state: 'stopped', type: 't2.micro', platform: 'Linux/UNIX' };
+  const running = { ...stopped, state: 'running' };
+  const ok = (item, inst) => m.unavailableReason(item, inst) === null;
+  const problems = [];
+  const g = cap.state_dependent_enablement;
+
+  for (const label of g.enabled_only_when_running) {
+    const it = find(label);
+    if (!it) { problems.push(`${label}: not modelled`); continue; }
+    if (!ok(it, running)) problems.push(`${label}: console enables it while running, mock does not`);
+    if (ok(it, stopped)) problems.push(`${label}: console disables it while stopped, mock enables it`);
+  }
+  for (const label of g.enabled_only_when_stopped) {
+    const it = find(label);
+    if (!it) { problems.push(`${label}: not modelled`); continue; }
+    if (!ok(it, stopped)) problems.push(`${label}: console enables it while stopped, mock does not`);
+    if (ok(it, running)) problems.push(`${label}: console disables it while running, mock enables it`);
+  }
+  for (const label of g.disabled_in_both_states.items) {
+    const it = find(label);
+    if (!it) { problems.push(`${label}: not modelled`); continue; }
+    if (ok(it, running) || ok(it, stopped)) problems.push(`${label}: console disables it in both states, mock enables it`);
+  }
+
+  assert(problems.length === 0, problems.slice(0, 6).join('; ') + (problems.length > 6 ? ` (+${problems.length - 6} more)` : ''));
+  const n = g.enabled_only_when_running.length + g.enabled_only_when_stopped.length + g.disabled_in_both_states.items.length;
+  return `${n} state-gated actions replay identically against the captured console matrix`;
+});
+
+
 // ---------------------------------------------------------------- report
 const pass = results.filter((r) => r.ok).length;
 const fail = results.length - pass;
