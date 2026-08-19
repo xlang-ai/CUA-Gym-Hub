@@ -13,6 +13,17 @@ const STATUS_COLORS = {
   '已取消': { bg: '#f5f5f5', border: '#d9d9d9', text: '#8c8c8c', icon: '✕' },
 };
 
+const SEAT_PRICE_KEYS = {
+  '商务座': 'businessSeat',
+  '一等座': 'firstClassSeat',
+  '二等座': 'secondClassSeat',
+  '高级软卧': 'deluxeSoftSleeper',
+  '软卧': 'softSleeper',
+  '硬卧': 'hardSleeper',
+  '硬座': 'hardSeat',
+  '无座': 'noSeat',
+};
+
 export default function OrderDetailPage() {
   const { orderId } = useParams();
   const [searchParams] = useSearchParams();
@@ -106,8 +117,12 @@ export default function OrderDetailPage() {
       return;
     }
     const newTrain = altTrains[0];
-    const changeFee = Math.floor(order.price * 0.05);
-    const priceDiff = (newTrain.prices.secondClassSeat || newTrain.prices.firstClassSeat || 0) - order.price;
+    const priceKey = SEAT_PRICE_KEYS[order.seatClass];
+    const newPrice = priceKey ? newTrain.prices[priceKey] : null;
+    if (newPrice == null) {
+      showToast(`新车次无${order.seatClass}可改签`, 'warning');
+      return;
+    }
 
     updateState((prev) => ({
       ...prev,
@@ -145,9 +160,11 @@ export default function OrderDetailPage() {
       duration: newTrain.duration,
       seatClass: order.seatClass,
       seatNo: '',
-      price: order.price,
+      price: newPrice,
       passengers: order.passengers.map((p, i) => ({
         ...p,
+        seatClass: order.seatClass,
+        ticketPrice: newPrice,
         seatNo: `${String(carNo).padStart(2, '0')}车${String(seatNo + i).padStart(2, '0')}${seatNumbers[i % 5]}号`,
         ticketStatus: '已出票',
       })),
