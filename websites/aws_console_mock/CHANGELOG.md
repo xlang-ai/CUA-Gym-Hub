@@ -4,6 +4,62 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.6.6
+
+The EC2 column set and Preferences dialog, from the console's own Preferences panel.
+
+### 7 columns → 52
+
+Captured 2026-08-18 by opening the live console's Preferences: **51 attribute columns plus the
+pinned Name column, 16 on by default.** The mock had seven, each rendered by its own hardcoded
+`<th>`/`<td>` pair.
+
+`src/lib/ec2Columns.js` now holds all 52 with a `get(instance, state)` accessor, and the table
+renders from it. Values are **derived, never stored and never random** — a task harness injects
+partial instances and must not crash on a missing field, and a column an agent reads has to be
+identical on every run or no check can be written over it. Elastic IP resolves against the
+account's Elastic IPs rather than sitting blank, since the mock has that association.
+
+Twelve columns show an em-dash for every seeded instance — Kernel ID, RAM disk ID, Placement
+group, Outpost ARN and similar. That is the faithful answer: they are blank in the real console
+too for ordinary HVM instances.
+
+### The reference was wrong in both directions
+
+Updating `page-depth` from the capture *raised* the bar — `columns_default` 11 → 17,
+`columns_optional` 14 → 35, both now `sourced` instead of `inferred`. The doc-derived lists had
+specified **Alarm status as a default column** when the console ships it off, and listed **Key
+name, Launch time and Platform details as optional** when they are on by default.
+
+### Preferences was a 224px popover
+
+The console's is a two-column modal: page size (10/25/50 resources), Wrap lines, Striped rows,
+Use tags as suggestion options, Context menu, Row click selection, Compact table mode, sticky
+first/last column, and an attribute-column list with its own **Filter columns** box — which is
+not optional once the list is 52 long. Rebuilt to match, and **Cancel discards while only Confirm
+applies**, as the console does.
+
+Every preference reaches the DOM. A preference that only sets state would be the same defect as a
+menu item that opens nothing, one layer down — so page size drives the pager, wrap/compact change
+cell classes, striped rows change row classes.
+
+### The pager was decorative
+
+EC2's pagination rendered a hardcoded `1`, `Previous`/`Next` permanently disabled, and
+`Showing 1-N of N` regardless. It now paginates for real off the page-size preference.
+
+### Two temporal dead zones, both invisible to the build
+
+`pageCount` referenced `instances` above its `const` declaration, and `<Link>` was used without
+being imported. Both compile; both throw on first render. The route crawl caught them, which is
+the check that can — this release's crawl also opens the Preferences dialog on every page, since
+the component changed shape for all of them.
+
+`npm run walk:prefs` — 7/7, including that Cancel really discards and Confirm really applies.
+
+`column_depth` 71.7% → **73.1%** *after* raising its requirement by six columns. Sourced CFI 65.3%
+→ **67.4%**; directional 69.5% → **70.4%**.
+
 ## 1.6.5
 
 Route table and security group menus from the capture — and 43 controls that announced success

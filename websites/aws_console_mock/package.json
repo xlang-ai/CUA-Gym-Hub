@@ -15,7 +15,8 @@
     "walk:types": "node walkthroughs/instance-types.mjs",
     "walk:details": "node walkthroughs/detail-pages.mjs",
     "walk:vpcfam": "node walkthroughs/vpc-family.mjs",
-    "walk": "for w in vpc-actions vpc-family ec2-actions instance-types detail-pages; do node walkthroughs/$w.mjs || exit 1; done"
+    "walk": "for w in vpc-actions vpc-family ec2-actions instance-types ec2-preferences detail-pages; do node walkthroughs/$w.mjs || exit 1; done",
+    "walk:prefs": "node walkthroughs/ec2-preferences.mjs"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",

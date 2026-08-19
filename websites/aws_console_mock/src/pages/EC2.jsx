@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
+import { EC2_COLUMNS, DEFAULT_COLUMN_KEYS } from '../lib/ec2Columns';
+
+// Only columns backed by a directly comparable field are sortable, matching the console, which
+// does not offer a sort control on every attribute column.
+const SORTABLE = new Set(['name', 'id', 'state', 'type', 'az', 'launchTime']);
+const MONO = new Set(['id', 'publicIp', 'privateIp', 'publicDns', 'privateDns', 'vpcId', 'subnetId',
+                      'imageId', 'volumeId', 'sgIds', 'reservationId', 'iamProfile', 'elasticIp']);
 import { RefreshCw, Search, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { format } from 'date-fns';
-import ColumnToggle, { useColumnVisibility } from '../components/ColumnToggle';
+import ColumnToggle, { useColumnVisibility, useTablePreferences } from '../components/ColumnToggle';
 import ActionsMenu from '../components/ActionsMenu';
 import InstanceActionDialog from '../components/InstanceActionDialog';
 import {
@@ -53,16 +60,16 @@ export default function EC2() {
   const [lastRefreshed, setLastRefreshed] = useState(null);
   const [actionDialog, setActionDialog] = useState(null);
 
-  const EC2_COLUMNS = [
-    { key: 'name', label: 'Name' },
-    { key: 'id', label: 'Instance ID' },
-    { key: 'state', label: 'Instance state' },
-    { key: 'type', label: 'Instance type' },
-    { key: 'publicIp', label: 'Public IPv4 address' },
-    { key: 'az', label: 'Availability zone' },
-    { key: 'launchTime', label: 'Launch time' },
-  ];
-  const [visibleCols, setVisibleCols] = useColumnVisibility('ec2_instances', EC2_COLUMNS.map(c => c.key));
+  const [visibleCols, setVisibleCols] = useColumnVisibility('ec2_instances', DEFAULT_COLUMN_KEYS);
+  const [prefs, setPrefs] = useTablePreferences('ec2_instances');
+  const [page, setPage] = useState(1);
+  // Render in the console's own column order, not the order the user toggled them on.
+  const shownColumns = EC2_COLUMNS.filter(c => visibleCols.includes(c.key));
+  // Preferences reach the DOM here. A preference that only sets state would be the same defect
+  // as a menu item that opens nothing, one layer down.
+  const cellWrap = prefs.wrapLines ? '' : 'whitespace-nowrap';
+  const cellPad = prefs.compact ? 'py-1.5' : 'py-3';
+  const rowStripe = (n) => (prefs.stripedRows && n % 2 === 1 ? 'bg-aws-disabled-bg/40' : '');
 
   // Launch wizard state
   const [launchName, setLaunchName] = useState('');
@@ -82,6 +89,11 @@ export default function EC2() {
     const bVal = b[sortCol] || '';
     return aVal < bVal ? -val : aVal > bVal ? val : 0;
   });
+
+  const pageCount = Math.max(1, Math.ceil(instances.length / prefs.pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const pageStart = (currentPage - 1) * prefs.pageSize;
+  const pageRows = instances.slice(pageStart, pageStart + prefs.pageSize);
 
   const selectedInstance = selectedIds.length === 1 ? state.ec2.find(i => i.id === selectedIds[0]) : null;
 
@@ -313,7 +325,7 @@ export default function EC2() {
             >
               <RefreshCw size={16} className="text-aws-text-secondary" />
             </button>
-            <ColumnToggle tableName="ec2_instances" columns={EC2_COLUMNS} visibleColumns={visibleCols} onToggle={setVisibleCols} />
+            <ColumnToggle tableName="ec2_instances" columns={EC2_COLUMNS} visibleColumns={visibleCols} onToggle={setVisibleCols} preferences={prefs} onPreferences={setPrefs} />
           </div>
         </div>
         {/* Actions bar. Enablement comes from src/lib/instanceActions.js, which encodes the
@@ -343,44 +355,61 @@ export default function EC2() {
             <thead>
               <tr>
                 <th className="w-8"><input type="checkbox" onChange={e => { if (e.target.checked) setSelectedIds(instances.map(i => i.id)); else setSelectedIds([]); }} checked={selectedIds.length > 0 && selectedIds.length === instances.length} /></th>
-                {visibleCols.includes('name') && <th className="cursor-pointer select-none" onClick={() => handleSort('name')}>Name <SortIcon col="name" /></th>}
-                {visibleCols.includes('id') && <th className="cursor-pointer select-none" onClick={() => handleSort('id')}>Instance ID <SortIcon col="id" /></th>}
-                {visibleCols.includes('state') && <th className="cursor-pointer select-none" onClick={() => handleSort('state')}>Instance state <SortIcon col="state" /></th>}
-                {visibleCols.includes('type') && <th className="cursor-pointer select-none" onClick={() => handleSort('type')}>Instance type <SortIcon col="type" /></th>}
-                {visibleCols.includes('publicIp') && <th>Public IPv4 address</th>}
-                {visibleCols.includes('az') && <th className="cursor-pointer select-none" onClick={() => handleSort('az')}>Availability zone <SortIcon col="az" /></th>}
-                {visibleCols.includes('launchTime') && <th className="cursor-pointer select-none" onClick={() => handleSort('launchTime')}>Launch time <SortIcon col="launchTime" /></th>}
+                {shownColumns.map(col => (
+                  SORTABLE.has(col.key)
+                    ? <th key={col.key} className="cursor-pointer select-none whitespace-nowrap" onClick={() => handleSort(col.key)}>
+                        {col.label} <SortIcon col={col.key} />
+                      </th>
+                    : <th key={col.key} className="whitespace-nowrap">{col.label}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {instances.map(inst => {
+              {pageRows.map((inst, rowIndex) => {
                 const colors = STATE_COLORS[inst.state] || STATE_COLORS.running;
                 return (
-                  <tr key={inst.id} className={selectedIds.includes(inst.id) ? 'bg-aws-status-info-bg/50' : ''}>
+                  <tr key={inst.id} className={selectedIds.includes(inst.id) ? 'bg-aws-status-info-bg/50' : rowStripe(rowIndex)}>
                     <td>
                       <input type="checkbox" checked={selectedIds.includes(inst.id)} onChange={e => {
                         if (e.target.checked) setSelectedIds([...selectedIds, inst.id]);
                         else setSelectedIds(selectedIds.filter(id => id !== inst.id));
                       }} />
                     </td>
-                    {visibleCols.includes('name') && <td className="font-medium text-aws-blue cursor-pointer hover:underline" onClick={() => navigate(`/ec2/instances/${inst.id}${location.search}`)}>{inst.name}</td>}
-                    {visibleCols.includes('id') && <td className="font-mono text-sm text-aws-blue cursor-pointer hover:underline" onClick={() => navigate(`/ec2/instances/${inst.id}${location.search}`)}>{inst.id}</td>}
-                    {visibleCols.includes('state') && <td>
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${colors.text}`}>
-                        <span className={`w-2 h-2 rounded-full ${colors.dot}`}></span>
-                        {inst.state}
-                      </span>
-                    </td>}
-                    {visibleCols.includes('type') && <td>{inst.type}</td>}
-                    {visibleCols.includes('publicIp') && <td className="font-mono text-sm">{inst.publicIp}</td>}
-                    {visibleCols.includes('az') && <td>{inst.az}</td>}
-                    {visibleCols.includes('launchTime') && <td>{inst.launchTime ? format(new Date(inst.launchTime), 'MMM d, yyyy h:mm a') : '-'}</td>}
+                    {shownColumns.map(col => {
+                      if (col.key === 'name' || col.key === 'id') {
+                        return (
+                          <td key={col.key} className={col.key === 'id' ? 'font-mono text-sm' : 'font-medium'}>
+                            <Link to={`/ec2/instances/${inst.id}${location.search}`} className="text-aws-blue hover:underline">
+                              {col.get(inst, state)}
+                            </Link>
+                          </td>
+                        );
+                      }
+                      if (col.key === 'state') {
+                        return (
+                          <td key={col.key}>
+                            <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${colors.text}`}>
+                              <span className={`w-2 h-2 rounded-full ${colors.dot}`}></span>
+                              {inst.state}
+                            </span>
+                          </td>
+                        );
+                      }
+                      if (col.key === 'launchTime') {
+                        return <td key={col.key} className={`${cellWrap} ${cellPad}`}>
+                          {inst.launchTime ? format(new Date(inst.launchTime), 'MMM d, yyyy h:mm a') : '–'}
+                        </td>;
+                      }
+                      return <td key={col.key} className={`${MONO.has(col.key) ? 'font-mono text-sm ' : ''}${cellWrap} ${cellPad}`}>
+                        {col.get(inst, state)}
+                      </td>;
+                    })}
                   </tr>
                 );
               })}
               {instances.length === 0 && (
                 <tr>
-                  <td colSpan={1 + visibleCols.length} className="text-center py-8 text-aws-text-secondary">
+                  <td colSpan={1 + shownColumns.length} className="text-center py-8 text-aws-text-secondary">
                     No instances found.
                     <button className="text-aws-blue hover:underline ml-2" onClick={() => setView('launch')}>Launch instances</button>
                   </td>
@@ -391,11 +420,15 @@ export default function EC2() {
         </div>
         {/* Pagination */}
         <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary flex items-center justify-between">
-          <span>Showing 1-{instances.length} of {instances.length} items</span>
+          <span>
+            Showing {instances.length === 0 ? 0 : pageStart + 1}-{Math.min(pageStart + prefs.pageSize, instances.length)} of {instances.length} items
+          </span>
           <div className="flex items-center gap-2">
-            <button className="aws-btn aws-btn-secondary text-xs py-0.5" disabled>Previous</button>
-            <span className="px-2">1</span>
-            <button className="aws-btn aws-btn-secondary text-xs py-0.5" disabled>Next</button>
+            <button className="aws-btn aws-btn-secondary text-xs py-0.5" disabled={currentPage <= 1}
+              onClick={() => setPage(currentPage - 1)}>Previous</button>
+            <span className="px-2">{currentPage} / {pageCount}</span>
+            <button className="aws-btn aws-btn-secondary text-xs py-0.5" disabled={currentPage >= pageCount}
+              onClick={() => setPage(currentPage + 1)}>Next</button>
           </div>
         </div>
       </div>
