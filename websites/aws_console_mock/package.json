@@ -11,7 +11,8 @@
     "fidelity": "node fidelity-score.mjs",
     "walk:vpc": "node walkthroughs/vpc-actions.mjs",
     "depth": "node depth-report.mjs",
-    "walk:ec2": "node walkthroughs/ec2-actions.mjs"
+    "walk:ec2": "node walkthroughs/ec2-actions.mjs",
+    "walk:types": "node walkthroughs/instance-types.mjs"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",

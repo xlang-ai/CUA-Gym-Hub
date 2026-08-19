@@ -401,6 +401,13 @@ export const getDefaultData = () => ({
   // ========================
   // S3 - Access Points / Batch Operations / Storage Lens
   // ========================
+  exports: [],
+  s3DirectoryBuckets: [
+    { name: 'analytics-scratch--use1-az4--x-s3', region: 'us-east-1', az: 'use1-az4',
+      created: '2026-05-02 09:14:31', objects: 4820, encryption: 'SSE-S3' },
+    { name: 'ml-feature-cache--use1-az6--x-s3', region: 'us-east-1', az: 'use1-az6',
+      created: '2026-06-18 16:02:07', objects: 1173, encryption: 'SSE-S3' },
+  ],
   s3AccessPoints: [
     { name: "prod-assets-ap", bucketName: "my-app-assets-prod", arn: "arn:aws:s3:us-east-1:123456789012:accesspoint/prod-assets-ap", alias: "prod-assets-ap-a1b2c3d4e5f6g7h8i9j0.s3-accesspoint.us-east-1.amazonaws.com", status: "Active", networkOrigin: "Internet", vpcId: "", created: "2024-02-01T10:00:00Z" },
     { name: "internal-datalake-ap", bucketName: "data-lake-raw", arn: "arn:aws:s3:us-west-2:123456789012:accesspoint/internal-datalake-ap", alias: "internal-datalake-ap-b2c3d4e5f6g7h8i9j0k1.s3-accesspoint.us-west-2.amazonaws.com", status: "Active", networkOrigin: "VPC", vpcId: "vpc-0abc1234def56789", created: "2024-02-10T09:00:00Z" },

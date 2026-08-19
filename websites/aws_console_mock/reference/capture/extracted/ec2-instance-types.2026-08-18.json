@@ -1,0 +1,40 @@
+{
+  "surface": "ec2_instance_types",
+  "captured": "2026-08-18",
+  "confidence": "sourced",
+  "method": "Live console, read-only. Row selected, Actions opened, Instance type finder opened and cancelled without submitting.",
+
+  "list": {
+    "heading": "Instance types (860)",
+    "heading_when_selected": "Instance types (1/860)",
+    "toolbar": ["Instance type finder", "Actions"],
+    "actions_enabled_without_selection": true
+  },
+
+  "actions_menu": {
+    "items": ["Launch instance", "Create launch template", "Download list CSV"],
+    "all_enabled_with_one_selected": true
+  },
+
+  "split_panel": {
+    "placeholder": "Select an instance type",
+    "heading_when_selected": "Instance type: <type>",
+    "tabs": ["Details", "Compute", "Networking", "Storage", "Accelerators", "Pricing"]
+  },
+
+  "instance_type_finder": {
+    "route_fragment": "#InstanceTypeFinder:",
+    "headings": ["Instance type finder", "Instance type requirements"],
+    "fields": ["Workload type", "Use case", "Priority", "CPU manufacturer"],
+    "observed_values": {
+      "Workload type": "Web/App Server",
+      "Use case": "Web Hosting",
+      "Priority": "Price/Performance",
+      "CPU manufacturer": "No preference"
+    },
+    "value_note": "These are the defaults the form opened with, not the full option sets — the selects were not expanded.",
+    "buttons": ["Cancel", "Get instance type advice"]
+  },
+
+  "mock_gap_at_capture_time": "The mock reproduced all three labels — 'Instance type finder', 'Actions', 'Select an instance type' — as buttons with no onClick at all. The vocabulary was copied and the behaviour was not, which is why they scored as present under action_coverage while being inert."
+}

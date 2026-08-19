@@ -779,6 +779,13 @@ function reducer(prev, action) {
     //
     // Resource-specific cases (DELETE_VPC and friends) are kept and still preferred where
     // deletion has to cascade — this does not cascade, it only removes the row.
+    case 'RECORD_EXPORT': {
+      // A download that only fires a toast cannot be verified: the reward function reads
+      // /go state_diff, and a browser download leaves no trace there. Recording the export
+      // makes "the agent exported the bill" a checkable fact rather than a claim.
+      newState.exports = [...(prev.exports || []), action.payload];
+      break;
+    }
     case 'RESOURCE_SET_TAGS':
     case 'RESOURCE_UPDATE':
     case 'RESOURCE_DELETE': {

@@ -1,0 +1,20 @@
+{
+  "surface": "billing_and_cost_management",
+  "captured": "2026-08-18",
+  "confidence": "sourced",
+  "method": "Live console navigation drawer, read-only.",
+  "capture_limitation": "Only the navigation was readable. The sampled IAM identity lacks billing access — the Bills page returns 'You need permissions' — so no billing page content, column set, or action could be captured. Account permissions were deliberately not changed to work around this. Anything about billing page bodies in the reference remains doc-derived and unverified, including whether the Bills CSV export still exists.",
+  "nav": {
+    "top": ["Home", "Getting Started", "FinOps Agent"],
+    "sections": {
+      "Billing and Payments": ["Bills", "Payments", "Credits", "Purchase Orders"],
+      "Cost and Usage Analysis": ["Cost Explorer", "Cost Explorer Saved Reports", "Cost Anomaly Detection", "Free Tier", "Data Exports", "Customer Carbon Footprint Tool"],
+      "Cost Organization": ["Cost Categories", "Cost Allocation Tags", "Billing Conductor"],
+      "Budgets and Planning": ["Budgets", "Budgets Reports"],
+      "Savings and Commitments": [],
+      "Preferences and Settings": []
+    },
+    "badges": { "FinOps Agent": "Preview", "Billing Conductor": "external-link" }
+  },
+  "note": "The two trailing sections were below the fold and their items were not read; they are recorded as present-but-unenumerated rather than as empty."
+}

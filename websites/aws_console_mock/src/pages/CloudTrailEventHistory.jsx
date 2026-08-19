@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
 import { Search, ChevronDown, ChevronRight, RefreshCw } from 'lucide-react';
 import AccessDenied from '../components/AccessDenied';
@@ -74,9 +75,7 @@ export default function CloudTrailEventHistory() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Event history</h1>
-        <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={() => addFlash('success', 'Refreshed')}>
-          <RefreshCw size={12} /> Refresh
-        </button>
+        <LastUpdated />
       </div>
 
       {/* Filters */}

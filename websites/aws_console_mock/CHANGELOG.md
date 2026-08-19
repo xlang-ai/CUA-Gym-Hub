@@ -4,6 +4,73 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.6.2
+
+Every blank endpoint the probe can reach is now wired. `interaction_coverage` 87.8% → **100%**.
+
+### The eight inert controls, and what each turned out to be
+
+Four different problems wearing the same symptom:
+
+- **`Owned by me` (AMIs), `All policies` (IAM)** — not defects. They filter correctly; they were
+  the *already-selected* tab, so re-clicking them rightly did nothing. My tagging pass had left
+  them without `aria-selected` because its pattern only matched `x === y`, not `x === 'literal'`,
+  so the probe could not tell a selected tab from a dead one. Fixed in the probe and in the
+  markup — 5 more tabs across 2 files now declare `aria-selected`, and none are left without it.
+- **`All Regions`, `Directory buckets` (S3)** — genuinely dead. `activeTab` set a highlight and
+  nothing read it: all three tabs rendered the same unfiltered list. The tab now selects both the
+  resource and the Region scope, and the subheader names what is actually listed. Directory
+  buckets are a distinct resource (S3 Express One Zone, zonal, `--<az-id>--x-s3`), so two are
+  seeded rather than showing an empty tab.
+- **`Refresh` (CloudTrail)** — `addFlash('success', 'Refreshed')` and nothing else: a success
+  message for work that never happened. Replaced with `LastUpdated`, the "Last updated / N
+  minutes ago" stamp the console actually shows. The timestamp is component state on purpose —
+  in the store, every refresh would appear in `/go` `state_diff` and a reward function would read
+  clicking Refresh as changing the environment.
+- **`Download CSV` (Bills), and the whole instance-types toolbar** — see below.
+
+### Downloads are now verifiable, not announced
+
+`Download CSV` flashed "Bill download initiated." A browser download leaves nothing in
+`state_diff`, so even a real one is unverifiable. Both exports now build the CSV, hand it to the
+browser, **and** dispatch `RECORD_EXPORT` into a new `exports` slice — which makes "the agent
+exported the bill" a checkable fact instead of a claim.
+
+### Instance types: three labels that had no `onClick` at all
+
+`Instance type finder`, `Actions`, and `Select an instance type` were rendered as buttons with no
+handler — the vocabulary copied, the behaviour not, which is exactly how they scored as present
+under `action_coverage` while doing nothing. All three rebuilt against a live capture
+(`reference/capture/extracted/ec2-instance-types.2026-08-18.json`):
+
+- **Actions** — the three captured items: Launch instance, Create launch template, Download list CSV.
+- **Split panel** — the six captured tabs (Details, Compute, Networking, Storage, Accelerators,
+  Pricing), heading switching to `Instance type: <type>` on selection, as the console does. Every
+  tab resolves to real fields; the accelerator tab reports "None" rather than rendering empty.
+  Pricing is derived from vCPU and memory, never random, so a task that checks a price is reproducible.
+- **Instance type finder** — the captured route's four fields (Workload type, Use case, Priority,
+  CPU manufacturer) and its `Get instance type advice` submit, which narrows the table and shows a
+  dismissible banner. Only each select's *default* was captured; the remaining options are marked
+  inferred in the source.
+
+`npm run walk:types` asserts all of it against `/go` `current_state` — 7/7, including that the
+CSV export lands in server state and that the Graviton filter takes the table 10 → 1 → 10.
+
+### What 100% does and does not mean
+
+Every enabled control the probe reaches now produces an observable effect. It does not mean every
+control is *correctly* implemented, and the probe still caps at 14 actions per page and reports
+when it does. `state_gating` likewise reads 100% over a capture covering one resource type, which
+the report states on the same line.
+
+### Capture
+
+- `ec2-instance-types.2026-08-18.json` — sourced.
+- `billing-nav.2026-08-18.json` — the Billing navigation only. The sampled identity lacks billing
+  access ("You need permissions"), so no billing page body could be read and account permissions
+  were deliberately not changed to get around it. Whether the Bills CSV export still exists in the
+  real console therefore remains **unverified**, and the file says so.
+
 ## 1.6.1
 
 Reweight the fidelity index toward interaction, and build the console's missing second layer.

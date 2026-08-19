@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 export default function BillingBills() {
-  const { state, addFlash } = useStore();
+  const { state, dispatch, addFlash } = useStore();
   const bills = state.billing?.bills || [];
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -39,12 +39,38 @@ export default function BillingBills() {
     { service: 'Tax', charge: 8.92 },
   ];
 
+
+  // Builds the CSV, hands it to the browser, and records the export in the store.
+  // Previously this only flashed "Bill download initiated." — a success message for work
+  // that never happened, and unverifiable besides: a browser download leaves nothing in
+  // /go state_diff for a reward function to check.
+  const handleDownloadCsv = () => {
+    const rows = (state.billing?.byService || []);
+    const header = ['Service', 'Amount', 'Currency', 'Percentage'];
+    const body = rows.map((r) => [r.name, r.amount, state.billing?.currency || 'USD', r.percentage]);
+    const csv = [header, ...body]
+      .map((cols) => cols.map((c) => (/[",\n]/.test(String(c)) ? `"${String(c).replace(/"/g, '""')}"` : c)).join(','))
+      .join('\n');
+    const filename = `bill-${state.billing?.currentMonthLabel || 'current'}.csv`;
+    try {
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      // Sandboxes can block programmatic downloads; the export record below still stands.
+    }
+    dispatch({ type: 'RECORD_EXPORT', payload: { kind: 'billing-csv', filename, rows: rows.length, bytes: csv.length } });
+    addFlash('success', `Exported ${rows.length} service line items to ${filename}`);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Bills</h1>
         <div className="flex items-center gap-2">
-          <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={() => addFlash('info', 'Bill download initiated.')}>
+          <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={handleDownloadCsv}>
             <Download size={14} /> Download CSV
           </button>
         </div>

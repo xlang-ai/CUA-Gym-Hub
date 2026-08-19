@@ -16,7 +16,17 @@ export default function S3Buckets() {
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 25;
 
-  const buckets = state.s3.filter(b => !search || b.name.toLowerCase().includes(search.toLowerCase()));
+  // The tab selects which S3 resource is listed and at what region scope. Before this it
+  // only set a highlight: all three tabs rendered the same unfiltered list of general
+  // purpose buckets, so two of them were controls that changed nothing.
+  //   General purpose buckets — standard buckets in the current Region
+  //   All Regions            — the same buckets across every Region
+  //   Directory buckets      — S3 Express One Zone buckets, a distinct zonal resource
+  const source = activeTab === 'directory' ? (state.s3DirectoryBuckets || []) : state.s3;
+  const inScope = activeTab === 'general'
+    ? source.filter(b => b.region === state.user.region)
+    : source;
+  const buckets = inScope.filter(b => !search || b.name.toLowerCase().includes(search.toLowerCase()));
   const totalPages = Math.max(1, Math.ceil(buckets.length / PAGE_SIZE));
   const pagedBuckets = buckets.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
@@ -89,7 +99,7 @@ export default function S3Buckets() {
         {/* Subheader */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-sm">
-            General purpose buckets ({state.s3.length}) <span className="text-aws-blue text-xs font-normal ml-1 cursor-pointer hover:underline">Info</span>
+            {tabs.find(t => t.id === activeTab)?.label} ({buckets.length}) <span className="text-aws-blue text-xs font-normal ml-1 cursor-pointer hover:underline">Info</span>
           </h2>
           <div className="flex items-center gap-2">
             {selectedBuckets.length > 0 && (
