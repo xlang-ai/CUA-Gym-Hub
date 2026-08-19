@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -14,6 +15,7 @@ export default function VPCInternetGateways() {
     const q = search.toLowerCase();
     return ig.name.toLowerCase().includes(q) || ig.id.toLowerCase().includes(q);
   });
+  const paged = usePaged(igws);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -47,6 +49,7 @@ export default function VPCInternetGateways() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Internet Gateways ({igws.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length === 1 && (() => {
               const igw = state.vpc.internetGateways.find(i => i.id === selected[0]);
@@ -66,11 +69,11 @@ export default function VPCInternetGateways() {
         </div>
         <table className="aws-table">
           <thead>
-            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? igws.map(i=>i.id) : [])} /></th>
+            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(i=>i.id) : [])} /></th>
             <th>Internet Gateway ID</th><th>Name</th><th>State</th><th>VPC ID</th></tr>
           </thead>
           <tbody>
-            {igws.map(ig => (
+            {paged.rows.map(ig => (
               <tr key={ig.id} className={selected.includes(ig.id) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(ig.id)} onChange={e => setSelected(e.target.checked ? [...selected, ig.id] : selected.filter(x=>x!==ig.id))} /></td>
                 <td className="font-mono text-sm text-aws-blue">{ig.id}</td>
@@ -82,7 +85,7 @@ export default function VPCInternetGateways() {
             {igws.length === 0 && <tr><td colSpan="5" className="text-center py-8 text-aws-text-secondary">No internet gateways found.</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{igws.length} of {igws.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (

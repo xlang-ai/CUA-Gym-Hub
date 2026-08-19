@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { Link, useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ export default function LambdaFunctions() {
   const [nameError, setNameError] = useState('');
 
   const functions = state.lambda.filter(f => !search || f.name.toLowerCase().includes(search.toLowerCase()));
+  const paged = usePaged(functions);
 
   const handleCreate = () => {
     if (!funcName.trim()) return;
@@ -116,7 +118,8 @@ export default function LambdaFunctions() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h1 className="font-bold text-2xl">Functions ({state.lambda.length})</h1>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <TableToolbar p={paged} />
+            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create function</button>
         </div>
       </div>
@@ -129,7 +132,7 @@ export default function LambdaFunctions() {
       <table className="aws-table">
         <thead><tr><th className="w-8"><input type="checkbox" /></th><th>Function name</th><th>Description</th><th>Runtime</th><th>Code size</th><th>Last modified</th></tr></thead>
         <tbody>
-          {functions.map(f => {
+          {paged.rows.map(f => {
             const badge = runtimeBadge(f.runtime);
             return (
               <tr key={f.name}>
@@ -144,9 +147,7 @@ export default function LambdaFunctions() {
           })}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
-        Showing 1-{functions.length} of {functions.length} items
-      </div>
+      <TablePager p={paged} />
     </div>
   );
 }

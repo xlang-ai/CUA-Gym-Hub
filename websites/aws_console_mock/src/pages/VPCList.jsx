@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -16,6 +17,7 @@ export default function VPCList() {
     const q = search.toLowerCase();
     return v.name.toLowerCase().includes(q) || v.id.toLowerCase().includes(q) || v.cidr.includes(q);
   });
+  const paged = usePaged(vpcs);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ export default function VPCList() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Your VPCs ({vpcs.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete VPC</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create VPC</button>
@@ -53,11 +56,11 @@ export default function VPCList() {
         </div>
         <table className="aws-table">
           <thead>
-            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? vpcs.map(v=>v.id) : [])} /></th>
+            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(v=>v.id) : [])} /></th>
             <th>VPC ID</th><th>Name</th><th>State</th><th>IPv4 CIDR</th><th>Default VPC</th><th>DNS hostnames</th><th>Tenancy</th></tr>
           </thead>
           <tbody>
-            {vpcs.map(v => (
+            {paged.rows.map(v => (
               <tr key={v.id} className={selected.includes(v.id) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(v.id)} onChange={e => setSelected(e.target.checked ? [...selected, v.id] : selected.filter(x=>x!==v.id))} /></td>
                 <td className="font-mono text-sm text-aws-blue">{v.id}</td>
@@ -72,7 +75,7 @@ export default function VPCList() {
             {vpcs.length === 0 && <tr><td colSpan="8" className="text-center py-8 text-aws-text-secondary">No VPCs found.</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{vpcs.length} of {vpcs.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (

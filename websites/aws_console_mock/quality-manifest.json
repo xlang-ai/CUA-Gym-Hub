@@ -1,7 +1,7 @@
 {
   "app": "aws_console_mock",
   "display_name": "XWS Console Mock",
-  "app_version": "1.5.0",
+  "app_version": "1.5.1",
   "baseline_git_sha": "f9e1b06ccf680c59c388852641221426899cb7de",
   "reference": {
     "product": "AWS Management Console",
@@ -273,12 +273,12 @@
   "fidelity": {
     "runner": "node fidelity-score.mjs --base http://127.0.0.1:5273",
     "reference": "reference/page-depth.2026-08.json",
-    "cfi_all_requirements": 0.428,
-    "cfi_sourced_only": 0.438,
+    "cfi_all_requirements": 0.453,
+    "cfi_sourced_only": 0.471,
     "dimensions": {
       "column_depth": 0.713,
       "optional_depth": 0.256,
-      "control_coverage": 0.48,
+      "control_coverage": 0.641,
       "action_coverage": 0.334,
       "tab_coverage": 0.49
     },
@@ -289,6 +289,10 @@
       "/vpc/route-tables",
       "/vpc/subnets",
       "/billing/bills"
-    ]
+    ],
+    "screenshot_harvest": {
+      "result": "NEGATIVE",
+      "note": "A dedicated pass tried to recover default column lists for 17 list pages from AWS-published screenshots, downloading and visually inspecting every candidate image. It found none that were both current and showed a full default table. AWS blog images are cropped hero shots of the one new feature being announced, and current docs have largely stopped embedding console captures. The VPC success in 1.5.0 was a specific post that happened to carry full-table screenshots, not a generalisable method."
+    }
   }
 }

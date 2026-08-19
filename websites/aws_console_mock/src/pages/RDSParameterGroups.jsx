@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, ChevronDown, X } from 'lucide-react';
@@ -18,9 +19,10 @@ export default function RDSParameterGroups() {
   const filtered = paramGroups.filter(g =>
     !search || g.name.toLowerCase().includes(search.toLowerCase()) || (g.family || '').toLowerCase().includes(search.toLowerCase())
   );
+  const paged = usePaged(filtered);
 
   const toggleSelect = (name) => setSelected(prev => prev.includes(name) ? prev.filter(x => x !== name) : [...prev, name]);
-  const toggleAll = () => setSelected(selected.length === filtered.length ? [] : filtered.map(g => g.name));
+  const toggleAll = () => setSelected(selected.length === filtered.length ? [] : paged.rows.map(g => g.name));
 
   const handleCreateGroup = () => {
     if (!newGroupName.trim()) return;
@@ -122,7 +124,8 @@ export default function RDSParameterGroups() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h2 className="font-bold text-lg">Parameter groups ({paramGroups.length})</h2>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <TableToolbar p={paged} />
+            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-secondary text-xs" disabled={!selected.length || selected.some(n => { const g = paramGroups.find(x => x.name === n); return !g || g.type !== 'Custom'; })}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create parameter group</button>
         </div>
@@ -143,7 +146,7 @@ export default function RDSParameterGroups() {
         <tbody>
           {filtered.length === 0 ? (
             <tr><td colSpan={5} className="text-center py-8 text-aws-text-secondary">No parameter groups found</td></tr>
-          ) : filtered.map(g => (
+          ) : paged.rows.map(g => (
             <tr key={g.name} className={`cursor-pointer ${selected.includes(g.name) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailGroup(g)}>
               <td onClick={e => e.stopPropagation()}>
                 <input type="checkbox" checked={selected.includes(g.name)} onChange={() => toggleSelect(g.name)} />
@@ -156,9 +159,7 @@ export default function RDSParameterGroups() {
           ))}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
-        Showing 1-{filtered.length} of {filtered.length} items
-      </div>
+      <TablePager p={paged} />
     </div>
 
       {showCreate && (

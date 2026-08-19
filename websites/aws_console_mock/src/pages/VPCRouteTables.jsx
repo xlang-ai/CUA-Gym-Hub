@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -17,6 +18,7 @@ export default function VPCRouteTables() {
     const q = search.toLowerCase();
     return rt.name.toLowerCase().includes(q) || rt.id.toLowerCase().includes(q);
   });
+  const paged = usePaged(routeTables);
 
   const detail = detailId ? state.vpc.routeTables.find(rt => rt.id === detailId) : null;
 
@@ -43,6 +45,7 @@ export default function VPCRouteTables() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Route Tables ({routeTables.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create route table</button>
@@ -56,11 +59,11 @@ export default function VPCRouteTables() {
         </div>
         <table className="aws-table">
           <thead>
-            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? routeTables.map(r=>r.id) : [])} /></th>
+            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(r=>r.id) : [])} /></th>
             <th>Route Table ID</th><th>Name</th><th>VPC</th><th>Associations</th></tr>
           </thead>
           <tbody>
-            {routeTables.map(rt => (
+            {paged.rows.map(rt => (
               <tr key={rt.id} className={`cursor-pointer ${selected.includes(rt.id) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailId(rt.id)}>
                 <td onClick={e => e.stopPropagation()}>
                   <input type="checkbox" checked={selected.includes(rt.id)} onChange={e => setSelected(e.target.checked ? [...selected, rt.id] : selected.filter(x=>x!==rt.id))} />
@@ -74,7 +77,7 @@ export default function VPCRouteTables() {
             {routeTables.length === 0 && <tr><td colSpan="5" className="text-center py-8 text-aws-text-secondary">No route tables found.</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{routeTables.length} of {routeTables.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {detail && (

@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, ChevronDown, Copy } from 'lucide-react';
@@ -16,9 +17,10 @@ export default function EC2KeyPairs() {
   const kps = (state.keyPairs || []).filter(kp =>
     !search || kp.name.toLowerCase().includes(search.toLowerCase()) || kp.id.toLowerCase().includes(search.toLowerCase())
   );
+  const paged = usePaged(kps);
 
   const toggleSelect = (name) => setSelected(prev => prev.includes(name) ? prev.filter(x => x !== name) : [...prev, name]);
-  const toggleAll = () => setSelected(selected.length === kps.length ? [] : kps.map(kp => kp.name));
+  const toggleAll = () => setSelected(selected.length === kps.length ? [] : paged.rows.map(kp => kp.name));
 
   const downloadPrivateKey = (keyPair, format = keyFormat) => {
     if (!keyPair) return;
@@ -83,6 +85,7 @@ export default function EC2KeyPairs() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Key Pairs ({state.keyPairs.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <div className="relative">
               <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" disabled={!selected.length} onClick={() => setActionsOpen(!actionsOpen)}>
@@ -122,7 +125,7 @@ export default function EC2KeyPairs() {
             </tr>
           </thead>
           <tbody>
-            {kps.map(kp => (
+            {paged.rows.map(kp => (
               <tr key={kp.name} className={selected.includes(kp.name) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(kp.name)} onChange={() => toggleSelect(kp.name)} /></td>
                 <td className="text-aws-blue font-medium">{kp.name}</td>
@@ -138,9 +141,7 @@ export default function EC2KeyPairs() {
             {kps.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-aws-text-secondary">No key pairs found</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
-          Showing 1-{kps.length} of {kps.length} items
-        </div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (

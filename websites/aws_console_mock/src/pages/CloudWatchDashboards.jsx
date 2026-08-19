@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -14,6 +15,7 @@ export default function CloudWatchDashboards() {
     if (!search) return true;
     return d.name.toLowerCase().includes(search.toLowerCase());
   });
+  const paged = usePaged(dashboards);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ export default function CloudWatchDashboards() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Dashboards ({dashboards.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create dashboard</button>
@@ -49,11 +52,11 @@ export default function CloudWatchDashboards() {
         </div>
         <table className="aws-table">
           <thead>
-            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? dashboards.map(d=>d.name) : [])} /></th>
+            <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(d=>d.name) : [])} /></th>
             <th>Dashboard name</th><th>Widgets</th><th>Last modified</th></tr>
           </thead>
           <tbody>
-            {dashboards.map(d => (
+            {paged.rows.map(d => (
               <tr key={d.name} className={selected.includes(d.name) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(d.name)} onChange={e => setSelected(e.target.checked ? [...selected, d.name] : selected.filter(x=>x!==d.name))} /></td>
                 <td className="font-medium text-aws-blue">{d.name}</td>
@@ -64,7 +67,7 @@ export default function CloudWatchDashboards() {
             {dashboards.length === 0 && <tr><td colSpan="4" className="text-center py-8 text-aws-text-secondary">No dashboards found.</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{dashboards.length} of {dashboards.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (

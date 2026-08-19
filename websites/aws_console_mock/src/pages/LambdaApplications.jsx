@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, X, LayoutGrid, Rocket, Trash2 } from 'lucide-react';
@@ -23,6 +24,7 @@ export default function LambdaApplications() {
   const [functions, setFunctions] = useState([]);
 
   const apps = state.lambdaApplications || [];
+  const paged = usePaged(apps);
   const availableFunctions = (state.lambda || []).map(f => f.name);
 
   const toggleFn = (fn) => setFunctions(prev => prev.includes(fn) ? prev.filter(x => x !== fn) : [...prev, fn]);
@@ -77,7 +79,7 @@ export default function LambdaApplications() {
             <tr><th>Name</th><th>Description</th><th>Template source</th><th>Status</th><th>Functions</th><th>Last updated</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {apps.map(a => (
+            {paged.rows.map(a => (
               <tr key={a.name}>
                 <td className="text-aws-blue font-medium">{a.name}</td>
                 <td className="text-xs text-aws-text-secondary max-w-xs truncate">{a.description || '-'}</td>
@@ -96,7 +98,7 @@ export default function LambdaApplications() {
             {apps.length === 0 && <tr><td colSpan={7} className="text-center py-8 text-aws-text-secondary">No applications found.</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{apps.length} of {apps.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (

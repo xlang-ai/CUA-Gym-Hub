@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, X, ListChecks, Play, Ban, Trash2 } from 'lucide-react';
@@ -24,6 +25,7 @@ export default function S3BatchOperations() {
 
   const buckets = state.s3 || [];
   const jobs = state.s3BatchOperations || [];
+  const paged = usePaged(jobs);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -86,7 +88,7 @@ export default function S3BatchOperations() {
             <tr><th>Job ID</th><th>Description</th><th>Operation</th><th>Status</th><th>Priority</th><th>Progress</th><th>Created</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {jobs.map(j => (
+            {paged.rows.map(j => (
               <tr key={j.id} className={selected === j.id ? 'bg-aws-blue-light' : ''} onClick={() => setSelected(j.id)}>
                 <td className="text-aws-blue font-mono text-xs cursor-pointer">{j.id.slice(0, 8)}...</td>
                 <td className="font-medium">{j.description}</td>
@@ -108,7 +110,7 @@ export default function S3BatchOperations() {
             {jobs.length === 0 && <tr><td colSpan={8} className="text-center py-8 text-aws-text-secondary">No batch jobs found.</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{jobs.length} of {jobs.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {selectedJob && (

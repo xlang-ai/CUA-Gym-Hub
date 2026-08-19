@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -20,6 +21,7 @@ export default function CloudWatchAlarms() {
     const q = search.toLowerCase();
     return a.name.toLowerCase().includes(q) || a.metric.toLowerCase().includes(q) || a.namespace.toLowerCase().includes(q);
   });
+  const paged = usePaged(alarms);
 
   const detail = detailName ? state.cloudwatch.alarms.find(a => a.name === detailName) : null;
 
@@ -46,6 +48,7 @@ export default function CloudWatchAlarms() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Alarms ({alarms.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create alarm</button>
@@ -60,11 +63,11 @@ export default function CloudWatchAlarms() {
         <div className="overflow-x-auto">
           <table className="aws-table">
             <thead>
-              <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? alarms.map(a=>a.name) : [])} /></th>
+              <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(a=>a.name) : [])} /></th>
               <th>Name</th><th>State</th><th>Metric</th><th>Namespace</th><th>Threshold</th><th>Description</th></tr>
             </thead>
             <tbody>
-              {alarms.map(a => (
+              {paged.rows.map(a => (
                 <tr key={a.name} className={`cursor-pointer ${selected.includes(a.name) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailName(a.name)}>
                   <td onClick={e => e.stopPropagation()}>
                     <input type="checkbox" checked={selected.includes(a.name)} onChange={e => setSelected(e.target.checked ? [...selected, a.name] : selected.filter(x=>x!==a.name))} />
@@ -83,7 +86,7 @@ export default function CloudWatchAlarms() {
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{alarms.length} of {alarms.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {detail && (

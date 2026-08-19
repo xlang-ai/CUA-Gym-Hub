@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search } from 'lucide-react';
@@ -16,6 +17,7 @@ export default function IAMRoles() {
   const filteredRoles = state.iam.roles.filter(r =>
     !search || r.name.toLowerCase().includes(search.toLowerCase())
   );
+  const paged = usePaged(filteredRoles);
 
   const handleCreate = () => {
     if (!roleName.trim()) return;
@@ -142,7 +144,8 @@ export default function IAMRoles() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h1 className="font-bold text-2xl">Roles ({state.iam.roles.length})</h1>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <TableToolbar p={paged} />
+            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create role</button>
         </div>
@@ -155,11 +158,11 @@ export default function IAMRoles() {
       </div>
       <table className="aws-table">
         <thead><tr>
-          <th className="w-8"><input type="checkbox" checked={selected.length === filteredRoles.length && filteredRoles.length > 0} onChange={e => setSelected(e.target.checked ? filteredRoles.map(r => r.name) : [])} /></th>
+          <th className="w-8"><input type="checkbox" checked={selected.length === filteredRoles.length && filteredRoles.length > 0} onChange={e => setSelected(e.target.checked ? paged.rows.map(r => r.name) : [])} /></th>
           <th>Role name</th><th>Trusted entities</th><th>Last activity</th><th>Creation date</th>
         </tr></thead>
         <tbody>
-          {filteredRoles.map(r => (
+          {paged.rows.map(r => (
             <tr key={r.name} className={selected.includes(r.name) ? 'bg-aws-status-info-bg/50' : ''}>
               <td><input type="checkbox" checked={selected.includes(r.name)} onChange={e => setSelected(e.target.checked ? [...selected, r.name] : selected.filter(n => n !== r.name))} /></td>
               <td><button className="text-aws-blue font-medium hover:underline" onClick={() => setSelectedRole(r.name)}>{r.name}</button></td>
@@ -171,9 +174,7 @@ export default function IAMRoles() {
           {filteredRoles.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-aws-text-secondary">No roles found</td></tr>}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
-        Showing 1-{filteredRoles.length} of {filteredRoles.length} items
-      </div>
+      <TablePager p={paged} />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Database } from 'lucide-react';
@@ -21,6 +22,7 @@ const ENGINES = [
 
 export default function RDS() {
   const { state, dispatch, addFlash } = useStore();
+  const paged = usePaged(state.rds);
   const navigate = useNavigate();
   const [selectedIds, setSelectedIds] = useState([]);
   const [showCreate, setShowCreate] = useState(false);
@@ -206,7 +208,7 @@ export default function RDS() {
       <table className="aws-table">
         <thead><tr><th className="w-8"><input type="checkbox" /></th><th>DB identifier</th><th>Engine</th><th>Status</th><th>Role</th><th>Size</th><th>Region</th><th>Multi-AZ</th></tr></thead>
         <tbody>
-          {state.rds.map(db => (
+          {paged.rows.map(db => (
             <tr key={db.id} className={selectedIds.includes(db.id) ? 'bg-aws-status-info-bg/50' : ''}>
               <td><input type="checkbox" checked={selectedIds.includes(db.id)} onChange={e => {
                 if (e.target.checked) setSelectedIds([...selectedIds, db.id]);
@@ -223,9 +225,7 @@ export default function RDS() {
           ))}
         </tbody>
       </table>
-      <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
-        Showing 1-{state.rds.length} of {state.rds.length} items
-      </div>
+      <TablePager p={paged} />
     </div>
   );
 }

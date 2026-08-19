@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, MapPin } from 'lucide-react';
@@ -20,9 +21,10 @@ export default function S3AccessPoints() {
     const q = search.toLowerCase();
     return ap.name.toLowerCase().includes(q) || ap.bucketName.toLowerCase().includes(q);
   });
+  const paged = usePaged(accessPoints);
 
   const toggleSelect = (n) => setSelected(prev => prev.includes(n) ? prev.filter(x => x !== n) : [...prev, n]);
-  const toggleAll = () => setSelected(selected.length === accessPoints.length ? [] : accessPoints.map(a => a.name));
+  const toggleAll = () => setSelected(selected.length === accessPoints.length ? [] : paged.rows.map(a => a.name));
 
   const resetForm = () => { setName(''); setBucketName(''); setNetworkOrigin('Internet'); setVpcId(''); };
 
@@ -84,7 +86,7 @@ export default function S3AccessPoints() {
             </tr>
           </thead>
           <tbody>
-            {accessPoints.map(ap => (
+            {paged.rows.map(ap => (
               <tr key={ap.name} className={selected.includes(ap.name) ? 'bg-aws-blue-light' : ''}>
                 <td><input type="checkbox" checked={selected.includes(ap.name)} onChange={() => toggleSelect(ap.name)} /></td>
                 <td>
@@ -101,7 +103,7 @@ export default function S3AccessPoints() {
             {accessPoints.length === 0 && <tr><td colSpan={7} className="text-center py-8 text-aws-text-secondary">No access points found.</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{accessPoints.length} of {accessPoints.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (

@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -18,6 +19,7 @@ export default function VPCNATGateways() {
     const q = search.toLowerCase();
     return n.name.toLowerCase().includes(q) || n.id.toLowerCase().includes(q);
   });
+  const paged = usePaged(nats);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -44,6 +46,7 @@ export default function VPCNATGateways() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">NAT Gateways ({nats.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete NAT gateway</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create NAT gateway</button>
@@ -58,11 +61,11 @@ export default function VPCNATGateways() {
         <div className="overflow-x-auto">
           <table className="aws-table">
             <thead>
-              <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? nats.map(n=>n.id) : [])} /></th>
+              <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(n=>n.id) : [])} /></th>
               <th>NAT Gateway ID</th><th>Name</th><th>State</th><th>Subnet</th><th>Public IP</th><th>Private IP</th><th>Created</th></tr>
             </thead>
             <tbody>
-              {nats.map(n => (
+              {paged.rows.map(n => (
                 <tr key={n.id} className={selected.includes(n.id) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td><input type="checkbox" checked={selected.includes(n.id)} onChange={e => setSelected(e.target.checked ? [...selected, n.id] : selected.filter(x=>x!==n.id))} /></td>
                   <td className="font-mono text-sm text-aws-blue">{n.id}</td>
@@ -78,7 +81,7 @@ export default function VPCNATGateways() {
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{nats.length} of {nats.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (

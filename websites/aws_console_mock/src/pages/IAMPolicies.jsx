@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { Search, RefreshCw, X, ChevronDown } from 'lucide-react';
@@ -19,6 +20,7 @@ export default function IAMPolicies() {
     if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
+  const paged = usePaged(policies);
 
   const toggleSelect = (arn) => setSelected(prev => prev.includes(arn) ? prev.filter(x => x !== arn) : [...prev, arn]);
 
@@ -59,6 +61,7 @@ export default function IAMPolicies() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Policies ({allPolicies.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             <div className="relative">
               <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" disabled={!selected.length} onClick={() => setPolicyActionsOpen(!policyActionsOpen)}>
@@ -97,12 +100,12 @@ export default function IAMPolicies() {
         <table className="aws-table">
           <thead>
             <tr>
-              <th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? policies.map(p => p.arn) : [])} /></th>
+              <th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(p => p.arn) : [])} /></th>
               <th>Policy name</th><th>Type</th><th>Description</th><th>Attached entities</th><th>Created</th>
             </tr>
           </thead>
           <tbody>
-            {policies.map(p => (
+            {paged.rows.map(p => (
               <tr key={p.arn || p.name} className={`cursor-pointer ${selected.includes(p.arn) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailPolicy(p)}>
                 <td onClick={e => e.stopPropagation()}>
                   <input type="checkbox" checked={selected.includes(p.arn)} onChange={() => toggleSelect(p.arn)} />
@@ -121,9 +124,7 @@ export default function IAMPolicies() {
             {policies.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-aws-text-secondary">No policies found</td></tr>}
           </tbody>
         </table>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
-          Showing 1-{policies.length} of {policies.length} items
-        </div>
+        <TablePager p={paged} />
       </div>
 
       {detailPolicy && (

@@ -4,6 +4,38 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.5.1
+
+Real pagination and a Preferences dialog on 16 list pages.
+
+### Added
+
+- `usePaged` + `TableToolbar` + `TablePager`, retrofitted into 16 pages. The hook **slices the
+  row array** rather than only rendering pager chrome — a pager that does not paginate is the
+  same class of defect as a success toast for a mutation that never happened, and this codebase
+  has had enough of those.
+- Preferences carries page size (10/25/50/100) and the two sourced search toggles, "Use regular
+  expression matching" and "Use case sensitive matching".
+
+`control_coverage` 48.0% → **64.1%**; CFI 42.8% → **45.3%** overall, 43.8% → **47.1%** sourced.
+
+### Five pages deliberately not retrofitted
+
+`CloudWatchLogs`, `DynamoDBTables`, `EC2SecurityGroups`, `IAMGroups`, `IAMUsers` define their row
+variable *after* an early return, so the hook cannot be placed above it without restructuring the
+component. Skipped rather than forced — a conditionally-called hook is a React rule violation and
+would crash the page.
+
+### Correction to 1.5.0's claim about screenshots
+
+1.5.0 reported that AWS News Blog posts embed compliant, pixel-exact console screenshots and
+treated that as the general fix for our inferred column lists. **That does not generalise.** A
+dedicated pass across 17 list pages downloaded and visually inspected every candidate image and
+confirmed none were both current and showed a full default table: blog images are cropped hero
+shots of the one feature being announced, and current AWS docs have largely stopped embedding
+console captures at all. The VPC result was one post that happened to carry full-table
+screenshots. Recorded as a negative result in the manifest rather than left as an open lead.
+
 ## 1.5.0
 
 Adds a metric for how far this mock is from the real console, backed by eight research passes.

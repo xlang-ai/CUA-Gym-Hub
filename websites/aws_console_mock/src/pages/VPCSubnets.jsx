@@ -1,3 +1,4 @@
+import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -17,6 +18,7 @@ export default function VPCSubnets() {
     const q = search.toLowerCase();
     return s.name.toLowerCase().includes(q) || s.id.toLowerCase().includes(q) || s.vpcId.toLowerCase().includes(q);
   });
+  const paged = usePaged(subnets);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -41,6 +43,7 @@ export default function VPCSubnets() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Subnets ({subnets.length})</h1>
           <div className="flex items-center gap-2">
+            <TableToolbar p={paged} />
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete subnet</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create subnet</button>
@@ -55,11 +58,11 @@ export default function VPCSubnets() {
         <div className="overflow-x-auto">
           <table className="aws-table">
             <thead>
-              <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? subnets.map(s=>s.id) : [])} /></th>
+              <tr><th className="w-8"><input type="checkbox" onChange={e => setSelected(e.target.checked ? paged.rows.map(s=>s.id) : [])} /></th>
               <th>Subnet ID</th><th>Name</th><th>VPC</th><th>IPv4 CIDR</th><th>Availability Zone</th><th>Available IPs</th><th>Auto-assign public IP</th><th>Type</th></tr>
             </thead>
             <tbody>
-              {subnets.map(s => (
+              {paged.rows.map(s => (
                 <tr key={s.id} className={selected.includes(s.id) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td><input type="checkbox" checked={selected.includes(s.id)} onChange={e => setSelected(e.target.checked ? [...selected, s.id] : selected.filter(x=>x!==s.id))} /></td>
                   <td className="font-mono text-sm text-aws-blue">{s.id}</td>
@@ -76,7 +79,7 @@ export default function VPCSubnets() {
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">Showing 1-{subnets.length} of {subnets.length} items</div>
+        <TablePager p={paged} />
       </div>
 
       {showCreate && (
