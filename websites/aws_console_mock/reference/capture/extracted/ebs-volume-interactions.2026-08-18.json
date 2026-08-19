@@ -1,0 +1,37 @@
+{
+  "resource": "ebs_volume",
+  "captured": "2026-08-18",
+  "confidence": "partially_sourced",
+  "method": "Live console, read-only. Actions menu opened against an in-use volume and every item's aria-disabled recorded. Nothing was invoked.",
+  "capture_limitation": "Every volume in the sampled account was In-use, so only half the matrix is observed. What the console does with an `available` volume is inferred from which items it disables while in-use, and is marked as such below rather than presented as captured.",
+
+  "actions_menu": {
+    "top_level": ["Create volume","Modify volume","Create snapshot","Create snapshot lifecycle policy","Delete volume","Attach volume","Detach volume","Force detach volume","Manage auto-enabled I/O","Copy volume - new","Manage tags","Recycle Bin"],
+    "submenus": {
+      "Resilience testing": {
+        "note": "labelled 'Resilience testing' with the subtitle 'Previously fault injection'",
+        "items": ["Create experiment","Pause volume I/O","Inject volume I/O latency","AWS Fault Injection Service (FIS)"],
+        "constraint_text": "Test up to 5 volumes in the same AZ."
+      }
+    }
+  },
+
+  "observed_with_in_use_volume": {
+    "disabled": ["Delete volume", "Attach volume"],
+    "enabled": ["Create volume","Modify volume","Create snapshot","Create snapshot lifecycle policy","Detach volume","Force detach volume","Manage auto-enabled I/O","Copy volume - new","Manage tags","Recycle Bin","Create experiment","Pause volume I/O","Inject volume I/O latency"]
+  },
+
+  "state_dependent_enablement": {
+    "confidence": "half sourced",
+    "enabled_only_when_available": {
+      "items": ["Delete volume", "Attach volume"],
+      "basis": "sourced — both were disabled against an in-use volume"
+    },
+    "enabled_only_when_in_use": {
+      "items": ["Detach volume", "Force detach volume"],
+      "basis": "inferred — enabled here, but no available volume existed to confirm they are disabled in that state"
+    }
+  },
+
+  "task_design_implication": "Detaching then deleting a volume is a two-state sequence: Delete is refused while the volume is attached, so a task that ends in deletion must pass through detach and wait for the volume to reach available."
+}

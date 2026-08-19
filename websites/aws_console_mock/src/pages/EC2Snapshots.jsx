@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Camera } from 'lucide-react';
 import { format } from 'date-fns';
@@ -62,7 +63,7 @@ export default function EC2Snapshots() {
               <tr key={s.id} className={selected.includes(s.id) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(s.id)} onChange={() => toggleSelect(s.id)} /></td>
                 <td className="text-aws-blue font-medium">{s.name}</td>
-                <td className="font-mono text-sm">{s.id}</td>
+                <td className="font-mono text-sm"><Link to={`/ec2/snapshots/${s.id}`} className="text-aws-blue hover:underline">{s.id}</Link></td>
                 <td className="font-mono text-sm">{s.volumeId}</td>
                 <td>{s.volumeSize} GiB</td>
                 <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${s.status === 'completed' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{s.status}</span></td>

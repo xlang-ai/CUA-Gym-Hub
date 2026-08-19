@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -72,7 +73,7 @@ export default function CloudWatchAlarms() {
                   <td onClick={e => e.stopPropagation()}>
                     <input type="checkbox" checked={selected.includes(a.name)} onChange={e => setSelected(e.target.checked ? [...selected, a.name] : selected.filter(x=>x!==a.name))} />
                   </td>
-                  <td className="font-medium text-aws-blue">{a.name}</td>
+                  <td className="font-medium"><Link to={`/cloudwatch/alarms/${encodeURIComponent(a.name)}`} className="text-aws-blue hover:underline">{a.name}</Link></td>
                   <td>
                     <span className={`aws-badge ${a.state === 'OK' ? 'bg-aws-status-success-bg text-aws-success' : a.state === 'ALARM' ? 'bg-aws-status-error-bg text-aws-error' : 'bg-aws-disabled-bg text-aws-text-secondary'}`}>{a.state}</span>
                   </td>

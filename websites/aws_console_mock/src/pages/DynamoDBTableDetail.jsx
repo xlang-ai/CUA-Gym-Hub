@@ -45,7 +45,7 @@ export default function DynamoDBTableDetail() {
       <div className="aws-card">
         <div className="flex gap-4 border-b border-aws-border mb-4">
           {tabs.map(t => (
-            <button key={t} onClick={() => setTab(t)} className={`pb-2 px-1 text-sm font-medium border-b-2 ${tab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>{t}</button>
+            <button role="tab" aria-selected={tab === t} key={t} onClick={() => setTab(t)} className={`pb-2 px-1 text-sm font-medium border-b-2 ${tab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>{t}</button>
           ))}
         </div>
 

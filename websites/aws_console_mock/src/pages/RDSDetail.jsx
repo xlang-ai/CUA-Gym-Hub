@@ -35,7 +35,7 @@ export default function RDSDetail() {
       {/* Tab bar */}
       <div className="flex gap-4 border-b border-aws-border overflow-x-auto">
         {tabs.map(t => (
-          <button key={t} onClick={() => setTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 whitespace-nowrap ${tab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>
+          <button role="tab" aria-selected={tab === t} key={t} onClick={() => setTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 whitespace-nowrap ${tab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>
             {t}
           </button>
         ))}

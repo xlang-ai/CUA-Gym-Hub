@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -65,7 +66,7 @@ export default function VPCSubnets() {
               {paged.rows.map(s => (
                 <tr key={s.id} className={selected.includes(s.id) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td><input type="checkbox" checked={selected.includes(s.id)} onChange={e => setSelected(e.target.checked ? [...selected, s.id] : selected.filter(x=>x!==s.id))} /></td>
-                  <td className="font-mono text-sm text-aws-blue">{s.id}</td>
+                  <td className="font-mono text-sm"><Link to={`/vpc/subnets/${s.id}`} className="text-aws-blue hover:underline">{s.id}</Link></td>
                   <td className="font-medium">{s.name}</td>
                   <td className="font-mono text-sm">{s.vpcId}</td>
                   <td className="font-mono text-sm">{s.cidr}</td>

@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import ActionsMenu from '../components/ActionsMenu';
@@ -159,7 +160,7 @@ export default function VPCList() {
             {paged.rows.map(v => (
               <tr key={v.id} className={selected.includes(v.id) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(v.id)} onChange={e => setSelected(e.target.checked ? [...selected, v.id] : selected.filter(x=>x!==v.id))} /></td>
-                <td className="font-mono text-sm text-aws-blue">{v.id}</td>
+                <td className="font-mono text-sm"><Link to={`/vpc/vpcs/${v.id}`} className="text-aws-blue hover:underline">{v.id}</Link></td>
                 <td className="font-medium">{v.name}</td>
                 <td><span className="aws-badge bg-aws-status-success-bg text-aws-success">{v.state}</span></td>
                 <td className="font-mono text-sm">

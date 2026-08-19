@@ -71,6 +71,8 @@ import CloudWatchDashboards from './pages/CloudWatchDashboards';
 // VPC
 import VPCDashboard from './pages/VPCDashboard';
 import VPCList from './pages/VPCList';
+import ResourceDetailPage from './pages/ResourceDetailPage';
+import { RESOURCES } from './lib/resourceRegistry';
 import VPCSubnets from './pages/VPCSubnets';
 import VPCRouteTables from './pages/VPCRouteTables';
 import VPCInternetGateways from './pages/VPCInternetGateways';
@@ -239,6 +241,12 @@ function App() {
             <Route path="/cloudtrail/events" element={<CloudTrailEventHistory />} />
 
             {/* Legacy placeholder URLs kept alive for previously authored tasks */}
+            {/* The console's second layer, generated from src/lib/resourceRegistry.js.
+                Measured before these existed: 58 routes had a populated table and 5 had rows
+                that led anywhere. */}
+            {RESOURCES.map((r) => (
+              <Route key={r.id} path={r.detailRoute} element={<ResourceDetailPage resourceId={r.id} />} />
+            ))}
             <Route path="/local/:service/:item" element={<LegacyLocalRedirect />} />
 
             <Route path="/go" element={<StateInspector />} />

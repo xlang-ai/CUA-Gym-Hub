@@ -351,7 +351,19 @@ await check('S1', 'every console page declares a Cloudscape H1 page title', () =
       // which index.css styles with the same scale (the preferred, shared pattern).
       const inline = /<h1[^>]*className="[^"]*\btext-2xl\b/.test(src);
       const shared = /aws-page-header/.test(src) && /<h1[\s>]/.test(src);
-      return !inline && !shared;
+      // A page may delegate its header to a shared layout component. That is only accepted
+      // when the component itself satisfies the rule, checked here rather than assumed —
+      // otherwise "delegates" becomes a way to opt out of the gate.
+      const delegatesTo = (src.match(/<(ResourceDetail)\b/) || [])[1];
+      let delegated = false;
+      if (delegatesTo) {
+        const comp = path.join(ROOT, 'src/components', `${delegatesTo}.jsx`);
+        if (fs.existsSync(comp)) {
+          const csrc = fs.readFileSync(comp, 'utf8');
+          delegated = /<h1[^>]*className="[^"]*\btext-2xl\b/.test(csrc);
+        }
+      }
+      return !inline && !shared && !delegated;
     });
   assert(bad.length === 0, `${bad.length} pages without a 24px H1: ${bad.slice(0, 8).join(', ')}`);
   return `${fs.readdirSync(dir).filter((f) => f.endsWith('.jsx')).length - exempt.size} pages, all with a conforming H1`;

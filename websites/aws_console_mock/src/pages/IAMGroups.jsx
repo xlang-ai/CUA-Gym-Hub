@@ -75,7 +75,7 @@ export default function IAMGroups() {
         </div>
         <div className="flex gap-4 border-b border-aws-border">
           {['Users', 'Permissions'].map(t => (
-            <button key={t} onClick={() => setDetailTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 ${detailTab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary'}`}>{t}</button>
+            <button role="tab" aria-selected={detailTab === t} key={t} onClick={() => setDetailTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 ${detailTab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary'}`}>{t}</button>
           ))}
         </div>
         <div className="aws-card">

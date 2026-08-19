@@ -71,7 +71,7 @@ export default function S3Buckets() {
       {/* Tabs */}
       <div className="flex gap-0 border-b border-aws-border mb-0">
         {tabs.map(tab => (
-          <button
+          <button role="tab" aria-selected={activeTab === tab.id}
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`pb-2.5 px-4 text-sm font-medium border-b-2 transition-colors ${

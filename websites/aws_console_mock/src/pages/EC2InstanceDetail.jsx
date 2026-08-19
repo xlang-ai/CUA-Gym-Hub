@@ -223,7 +223,7 @@ export default function EC2InstanceDetail() {
       <div className="aws-card mt-0 border-t-0 p-0">
         <div className="flex gap-0 border-b border-aws-border px-4">
           {tabs.map(tab => (
-            <button
+            <button role="tab" aria-selected={activeTab === tab}
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`pb-2.5 px-4 pt-3 text-sm font-medium border-b-2 transition-colors ${

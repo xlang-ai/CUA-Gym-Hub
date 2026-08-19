@@ -133,7 +133,7 @@ export default function S3BucketDetail() {
       <div className="aws-card p-0">
         <div className="px-4 pt-3 pb-0 flex gap-4 border-b border-aws-border">
           {tabs.map(t => (
-            <button key={t} onClick={() => setTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 ${tab === t ? 'border-aws-orange text-aws-orange' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>
+            <button role="tab" aria-selected={tab === t} key={t} onClick={() => setTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 ${tab === t ? 'border-aws-orange text-aws-orange' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>
               {t}
             </button>
           ))}

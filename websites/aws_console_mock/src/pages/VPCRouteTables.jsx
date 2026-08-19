@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -68,7 +69,7 @@ export default function VPCRouteTables() {
                 <td onClick={e => e.stopPropagation()}>
                   <input type="checkbox" checked={selected.includes(rt.id)} onChange={e => setSelected(e.target.checked ? [...selected, rt.id] : selected.filter(x=>x!==rt.id))} />
                 </td>
-                <td className="font-mono text-sm text-aws-blue">{rt.id}</td>
+                <td className="font-mono text-sm"><Link to={`/vpc/route-tables/${rt.id}`} className="text-aws-blue hover:underline">{rt.id}</Link></td>
                 <td className="font-medium">{rt.name}</td>
                 <td className="font-mono text-sm">{rt.vpcId}</td>
                 <td>{rt.associations.length} subnet(s)</td>
@@ -84,7 +85,7 @@ export default function VPCRouteTables() {
         <div className="aws-card mt-0 border-t-0">
           <div className="flex gap-4 border-b border-aws-border mb-4">
             {['Routes', 'Subnet Associations'].map(tab => (
-              <button key={tab} onClick={() => setDetailTab(tab)} className={`pb-2 px-1 text-sm font-medium border-b-2 ${detailTab === tab ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>{tab}</button>
+              <button role="tab" aria-selected={detailTab === tab} key={tab} onClick={() => setDetailTab(tab)} className={`pb-2 px-1 text-sm font-medium border-b-2 ${detailTab === tab ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>{tab}</button>
             ))}
           </div>
           {detailTab === 'Routes' && (

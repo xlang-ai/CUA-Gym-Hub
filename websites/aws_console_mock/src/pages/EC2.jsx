@@ -405,7 +405,7 @@ export default function EC2() {
         <div className="aws-card mt-0 border-t-0">
           <div className="flex gap-4 border-b border-aws-border mb-4">
             {['Details', 'Security', 'Networking', 'Storage', 'Tags'].map(tab => (
-              <button key={tab} onClick={() => setDetailTab(tab)} className={`pb-2 px-1 text-sm font-medium border-b-2 ${detailTab === tab ? 'border-aws-orange text-aws-orange' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>
+              <button role="tab" aria-selected={detailTab === tab} key={tab} onClick={() => setDetailTab(tab)} className={`pb-2 px-1 text-sm font-medium border-b-2 ${detailTab === tab ? 'border-aws-orange text-aws-orange' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}>
                 {tab}
               </button>
             ))}

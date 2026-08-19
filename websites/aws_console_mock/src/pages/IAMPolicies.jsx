@@ -82,7 +82,7 @@ export default function IAMPolicies() {
         {/* Filter tabs */}
         <div className="px-4 py-2 border-b border-aws-border-secondary flex items-center gap-4">
           {[{ key: 'all', label: `All policies (${allPolicies.length})` }, { key: 'aws', label: `XWS managed (${allPolicies.filter(p=>p.type==='XWS managed').length})` }, { key: 'customer', label: `Customer managed (${allPolicies.filter(p=>p.type==='Customer managed').length})` }].map(f => (
-            <button
+            <button role="tab" aria-selected={filter === f.key}
               key={f.key}
               onClick={() => { setFilter(f.key); setSelected([]); }}
               className={`text-sm pb-1 border-b-2 ${filter === f.key ? 'border-aws-blue text-aws-blue font-medium' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`}

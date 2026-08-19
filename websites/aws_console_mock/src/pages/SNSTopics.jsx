@@ -101,7 +101,7 @@ export default function SNSTopics() {
         </div>
         <div className="flex gap-4 border-b border-aws-border">
           {['Subscriptions', 'Access policy'].map(t => (
-            <button key={t} onClick={() => setSubTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 ${subTab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary'}`}>{t}</button>
+            <button role="tab" aria-selected={subTab === t} key={t} onClick={() => setSubTab(t)} className={`pb-3 px-1 text-sm font-medium border-b-2 ${subTab === t ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary'}`}>{t}</button>
           ))}
         </div>
         {subTab === 'Access policy' && (

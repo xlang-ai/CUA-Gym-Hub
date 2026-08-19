@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, HardDrive } from 'lucide-react';
 import { format } from 'date-fns';
@@ -86,7 +87,7 @@ export default function EC2Volumes() {
               <tr key={v.id} className={selected.includes(v.id) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(v.id)} onChange={() => toggleSelect(v.id)} /></td>
                 <td className="text-aws-blue font-medium">{v.name}</td>
-                <td className="font-mono text-sm">{v.id}</td>
+                <td className="font-mono text-sm"><Link to={`/ec2/volumes/${v.id}`} className="text-aws-blue hover:underline">{v.id}</Link></td>
                 <td>{v.size} GiB</td>
                 <td><span className="text-xs font-mono">{v.volumeType}</span></td>
                 <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${v.state === 'in-use' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-blue-lighter text-aws-blue'}`}>{v.state}</span></td>

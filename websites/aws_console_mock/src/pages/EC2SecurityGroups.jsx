@@ -204,9 +204,9 @@ export default function EC2SecurityGroups() {
             <p className="text-xs text-aws-text-secondary mt-0.5">{detail.description}</p>
           </div>
           <div className="flex border-b border-aws-border">
-            <button className={`px-4 py-2 text-sm font-medium border-b-2 ${ruleTab === 'inbound' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => setRuleTab('inbound')}>Inbound rules ({detail.inboundRules.length})</button>
-            <button className={`px-4 py-2 text-sm font-medium border-b-2 ${ruleTab === 'outbound' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => setRuleTab('outbound')}>Outbound rules ({detail.outboundRules.length})</button>
-            <button className={`px-4 py-2 text-sm font-medium border-b-2 ${ruleTab === 'tags' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => setRuleTab('tags')}>Tags</button>
+            <button role="tab" className={`px-4 py-2 text-sm font-medium border-b-2 ${ruleTab === 'inbound' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => setRuleTab('inbound')}>Inbound rules ({detail.inboundRules.length})</button>
+            <button role="tab" className={`px-4 py-2 text-sm font-medium border-b-2 ${ruleTab === 'outbound' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => setRuleTab('outbound')}>Outbound rules ({detail.outboundRules.length})</button>
+            <button role="tab" className={`px-4 py-2 text-sm font-medium border-b-2 ${ruleTab === 'tags' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => setRuleTab('tags')}>Tags</button>
           </div>
           <div className="p-4">
             {ruleTab === 'inbound' && (

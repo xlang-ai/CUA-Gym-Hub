@@ -71,8 +71,8 @@ export default function EC2AMIs() {
 
         {/* Tabs */}
         <div className="flex border-b border-aws-border">
-          <button className={`px-4 py-2 text-sm font-medium border-b-2 ${tab === 'owned' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => { setTab('owned'); setSelected([]); }}>Owned by me</button>
-          <button className={`px-4 py-2 text-sm font-medium border-b-2 ${tab === 'public' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => { setTab('public'); setSelected([]); }}>Public images</button>
+          <button role="tab" className={`px-4 py-2 text-sm font-medium border-b-2 ${tab === 'owned' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => { setTab('owned'); setSelected([]); }}>Owned by me</button>
+          <button role="tab" className={`px-4 py-2 text-sm font-medium border-b-2 ${tab === 'public' ? 'border-aws-blue text-aws-blue' : 'border-transparent text-aws-text-secondary hover:text-aws-text'}`} onClick={() => { setTab('public'); setSelected([]); }}>Public images</button>
         </div>
 
         {/* Table */}

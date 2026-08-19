@@ -4,6 +4,71 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.6.1
+
+Reweight the fidelity index toward interaction, and build the console's missing second layer.
+
+### Why the index changed
+
+Two of the previous five dimensions scored columns, so the index rewarded cataloguing columns
+and the work followed it. Six dimensions now, three of them about whether the console can be
+*operated*:
+
+| dimension | what it asks |
+|---|---|
+| `column_depth` | are the default columns there |
+| `control_coverage` | filter, bulk-select, pagination, preferences |
+| `action_coverage` | is the action **vocabulary** present |
+| `interaction_coverage` | do those actions **do** anything — measured by clicking every one |
+| `flow_depth` | does a row lead anywhere, and does that page have tabs |
+| `state_gating` | does the mock refuse what the console refuses |
+
+`interaction_coverage` clicks. That is the only way to catch this codebase's recurring defect —
+a control wired to a dialog that was never rendered — which passes the build and every static
+gate.
+
+### Added
+
+- `src/lib/resourceRegistry.js` + `ResourceDetailPage`: the second layer, generated from data
+  rather than written fifty times. Eight resources so far (VPC, subnet, route table, security
+  group, volume, snapshot, IAM user, CloudWatch alarm), 27 tabs, every tab panel verified
+  non-empty in a browser.
+- Six list pages now reach their detail page through a real `<Link>`, not a `<td onClick>`. A
+  click handler on a cell is not a link: no href, no middle-click, and nothing in the
+  accessibility tree.
+- `role="tab"` / `aria-selected` on the 20 genuine tab-strip buttons across 17 pages.
+- `reference/capture/extracted/ebs-volume-interactions.json` — the volume Actions menu. Every
+  volume in the sampled account was In-use, so only half the state matrix is observed; the
+  other half is marked inferred and the fidelity score refuses to grade it.
+
+### Honest accounting of the score
+
+CFI moved 25.2% → **58.5%**, and most of that is the instrument, not the product:
+
+- `interaction_coverage` 3.1% → 87.8%. The first probe only clicked menu items, and most
+  actions here are toolbar buttons — it was measuring almost nothing. It then reported six
+  working `Create ...` buttons as inert because it required the page to grow, and every create
+  form *shrinks* the page by replacing the table. Both are fixed; 87.8% is the first honest
+  reading, not an improvement over 3.1%.
+- `flow_depth` 4.7% → 26.6% is genuine: eight detail pages and six linked lists, plus tab
+  strips that were always there but carried no `role="tab"` to be counted by.
+- `state_gating` reads 100% over a capture covering **one** resource type. The report now says
+  so on the same line, because a bare 100% invites the opposite conclusion.
+
+### Still inert — 8 controls that are enabled and do nothing
+
+`/ec2/amis` "Owned by me"; `/ec2/instance-types` "Instance type finder", "Actions", "Select an
+instance type"; `/s3` "All Regions", "Directory buckets"; `/cloudtrail/events` "Refresh";
+`/billing/bills` "Download CSV". These are the real blank endpoints, and they are now listed by
+name on every run instead of having to be found by hand.
+
+### Reverted during this release
+
+A first attempt to tag tab buttons matched every `onClick={() => setX(y)}` and labelled 53
+files' pagination, sorting and selection controls as tabs — worse than the gap it closed, since
+it corrupts the accessibility tree and inflates the very measurement it feeds. Reverted, then
+redone structurally against `border-b-2`: 20 buttons, 17 files.
+
 ## 1.6.0
 
 The EC2 Actions menu, rebuilt from the live console — and state gating, which is the part
