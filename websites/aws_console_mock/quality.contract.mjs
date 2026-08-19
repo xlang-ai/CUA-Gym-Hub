@@ -422,6 +422,27 @@ await check('R1', 'preview server binds dual-stack', () => {
   return 'preview binds dual-stack (host: true)';
 });
 
+await check('S5', 'every dispatched action has a matching reducer case', () => {
+  // A dispatch whose type no case handles falls through to `default: return prev` — the
+  // click appears to work, a success flash may even fire, and nothing changes. That is the
+  // same silent-no-op class as a menu item that opens nothing, and the build cannot see it:
+  // it is a string mismatch, not a type error. Caught in 1.5.2 when the VPC "Edit DNS
+  // hostnames" item dispatched UPDATE_VPC, which no reducer defined.
+  const reducer = read('src/store/StoreContext.jsx');
+  const handled = new Set([...reducer.matchAll(/case '([A-Z0-9_]+)'/g)].map((m) => m[1]));
+  const files = sh("find src -name '*.jsx' -o -name '*.js'").split('\n').filter(Boolean);
+  const orphans = [];
+  for (const f of files) {
+    const src = read(f);
+    for (const m of src.matchAll(/dispatch\(\s*\{\s*type:\s*'([A-Z0-9_]+)'/g)) {
+      if (!handled.has(m[1])) orphans.push(`${f.replace(/^src\//, '')} dispatches ${m[1]}`);
+    }
+  }
+  assert(orphans.length === 0, [...new Set(orphans)].join('; '));
+  return `${handled.size} reducer cases cover every dispatch site`;
+});
+
+
 // ---------------------------------------------------------------- report
 const pass = results.filter((r) => r.ok).length;
 const fail = results.length - pass;

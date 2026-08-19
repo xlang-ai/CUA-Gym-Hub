@@ -637,6 +637,7 @@ export const getDefaultData = () => ({
   // VPC
   // ========================
   vpc: {
+    flowLogs: [],
     vpcs: [
       { id: "vpc-0abc1234def56789", name: "production-vpc", cidr: "10.0.0.0/16", state: "available", isDefault: true, tenancy: "default", dnsHostnames: true, dnsResolution: true, tags: [{ Key: "Environment", Value: "Production" }] },
       { id: "vpc-0xyz9876abc54321", name: "staging-vpc", cidr: "172.16.0.0/16", state: "available", isDefault: false, tenancy: "default", dnsHostnames: true, dnsResolution: true, tags: [{ Key: "Environment", Value: "Staging" }] },

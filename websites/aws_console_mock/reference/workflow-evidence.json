@@ -3,21 +3,61 @@
   "method": "Each workflow walked end to end against a live dev server, counting committed interactions (a navigation click, a field entry, or a submit). Completion asserted from /go current_state, not from the UI's own success toast.",
   "note": "Tabs that are already selected on open (IAM Permissions, security-group Inbound rules) are not counted as steps, matching the real console where they are the default.",
   "workflows": [
-    { "id": "create_vpc", "declared": 4, "measured": 4, "completed": true,
-      "evidence": "vpc.vpcs 2 -> 3, new entry named parity-check-vpc" },
-    { "id": "create_s3_bucket", "declared": 4, "measured": 4, "completed": true,
-      "evidence": "s3 buckets 5 -> 6, new entry wf-parity-bucket" },
-    { "id": "create_cloudwatch_alarm", "declared": 5, "measured": 5, "completed": true,
-      "evidence": "cloudwatch.alarms 5 -> 6, new entry wf-parity-alarm" },
-    { "id": "attach_iam_policy_to_user", "declared": 5, "measured": 5, "completed": true,
-      "evidence": "jane.developer.policies gained AmazonS3ReadOnlyAccess; policy attachedEntities synced 4 -> 5" },
-    { "id": "launch_ec2_instance", "declared": 5, "measured": 5, "completed": true,
-      "evidence": "ec2 5 -> 6, new instance wf-parity-instance t2.micro running on XWS Linux 2023 AMI" },
-    { "id": "create_security_group_rule", "declared": 6, "measured": 6, "completed": true,
-      "evidence": "web-server-sg inboundRules 3 -> 4, HTTPS/443 from 203.0.113.0/24, written with both port and portRange for compatibility" }
+    {
+      "id": "create_vpc",
+      "declared": 4,
+      "measured": 4,
+      "completed": true,
+      "evidence": "vpc.vpcs 2 -> 3, new entry named parity-check-vpc"
+    },
+    {
+      "id": "create_s3_bucket",
+      "declared": 4,
+      "measured": 4,
+      "completed": true,
+      "evidence": "s3 buckets 5 -> 6, new entry wf-parity-bucket"
+    },
+    {
+      "id": "create_cloudwatch_alarm",
+      "declared": 5,
+      "measured": 5,
+      "completed": true,
+      "evidence": "cloudwatch.alarms 5 -> 6, new entry wf-parity-alarm"
+    },
+    {
+      "id": "attach_iam_policy_to_user",
+      "declared": 5,
+      "measured": 5,
+      "completed": true,
+      "evidence": "jane.developer.policies gained AmazonS3ReadOnlyAccess; policy attachedEntities synced 4 -> 5"
+    },
+    {
+      "id": "launch_ec2_instance",
+      "declared": 5,
+      "measured": 5,
+      "completed": true,
+      "evidence": "ec2 5 -> 6, new instance wf-parity-instance t2.micro running on XWS Linux 2023 AMI"
+    },
+    {
+      "id": "create_security_group_rule",
+      "declared": 6,
+      "measured": 6,
+      "completed": true,
+      "evidence": "web-server-sg inboundRules 3 -> 4, HTTPS/443 from 203.0.113.0/24, written with both port and portRange for compatibility"
+    }
   ],
   "defects_found_during_walkthrough": [
     "IAM 'Add permissions' modal was placed in the user-list return branch, so the feature shipped in 1.2.0 never rendered on the detail page where its button lives. Build and every static gate passed because none of them clicked it.",
     "S3Buckets bucket-name input carried pattern=\"[a-z0-9.-]+\", which the browser rejects under the v flag (bare - inside a character class), throwing on every render of the create dialog."
-  ]
+  ],
+  "automated_walkthroughs": [
+    {
+      "id": "vpc_actions_menu",
+      "script": "walkthroughs/vpc-actions.mjs",
+      "steps": 8,
+      "completed": true,
+      "evidence": "All 5 VPC Actions items verified against /go current_state, not the success toast: Edit CIDRs associates 10.99.0.0/16 and renders it; Manage tags writes CostCenter=rl-4417; Create flow log creates fl-* honouring the REJECT filter radio; Edit DNS hostnames flips the column and appears in state_diff; Delete VPC refuses the default VPC and deletes a non-default one. Menu is gated: all 5 items disabled until a VPC is selected. Passes against dev (5273) and preview (5274)."
+    }
+  ],
+  "note_on_automation": "1.5.2 replaces hand-walking with a committed, re-runnable script for the VPC Actions menu. Hand-walked evidence above predates it and is retained; new work should add a walkthroughs/*.mjs instead."
 }

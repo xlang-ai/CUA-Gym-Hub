@@ -762,6 +762,26 @@ function reducer(prev, action) {
       };
       break;
     }
+    case 'UPDATE_VPC': {
+      const { id, ...fields } = action.payload;
+      newState.vpc = { ...prev.vpc, vpcs: prev.vpc.vpcs.map(v => v.id === id ? { ...v, ...fields } : v) };
+      break;
+    }
+    case 'UPDATE_VPC_CIDR': {
+      const { id, cidr, secondaryCidrs } = action.payload;
+      newState.vpc = { ...prev.vpc, vpcs: prev.vpc.vpcs.map(v => v.id === id
+        ? { ...v, cidr, secondaryCidrs: secondaryCidrs || [] } : v) };
+      break;
+    }
+    case 'UPDATE_VPC_TAGS': {
+      const { id, tags } = action.payload;
+      newState.vpc = { ...prev.vpc, vpcs: prev.vpc.vpcs.map(v => v.id === id ? { ...v, tags } : v) };
+      break;
+    }
+    case 'CREATE_VPC_FLOW_LOG': {
+      newState.vpc = { ...prev.vpc, flowLogs: [...(prev.vpc.flowLogs || []), action.payload] };
+      break;
+    }
     default:
       return prev;
   }

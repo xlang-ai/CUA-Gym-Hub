@@ -72,14 +72,28 @@ function coverage(required, found) {
   return { score: matched.length / required.length, missing, matched };
 }
 
-/** In-page measurement. Runs inside the browser; must stay dependency-free. */
-function measurePage() {
+/**
+ * In-page measurement. Runs inside the browser; must stay dependency-free.
+ *
+ * Opens every dropdown trigger before collecting buttons. The real console keeps its
+ * per-resource actions behind an "Actions" menu, and the reference spec lists them under
+ * `actions_menu` — so a scorer that only reads *visible* buttons can never credit a
+ * correctly-implemented dropdown. Measured before this fix, five working VPC menu items
+ * moved action_coverage by 0.5pt. Worse than under-reporting, that gradient pushes toward
+ * hoisting actions into always-visible toolbar buttons, which is *less* faithful. The
+ * menu is opened, not the spec relaxed.
+ */
+async function measurePage() {
   const txt = (el) => (el?.innerText || '').replace(/\s+/g, ' ').trim();
+  for (const trigger of document.querySelectorAll('[aria-haspopup="menu"]')) {
+    if (trigger.getAttribute('aria-expanded') !== 'true') trigger.click();
+  }
+  await new Promise((r) => setTimeout(r, 60));
   const table = document.querySelector('table.aws-table') || document.querySelector('table');
   const columns = table
     ? Array.from(table.querySelectorAll('thead th')).map(txt).filter(Boolean)
     : [];
-  const allButtons = Array.from(document.querySelectorAll('button'));
+  const allButtons = Array.from(document.querySelectorAll('button, [role=menuitem]'));
   const chromeLabels = new Set(['services', 'admin user', 'n. virginia', 'info']);
   const buttons = allButtons
     .map(txt)

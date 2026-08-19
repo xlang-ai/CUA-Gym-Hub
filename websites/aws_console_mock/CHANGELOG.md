@@ -4,6 +4,52 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.5.2
+
+The Actions menu, starting with VPC — and a fix to the instrument that was hiding it.
+
+### Added
+
+- `ActionsMenu`, the dropdown every console list page carries. Every item must do something
+  observable: `onSelect` is required, and an item that cannot apply right now renders **disabled
+  with a reason** rather than silently closing the menu. A menu item that opens nothing teaches an
+  agent that the action worked.
+- VPC Actions, all five verified end to end: **Edit CIDRs** (associates and removes secondary
+  IPv4 blocks, rendered under the primary), **Edit DNS hostnames**, **Create flow log** (filter,
+  aggregation interval, destination, and custom log-record format, per the VPC User Guide "Create
+  a flow log" procedure), **Manage tags**, **Delete VPC**. The four screenshot-sourced items come
+  from official VPC console screenshots.
+- Reducer cases `UPDATE_VPC`, `UPDATE_VPC_CIDR`, `UPDATE_VPC_TAGS`, `CREATE_VPC_FLOW_LOG`, and a
+  `vpc.flowLogs` slice.
+- `walkthroughs/vpc-actions.mjs` (`npm run walk:vpc`) — a committed, re-runnable browser
+  walkthrough asserting each item against `/go` `current_state`, never against the success toast.
+  8/8 steps on both dev and preview.
+- Gate **S5**: every dispatched action has a matching reducer case.
+
+### Fixed
+
+- **The fidelity scorer could not see any Actions menu.** It measured only visible buttons, so
+  five working VPC menu items moved `action_coverage` by 0.5pt. Worse than under-reporting, that
+  gradient rewards hoisting actions into always-visible toolbar buttons — *less* faithful to a
+  console that deliberately hides them. The scorer now opens every `aria-haspopup="menu"` trigger
+  before measuring. The reference spec was not touched.
+- `Delete VPC` refuses default VPCs, as the console does, instead of deleting them.
+
+### Caught by S5 during this release
+
+`Edit DNS hostnames` dispatched `UPDATE_VPC`, which no reducer defined — the click would have
+fallen through to `default: return prev` and changed nothing while flashing success. `npm run
+build` passed: it is a string mismatch, not a type error. S5 exists so this class cannot ship.
+
+### Not a defect, worth recording
+
+The walkthrough first reported VPC mutations missing from `state_diff`. The cause was the
+walkthrough, not the app: `/go` computes `initial = readInitialState(sid) || currentState`, so a
+session that never pinned an initial state via `set` gets `initial === current` and an empty diff
+by construction. Task harnesses always `set` first; the walkthrough now does too.
+
+`action_coverage` 33.4% → **36.0%**; CFI 45.3% → **46.3%** overall, 47.1% → **49.5%** sourced.
+
 ## 1.5.1
 
 Real pagination and a Preferences dialog on 16 list pages.
