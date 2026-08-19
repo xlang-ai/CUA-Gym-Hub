@@ -41,13 +41,35 @@ await fetch(`${BASE}/post?sid=${SID}`, {
 
 await page.goto(`${BASE}/vpc/vpcs?sid=${SID}`, { waitUntil: 'networkidle0' });
 
-await step('menu is gated on selection', async () => {
+// Gating follows the captured console, not a blanket rule. "Create VPC" needs no selection;
+// "Create default VPC" is disabled because a default VPC already exists in the Region; every
+// per-resource item waits for a selection.
+const SELECTION_FREE = ['Create VPC', 'Create default VPC'];
+
+await step('menu matches the captured item list', async () => {
   await openActions();
-  const before = await menuItems();
-  const enabled = before.filter((i) => !i.disabled).map((i) => i.label);
-  if (enabled.length) throw new Error(`enabled with no selection: ${enabled.join(', ')}`);
+  const items = await menuItems();
+  const want = ['Create VPC', 'Create default VPC', 'Create flow log', 'Edit VPC settings',
+                'Edit CIDRs', 'Manage middlebox routes', 'Create encryption control',
+                'Manage tags', 'Delete VPC'];
+  const got = items.map((i) => i.label);
+  const missing = want.filter((w) => !got.includes(w));
+  const extra = got.filter((g) => !want.includes(g));
+  if (missing.length) throw new Error(`missing: ${missing.join(', ')}`);
+  if (extra.length) throw new Error(`not in the capture: ${extra.join(', ')}`);
   await page.keyboard.press('Escape');
-  return `${before.length} items, all disabled until a VPC is selected`;
+  return `${want.length} items, exactly the captured list`;
+});
+
+await step('per-resource items wait for a selection', async () => {
+  await openActions();
+  const items = await menuItems();
+  const wrong = items.filter((i) => !SELECTION_FREE.includes(i.label) && !i.disabled).map((i) => i.label);
+  if (wrong.length) throw new Error(`enabled with no selection: ${wrong.join(', ')}`);
+  const defaultItem = items.find((i) => i.label === 'Create default VPC');
+  if (!defaultItem.disabled) throw new Error('Create default VPC should be disabled while a default VPC exists');
+  await page.keyboard.press('Escape');
+  return 'only Create VPC is actionable; Create default VPC gated on the existing default';
 });
 
 await step('select one VPC', async () => {
@@ -55,9 +77,31 @@ await step('select one VPC', async () => {
   await openActions();
   const items = await menuItems();
   const dis = items.filter((i) => i.disabled).map((i) => i.label);
-  if (dis.length) throw new Error(`still disabled: ${dis.join(', ')}`);
+  if (dis.length !== 1 || dis[0] !== 'Create default VPC') {
+    throw new Error(`expected only Create default VPC disabled, got: ${dis.join(', ') || 'none'}`);
+  }
   await page.keyboard.press('Escape');
-  return `${items.length} items enabled: ${items.map((i) => i.label).join(', ')}`;
+  return `${items.length - 1} items actionable with one VPC selected`;
+});
+
+await step('Edit VPC settings toggles DNS hostnames', async () => {
+  const before = await page.evaluate(() =>
+    document.querySelector('table tbody tr:first-child').innerText.includes('Enabled'));
+  await openActions();
+  await (await byText('Edit VPC settings', '[role=menuitem]')).click();
+  await page.waitForFunction(() => /Enable DNS hostnames/.test(document.body.innerText));
+  await page.evaluate(() => {
+    const l = [...document.querySelectorAll('label')].find((x) => /Enable DNS hostnames/.test(x.innerText));
+    l.querySelector('input[type=checkbox]').click();
+  });
+  await (await byText('Save changes')).click();
+  await new Promise(r => setTimeout(r, 300));
+  const after = await page.evaluate(() =>
+    document.querySelector('table tbody tr:first-child').innerText.includes('Enabled'));
+  if (before === after) throw new Error('DNS hostnames column did not change');
+  const s = await state();
+  if (!('vpc' in (s.state_diff || {}))) throw new Error('mutation absent from state_diff');
+  return `Enabled ${before} -> ${after}, recorded in state_diff`;
 });
 
 await step('Edit CIDRs associates a secondary block', async () => {
@@ -107,20 +151,6 @@ await step('Create flow log creates a flow log', async () => {
   if (!fl) throw new Error('flowLogs empty after submit');
   if (fl.filter !== 'REJECT') throw new Error(`filter radio ignored: got ${fl.filter}`);
   return `${fl.id} filter=${fl.filter} dest=${fl.destinationType}`;
-});
-
-await step('Edit DNS hostnames toggles the column', async () => {
-  const before = await page.evaluate(() =>
-    document.querySelector('table tbody tr:first-child').innerText.includes('Enabled'));
-  await openActions();
-  await (await byText('Edit DNS hostnames', '[role=menuitem]')).click();
-  await new Promise(r => setTimeout(r, 300));
-  const after = await page.evaluate(() =>
-    document.querySelector('table tbody tr:first-child').innerText.includes('Enabled'));
-  if (before === after) throw new Error('DNS hostnames column did not change');
-  const s = await state();
-  if (!('vpc' in (s.state_diff || {}))) throw new Error('mutation absent from state_diff');
-  return `Enabled ${before} -> ${after}, recorded in state_diff`;
 });
 
 await step('Delete VPC refuses a default VPC', async () => {

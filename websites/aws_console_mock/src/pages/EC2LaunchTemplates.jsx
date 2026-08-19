@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, FileCode, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
@@ -100,7 +101,7 @@ export default function EC2LaunchTemplates() {
               <tr key={lt.id} className={selected.includes(lt.id) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(lt.id)} onChange={() => toggleSelect(lt.id)} /></td>
                 <td className="text-aws-blue font-medium cursor-pointer hover:underline" onClick={() => setDetail(lt)}>{lt.name}</td>
-                <td className="font-mono text-sm">{lt.id}</td>
+                <td className="font-mono text-sm"><Link to={`/ec2/launch-templates/${lt.id}`} className="text-aws-blue hover:underline">{lt.id}</Link></td>
                 <td>{lt.defaultVersion}</td>
                 <td>{lt.latestVersion}</td>
                 <td className="font-mono text-sm">{lt.ami}</td>

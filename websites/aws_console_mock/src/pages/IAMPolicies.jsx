@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { Search, RefreshCw, X, ChevronDown } from 'lucide-react';
@@ -110,7 +111,7 @@ export default function IAMPolicies() {
                 <td onClick={e => e.stopPropagation()}>
                   <input type="checkbox" checked={selected.includes(p.arn)} onChange={() => toggleSelect(p.arn)} />
                 </td>
-                <td className="text-aws-blue font-medium hover:underline">{p.name}</td>
+                <td className="font-medium"><Link to={`/iam/policies/${encodeURIComponent(p.name)}`} className="text-aws-blue hover:underline">{p.name}</Link></td>
                 <td>
                   <span className={`aws-badge ${p.type === 'XWS managed' ? 'bg-aws-status-info-bg text-aws-blue' : 'bg-aws-disabled-bg text-aws-text-secondary'}`}>
                     {p.type}

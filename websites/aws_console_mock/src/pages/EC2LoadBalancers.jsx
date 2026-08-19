@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Network } from 'lucide-react';
 import { format } from 'date-fns';
@@ -68,7 +69,7 @@ export default function EC2LoadBalancers() {
             {lbs.map(lb => (
               <tr key={lb.name} className={selected.includes(lb.name) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(lb.name)} onChange={() => toggleSelect(lb.name)} /></td>
-                <td className="text-aws-blue font-medium">{lb.name}</td>
+                <td className="font-medium"><Link to={`/ec2/load-balancers/${encodeURIComponent(lb.name)}`} className="text-aws-blue hover:underline">{lb.name}</Link></td>
                 <td className="font-mono text-xs max-w-xs truncate">{lb.dnsName}</td>
                 <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${lb.type === 'application' ? 'bg-purple-100 text-purple-800' : 'bg-teal-100 text-teal-800'}`}>{lb.type === 'application' ? 'ALB' : 'NLB'}</span></td>
                 <td>{lb.scheme}</td>

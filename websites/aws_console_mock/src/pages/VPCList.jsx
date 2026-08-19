@@ -1,6 +1,7 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import ActionsMenu from '../components/ActionsMenu';
 import { RefreshCw, Search, X, Plus, Trash2 } from 'lucide-react';
@@ -24,6 +25,7 @@ const FLOW_DESTINATIONS = [
 
 export default function VPCList() {
   const { state, dispatch, addFlash } = useStore();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState([]);
   const [showCreate, setShowCreate] = useState(false);
@@ -36,6 +38,7 @@ export default function VPCList() {
   const [cidrEdit, setCidrEdit] = useState(null);
   const [tagEdit, setTagEdit] = useState(null);
   const [flowLog, setFlowLog] = useState(null);
+  const [settings, setSettings] = useState(null);
 
   const vpcs = state.vpc.vpcs.filter(v => {
     if (!search) return true;
@@ -65,6 +68,24 @@ export default function VPCList() {
     if (deletable.length) addFlash('success', `Deleted ${deletable.length} VPC(s)`);
     if (blocked.length) addFlash('error', `Cannot delete default VPC ${blocked.map(v => v.id).join(', ')}`);
     setSelected([]);
+  };
+
+
+  const handleCreateDefault = () => {
+    const id = `vpc-${Math.random().toString(16).substr(2, 17)}`;
+    dispatch({ type: 'CREATE_VPC', payload: {
+      id, name: 'default', cidr: '172.31.0.0/16', state: 'available', isDefault: true,
+      tenancy: 'default', dnsHostnames: true, dnsResolution: true, tags: [],
+    }});
+    addFlash('success', `Created default VPC ${id}`);
+  };
+
+  const saveSettings = (e) => {
+    e.preventDefault();
+    dispatch({ type: 'UPDATE_VPC', payload: {
+      id: settings.id, dnsHostnames: settings.dnsHostnames, dnsResolution: settings.dnsResolution } });
+    addFlash('success', `Updated VPC settings for ${settings.id}`);
+    setSettings(null);
   };
 
   const saveCidrs = (e) => {
@@ -103,19 +124,19 @@ export default function VPCList() {
     setFlowLog(null);
   };
 
-  // Sourced from official VPC console screenshots: Edit CIDRs, Delete VPC, Create flow log,
-  // Manage tags. Anything not applicable is rendered disabled with a reason rather than
-  // silently doing nothing.
+  // Item list captured from the live console on 2026-08-18, in order:
+  // reference/capture/extracted/vpc-family-actions.2026-08-18.json
+  //
+  // Correction to 1.5.2, which shipped "Edit DNS hostnames" as a top-level item. It is not
+  // one — the console keeps DNS hostnames and DNS resolution inside "Edit VPC settings" —
+  // and four real items were missing. That menu was assembled from screenshots plus
+  // inference; this one is read off the thing itself.
+  const hasDefault = state.vpc.vpcs.some(v => v.isDefault);
   const actions = [
-    { label: 'Edit CIDRs',
-      disabled: !one, reason: 'Select exactly one VPC',
-      onSelect: () => setCidrEdit({ id: one.id, primary: one.cidr, secondary: one.secondaryCidrs || [] }) },
-    { label: 'Edit DNS hostnames',
-      disabled: !one, reason: 'Select exactly one VPC',
-      onSelect: () => {
-        dispatch({ type: 'UPDATE_VPC', payload: { id: one.id, dnsHostnames: !one.dnsHostnames } });
-        addFlash('success', `DNS hostnames ${one.dnsHostnames ? 'disabled' : 'enabled'} for ${one.id}`);
-      } },
+    { label: 'Create VPC', onSelect: () => setShowCreate(true) },
+    { label: 'Create default VPC',
+      disabled: hasDefault, reason: 'A default VPC already exists in this Region',
+      onSelect: handleCreateDefault },
     { label: 'Create flow log',
       disabled: !one, reason: 'Select exactly one VPC',
       onSelect: () => setFlowLog({
@@ -123,6 +144,19 @@ export default function VPCList() {
         destination: 'cloud-watch-logs', destinationArn: '/aws/vpc/flowlogs',
         customFormat: false, format: '${version} ${account-id} ${interface-id}',
       }) },
+    { separator: true },
+    { label: 'Edit VPC settings',
+      disabled: !one, reason: 'Select exactly one VPC',
+      onSelect: () => setSettings({ id: one.id, dnsHostnames: !!one.dnsHostnames, dnsResolution: !!one.dnsResolution }) },
+    { label: 'Edit CIDRs',
+      disabled: !one, reason: 'Select exactly one VPC',
+      onSelect: () => setCidrEdit({ id: one.id, primary: one.cidr, secondary: one.secondaryCidrs || [] }) },
+    { label: 'Manage middlebox routes',
+      disabled: !one, reason: 'Select exactly one VPC',
+      onSelect: () => navigate(`/vpc/route-tables?vpcId=${one.id}`) },
+    { label: 'Create encryption control',
+      disabled: !one, reason: 'Select exactly one VPC',
+      onSelect: () => navigate(`/vpc/encryption-controls?vpcId=${one.id}`) },
     { separator: true },
     { label: 'Manage tags',
       disabled: !one, reason: 'Select exactly one VPC',
@@ -197,6 +231,40 @@ export default function VPCList() {
               <div className="flex justify-end gap-2 pt-2">
                 <button type="button" className="aws-btn aws-btn-secondary" onClick={() => setShowCreate(false)}>Cancel</button>
                 <button type="submit" className="aws-btn aws-btn-primary">Create VPC</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {settings && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
+              <h3 className="font-bold">Edit VPC settings</h3>
+              <button onClick={() => setSettings(null)} aria-label="Close"><X size={18} /></button>
+            </div>
+            <form onSubmit={saveSettings} className="p-4 space-y-4 text-sm">
+              <p className="text-aws-text-secondary">VPC: <span className="font-mono">{settings.id}</span></p>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" className="mt-0.5" checked={settings.dnsResolution}
+                  onChange={e => setSettings({ ...settings, dnsResolution: e.target.checked })} />
+                <span>
+                  <span className="font-bold">Enable DNS resolution</span>
+                  <span className="block text-aws-text-secondary">Resolves public DNS hostnames to private IPv4 addresses inside the VPC.</span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" className="mt-0.5" checked={settings.dnsHostnames}
+                  onChange={e => setSettings({ ...settings, dnsHostnames: e.target.checked })} />
+                <span>
+                  <span className="font-bold">Enable DNS hostnames</span>
+                  <span className="block text-aws-text-secondary">Instances launched in this VPC receive a public DNS hostname.</span>
+                </span>
+              </label>
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" className="aws-btn aws-btn-secondary" onClick={() => setSettings(null)}>Cancel</button>
+                <button type="submit" className="aws-btn aws-btn-primary">Save changes</button>
               </div>
             </form>
           </div>

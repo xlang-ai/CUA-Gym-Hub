@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, Image, ChevronDown, X } from 'lucide-react';
 import { format } from 'date-fns';
@@ -85,7 +86,7 @@ export default function EC2AMIs() {
             {filtered.map(a => (
               <tr key={a.id} className={selected.includes(a.id) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(a.id)} onChange={() => toggleSelect(a.id)} /></td>
-                <td className="text-aws-blue font-medium">{a.name}</td>
+                <td className="font-medium"><Link to={`/ec2/amis/${a.id}`} className="text-aws-blue hover:underline">{a.name}</Link></td>
                 <td className="font-mono text-sm">{a.id}</td>
                 <td><span className={`px-2 py-0.5 rounded text-xs font-medium ${a.owner === 'amazon' ? 'bg-aws-status-warning-bg text-aws-warning' : a.owner === '123456789012' ? 'bg-aws-blue-lighter text-aws-blue' : 'bg-aws-disabled-bg text-aws-text'}`}>
                   {a.owner === '123456789012' ? 'self' : a.owner}

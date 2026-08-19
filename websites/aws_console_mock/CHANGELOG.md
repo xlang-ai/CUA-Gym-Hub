@@ -4,6 +4,65 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.6.3
+
+The second layer across 26 resources, and the VPC menu corrected against the console.
+
+### The VPC Actions menu was partly invented — corrected
+
+1.5.2 built that menu from screenshots plus inference. Read off the live console, it was wrong
+in both directions:
+
+- **`Edit DNS hostnames` is not a top-level item.** The console keeps DNS hostnames and DNS
+  resolution inside **`Edit VPC settings`**, which the mock did not have. Replaced, with both
+  toggles and their real explanatory copy.
+- **Four items were missing**: `Create VPC`, `Create default VPC`, `Manage middlebox routes`,
+  `Create encryption control`.
+- **Gating was wrong.** The mock disabled every item until a row was selected. The console
+  enables `Create VPC` always, and disables `Create default VPC` for a specific reason — a
+  default VPC already exists in the Region.
+
+`Create encryption control` had nowhere to go, so `/vpc/encryption-controls` now exists with a
+real create form and reducer — the VPC console carries that view and the sub-navigation was
+captured. Its own columns were not captured and are marked inferred.
+
+The walkthrough now asserts the menu equals the captured list **exactly, with no extras**, so an
+invented item fails the run rather than quietly scoring under `action_coverage`. 9/9.
+
+### 18 more detail pages
+
+`resourceRegistry` goes 8 → **26 resources, 76 tabs**; nine more list pages reach them by real
+link. `flow_depth` 26.6% → **54.7%**, dead-end routes 48 → 40.
+
+### `walk:details` — and the three bugs it caught
+
+A new check renders every registry page and clicks every tab, failing on two conditions: a tab
+panel that renders nothing, and a tab whose fields **all** resolve to the em-dash placeholder —
+the second being worse, since it looks populated while meaning the registry named fields the
+resource does not have. It caught three shape assumptions I had made from field *names*:
+
+- `targetGroups.healthCheck` is an object, not a scalar — rendering it threw "Objects are not
+  valid as a React child".
+- `iam.roles.trustedEntities` is a single string, not an array.
+- `cloudwatch.logGroups.streams` is a **count**, not a list. Listing streams from a number would
+  have meant inventing stream names, so that tab now reports what is actually known.
+
+26 pass, 0 fail.
+
+### The sourced score did not move, and that is the point
+
+Directional CFI 59.8% → **67.5%**. Sourced CFI stayed at **63.4%**, because the 18 new resources
+carry `inferred` tab lists. Work that has not been checked against the console does not raise the
+defensible number — which is what the confidence marking is for.
+
+### Capture
+
+`vpc-family-actions.2026-08-18.json` — VPC, subnet, route table, security group, network ACL menus
+with each item's disabled state and the reason. Two notes recorded rather than tidied away: the
+network ACL menu was captured with **no row selected**, so everything but Create read as disabled;
+and every VPC-family list carries a split panel (`Select a <resource>` → `<Resource> details`) that
+the mock has on no page.
+
 ## 1.6.2
 
 Every blank endpoint the probe can reach is now wired. `interaction_coverage` 87.8% → **100%**.

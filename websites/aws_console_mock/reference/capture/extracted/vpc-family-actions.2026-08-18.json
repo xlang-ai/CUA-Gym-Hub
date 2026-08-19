@@ -1,0 +1,40 @@
+{
+  "surface": "vpc_console",
+  "captured": "2026-08-18",
+  "confidence": "sourced",
+  "method": "Live VPC console, read-only. One row selected per list, Actions opened, each item's aria-disabled recorded, menu closed. Nothing invoked.",
+
+  "resources": {
+    "vpc": {
+      "items": ["Create VPC", "Create default VPC", "Create flow log", "Edit VPC settings", "Edit CIDRs", "Manage middlebox routes", "Create encryption control", "Manage tags", "Delete VPC"],
+      "disabled_when_captured": ["Create default VPC"],
+      "disabled_reason": "a default VPC already exists in the Region",
+      "correction": "The mock shipped 'Edit DNS hostnames' as a top-level item in 1.5.2. It is not one — the console exposes DNS settings inside 'Edit VPC settings'. The mock also lacked Create VPC, Create default VPC, Manage middlebox routes and Create encryption control."
+    },
+    "subnet": {
+      "items": ["Create subnet", "View details", "Create flow log", "Edit subnet settings", "Edit IPv6 CIDRs", "Edit network ACL association", "Edit route table association", "Edit CIDR reservations", "Share subnet", "Manage tags", "Delete subnet"],
+      "disabled_when_captured": ["Edit IPv6 CIDRs", "Share subnet"],
+      "disabled_reason": "the subnet has no IPv6 association; sharing requires Resource Access Manager"
+    },
+    "route_table": {
+      "items": ["Create route table", "View details", "Set main route table", "Edit subnet associations", "Edit edge associations", "Edit route propagation", "Edit routes", "Manage tags", "Delete route table"],
+      "disabled_when_captured": ["Set main route table"],
+      "disabled_reason": "the selected route table is already the main route table"
+    },
+    "security_group": {
+      "items": ["Create security group", "Export security groups to CSV", "Export security groups inbound/outbound rules", "View details", "Edit inbound rules", "Edit outbound rules", "Manage tags", "Manage stale rules", "Copy to new security group", "Share security group", "Delete security groups"],
+      "disabled_when_captured": ["Share security group"],
+      "disabled_reason": "sharing requires Resource Access Manager",
+      "note": "Two distinct CSV exports — the group list, and the inbound/outbound rules."
+    },
+    "network_acl": {
+      "items": ["Create network ACL", "View details", "Edit inbound rules", "Edit outbound rules", "Edit subnet associations", "Manage tags", "Delete network ACLs"],
+      "capture_caveat": "Captured with NO row selected, so every item except Create read as disabled. That tells us the item list and that the menu is selection-gated, but not which items are gated on anything further. Recorded as observed rather than cleaned up."
+    }
+  },
+
+  "cross_cutting": {
+    "split_panel_placeholder": "Every list carries a split panel whose collapsed label is 'Select a <resource>' and which becomes '<Resource> details' once a row is selected. Observed on subnets, route tables, VPCs, security groups, instances, volumes, snapshots, AMIs, elastic IPs, launch templates and instance types — it is the console's standard list layout, and the mock has it on no page.",
+    "view_details_item": "Most VPC-family menus carry a 'View details' item that opens the resource's detail page. The mock has detail pages for some of these now but no menu item that reaches them."
+  }
+}

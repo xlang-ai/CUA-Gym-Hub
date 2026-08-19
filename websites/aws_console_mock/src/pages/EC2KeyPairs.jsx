@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, ChevronDown, Copy } from 'lucide-react';
@@ -128,7 +129,7 @@ export default function EC2KeyPairs() {
             {paged.rows.map(kp => (
               <tr key={kp.name} className={selected.includes(kp.name) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(kp.name)} onChange={() => toggleSelect(kp.name)} /></td>
-                <td className="text-aws-blue font-medium">{kp.name}</td>
+                <td className="font-medium"><Link to={`/ec2/key-pairs/${encodeURIComponent(kp.name)}`} className="text-aws-blue hover:underline">{kp.name}</Link></td>
                 <td>
                   <span className="font-mono text-sm">{kp.id}</span>
                   <button className="ml-1 text-aws-text-disabled hover:text-aws-text-secondary" onClick={() => copyToClipboard(kp.id)}><Copy size={12} /></button>

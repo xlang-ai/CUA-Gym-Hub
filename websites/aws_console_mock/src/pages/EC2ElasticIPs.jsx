@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Globe } from 'lucide-react';
 
@@ -83,7 +84,7 @@ export default function EC2ElasticIPs() {
               <tr key={e.allocationId} className={selected.includes(e.allocationId) ? 'bg-aws-status-info-bg' : ''}>
                 <td><input type="checkbox" checked={selected.includes(e.allocationId)} onChange={() => toggleSelect(e.allocationId)} /></td>
                 <td className="text-aws-blue font-medium">{getName(e)}</td>
-                <td className="font-mono text-sm">{e.allocationId}</td>
+                <td className="font-mono text-sm"><Link to={`/ec2/elastic-ips/${e.allocationId}`} className="text-aws-blue hover:underline">{e.allocationId}</Link></td>
                 <td className="font-mono text-sm">{e.publicIp}</td>
                 <td className="font-mono text-sm">{e.instanceId || '-'}</td>
                 <td className="font-mono text-sm">{e.privateIp || '-'}</td>

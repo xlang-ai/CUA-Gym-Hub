@@ -822,6 +822,10 @@ function reducer(prev, action) {
       newState.vpc = { ...prev.vpc, vpcs: prev.vpc.vpcs.map(v => v.id === id ? { ...v, tags } : v) };
       break;
     }
+    case 'CREATE_VPC_ENCRYPTION_CONTROL': {
+      newState.vpc = { ...prev.vpc, encryptionControls: [...(prev.vpc.encryptionControls || []), action.payload] };
+      break;
+    }
     case 'CREATE_VPC_FLOW_LOG': {
       newState.vpc = { ...prev.vpc, flowLogs: [...(prev.vpc.flowLogs || []), action.payload] };
       break;

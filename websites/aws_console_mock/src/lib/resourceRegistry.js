@@ -203,6 +203,379 @@ export const RESOURCES = [
       tagTab,
     ],
   },
+
+  // ---- second batch -------------------------------------------------------------------
+  // Tab names are marked `inferred` unless a live capture named them. The fidelity score
+  // reads that mark, so an inferred tab list never counts toward the defensible figure.
+  {
+    id: 'ami', listRoute: '/ec2/amis', listLabel: 'AMIs', detailRoute: '/ec2/amis/:id',
+    path: 'amis', key: 'id', titleField: 'name', tabsConfidence: 'partially_sourced',
+    summary: [
+      { label: 'AMI ID', field: 'id', mono: true },
+      { label: 'Source', field: 'owner' },
+      { label: 'Status', field: 'state' },
+      { label: 'Architecture', field: 'architecture' },
+      { label: 'Platform', field: 'platform' },
+      { label: 'Visibility', field: 'public', format: (v) => (v ? 'Public' : 'Private') },
+    ],
+    tabs: [
+      { label: 'Details', fields: [
+        { label: 'Description', field: 'description' },
+        { label: 'Root device type', field: 'rootDeviceType' },
+        { label: 'Virtualization', field: 'virtualization' },
+        { label: 'Creation date', field: 'created' }] },
+      { label: 'Permissions', rows: (r) => [{ scope: r.public ? 'Public' : 'Private', principal: r.public ? 'all' : r.owner }],
+        columns: [['Visibility', 'scope'], ['Principal', 'principal']] },
+      tagTab,
+    ],
+  },
+  {
+    id: 'keyPair', listRoute: '/ec2/key-pairs', listLabel: 'Key pairs', detailRoute: '/ec2/key-pairs/:id',
+    path: 'keyPairs', key: 'name', titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Name', field: 'name' },
+      { label: 'Key pair ID', field: 'id', mono: true },
+      { label: 'Type', field: 'type' },
+      { label: 'Created', field: 'created' },
+    ],
+    tabs: [
+      { label: 'Details', fields: [
+        { label: 'Fingerprint', field: 'fingerprint', mono: true },
+        { label: 'Key type', field: 'type' },
+        { label: 'Created', field: 'created' }] },
+      tagTab,
+    ],
+  },
+  {
+    id: 'elasticIp', listRoute: '/ec2/elastic-ips', listLabel: 'Elastic IP addresses',
+    detailRoute: '/ec2/elastic-ips/:id', path: 'elasticIps', key: 'allocationId',
+    titleField: 'publicIp', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Allocated IPv4 address', field: 'publicIp', mono: true },
+      { label: 'Allocation ID', field: 'allocationId', mono: true },
+      { label: 'Association ID', field: 'associationId', mono: true },
+      { label: 'Associated instance ID', field: 'instanceId', mono: true, link: (r) => (r.instanceId ? `/ec2/instances/${r.instanceId}` : undefined) },
+      { label: 'Private IP address', field: 'privateIp', mono: true },
+      { label: 'Scope', field: 'domain' },
+    ],
+    tabs: [
+      { label: 'Details', fields: [
+        { label: 'Network interface', field: 'networkInterfaceId', mono: true },
+        { label: 'Scope', field: 'domain' }] },
+      tagTab,
+    ],
+  },
+  {
+    id: 'loadBalancer', listRoute: '/ec2/load-balancers', listLabel: 'Load balancers',
+    detailRoute: '/ec2/load-balancers/:id', path: 'loadBalancers', key: 'name',
+    titleField: 'name', tabsConfidence: 'partially_sourced',
+    summary: [
+      { label: 'Name', field: 'name' },
+      { label: 'DNS name', field: 'dnsName', mono: true },
+      { label: 'State', field: 'state' },
+      { label: 'Type', field: 'type' },
+      { label: 'Scheme', field: 'scheme' },
+      { label: 'VPC', field: 'vpcId', mono: true, link: (r) => `/vpc/vpcs/${r.vpcId}` },
+    ],
+    tabs: [
+      { label: 'Listeners', rows: (r) => r.listeners || [],
+        columns: [['Protocol', 'protocol'], ['Port', 'port'], ['Default action', 'defaultAction']],
+        empty: 'This load balancer has no listeners.' },
+      { label: 'Network mapping', rows: (r) => (r.az || []).map((z) => ({ zone: z, vpc: r.vpcId })),
+        columns: [['Availability Zone', 'zone'], ['VPC', 'vpc']] },
+      { label: 'Security', rows: (r) => (r.securityGroups || []).map((g) => ({ id: g })),
+        columns: [['Security group', 'id']], empty: 'No security groups associated.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'targetGroup', listRoute: '/ec2/target-groups', listLabel: 'Target groups',
+    detailRoute: '/ec2/target-groups/:id', path: 'targetGroups', key: 'name',
+    titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Name', field: 'name' },
+      { label: 'Protocol', field: 'protocol' },
+      { label: 'Port', field: 'port' },
+      { label: 'Target type', field: 'targetType' },
+      { label: 'VPC', field: 'vpcId', mono: true, link: (r) => `/vpc/vpcs/${r.vpcId}` },
+      { label: 'Load balancer', field: 'loadBalancer' },
+    ],
+    tabs: [
+      { label: 'Targets', rows: (r) => r.targets || [],
+        columns: [['Instance ID', 'id'], ['Port', 'port'], ['Zone', 'az'], ['Health status', 'health']],
+        empty: 'No targets registered with this target group.' },
+      // healthCheck is an object, not a scalar — rendering it directly threw
+      // "Objects are not valid as a React child". Expanded into its real keys.
+      { label: 'Health checks', rows: (r) => {
+          const h = r.healthCheck || {};
+          return Object.keys(h).length ? [h] : [];
+        },
+        columns: [['Path', 'path'], ['Protocol', 'protocol'], ['Interval', 'interval'],
+                  ['Timeout', 'timeout'], ['Healthy threshold', 'healthyThreshold'],
+                  ['Unhealthy threshold', 'unhealthyThreshold']],
+        empty: 'No health check configured.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'autoScalingGroup', listRoute: '/ec2/auto-scaling-groups', listLabel: 'Auto Scaling groups',
+    detailRoute: '/ec2/auto-scaling-groups/:id', path: 'autoScalingGroups', key: 'name',
+    titleField: 'name', tabsConfidence: 'sourced',
+    summary: [
+      { label: 'Name', field: 'name' },
+      { label: 'Desired capacity', field: 'desiredCapacity' },
+      { label: 'Minimum capacity', field: 'minSize' },
+      { label: 'Maximum capacity', field: 'maxSize' },
+      { label: 'Launch template', field: 'launchTemplate' },
+      { label: 'Health check type', field: 'healthCheckType' },
+    ],
+    tabs: [
+      { label: 'Details', fields: [
+        { label: 'Launch template version', field: 'launchTemplateVersion' },
+        { label: 'Health check grace period', field: 'healthCheckGracePeriod' },
+        { label: 'Availability Zones', field: 'az' },
+        { label: 'Created', field: 'created' }] },
+      { label: 'Instance management',
+        rows: (r) => (r.instances || []).map((i) => (typeof i === 'string' ? { id: i, lifecycle: 'InService', health: 'Healthy' } : i)),
+        columns: [['Instance ID', 'id'], ['Lifecycle', 'lifecycle'], ['Health status', 'health']],
+        empty: 'This group currently has no instances.' },
+      { label: 'Automatic scaling', rows: (r) => r.policies || [],
+        columns: [['Policy name', 'name'], ['Type', 'type'], ['Metric', 'metric'], ['Target', 'target']],
+        empty: 'No scaling policies. The group holds its desired capacity.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'launchTemplate', listRoute: '/ec2/launch-templates', listLabel: 'Launch templates',
+    detailRoute: '/ec2/launch-templates/:id', path: 'launchTemplates', key: 'id',
+    titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Launch template ID', field: 'id', mono: true },
+      { label: 'Launch template name', field: 'name' },
+      { label: 'Default version', field: 'defaultVersion' },
+      { label: 'Latest version', field: 'latestVersion' },
+      { label: 'Created by', field: 'createdBy' },
+      { label: 'Create time', field: 'created' },
+    ],
+    tabs: [
+      { label: 'Details', fields: [
+        { label: 'AMI ID', field: 'ami', mono: true },
+        { label: 'Instance type', field: 'instanceType' },
+        { label: 'Key pair', field: 'keyPair' },
+        { label: 'IAM instance profile', field: 'iamInstanceProfile' },
+        { label: 'Monitoring', field: 'monitoring' }] },
+      { label: 'Security groups', rows: (r) => (r.securityGroups || []).map((g) => ({ id: g })),
+        columns: [['Security group', 'id']], empty: 'No security groups on this template version.' },
+      { label: 'Advanced details', fields: [{ label: 'User data', field: 'userData' }] },
+      tagTab,
+    ],
+  },
+  {
+    id: 'internetGateway', listRoute: '/vpc/internet-gateways', listLabel: 'Internet gateways',
+    detailRoute: '/vpc/internet-gateways/:id', path: 'vpc.internetGateways', key: 'id',
+    titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Internet gateway ID', field: 'id', mono: true },
+      { label: 'State', field: 'state' },
+      { label: 'VPC ID', field: 'vpcId', mono: true, link: (r) => (r.vpcId ? `/vpc/vpcs/${r.vpcId}` : undefined) },
+    ],
+    tabs: [tagTab],
+  },
+  {
+    id: 'natGateway', listRoute: '/vpc/nat-gateways', listLabel: 'NAT gateways',
+    detailRoute: '/vpc/nat-gateways/:id', path: 'vpc.natGateways', key: 'id',
+    titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'NAT gateway ID', field: 'id', mono: true },
+      { label: 'State', field: 'state' },
+      { label: 'Subnet', field: 'subnetId', mono: true, link: (r) => `/vpc/subnets/${r.subnetId}` },
+      { label: 'Primary public IPv4 address', field: 'publicIp', mono: true },
+      { label: 'Primary private IPv4 address', field: 'privateIp', mono: true },
+      { label: 'Created', field: 'created' },
+    ],
+    tabs: [tagTab],
+  },
+  {
+    id: 'networkAcl', listRoute: '/vpc/network-acls', listLabel: 'Network ACLs',
+    detailRoute: '/vpc/network-acls/:id', path: 'vpc.networkAcls', key: 'id',
+    titleField: 'name', tabsConfidence: 'sourced',
+    summary: [
+      { label: 'Network ACL ID', field: 'id', mono: true },
+      { label: 'VPC', field: 'vpcId', mono: true, link: (r) => `/vpc/vpcs/${r.vpcId}` },
+      { label: 'Default', field: 'isDefault', format: (v) => (v ? 'Yes' : 'No') },
+    ],
+    tabs: [
+      { label: 'Inbound rules', rows: (r) => r.inbound || [],
+        columns: [['Rule number', 'rule'], ['Type', 'type'], ['Protocol', 'protocol'], ['Port range', 'portRange'], ['Source', 'source'], ['Allow/Deny', 'action']] },
+      { label: 'Outbound rules', rows: (r) => r.outbound || [],
+        columns: [['Rule number', 'rule'], ['Type', 'type'], ['Protocol', 'protocol'], ['Port range', 'portRange'], ['Destination', 'destination'], ['Allow/Deny', 'action']] },
+      { label: 'Subnet associations', rows: (r) => (r.associations || []).map((a) => (typeof a === 'string' ? { id: a } : a)),
+        columns: [['Subnet ID', 'id']], empty: 'This network ACL is not associated with any subnet.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'iamRole', listRoute: '/iam/roles', listLabel: 'Roles', detailRoute: '/iam/roles/:id',
+    path: 'iam.roles', key: 'name', titleField: 'name', tabsConfidence: 'partially_sourced',
+    summary: [
+      { label: 'Role name', field: 'name' },
+      { label: 'ARN', field: 'arn', mono: true },
+      { label: 'Created', field: 'created' },
+      { label: 'Last activity', field: 'lastActivity' },
+      { label: 'Maximum session duration', field: 'maxSessionDuration' },
+    ],
+    tabs: [
+      { label: 'Permissions', rows: (r) => (r.policies || []).map((p) => ({ name: p, type: 'Managed policy' })),
+        columns: [['Policy name', 'name'], ['Type', 'type']], empty: 'This role has no permissions policies.' },
+      // trustedEntities is a single string in the seed data, not a list.
+      { label: 'Trust relationships', rows: (r) => {
+          const e = r.trustedEntities;
+          if (!e) return [];
+          return (Array.isArray(e) ? e : [e]).map((x) => (typeof x === 'string' ? { entity: x } : x));
+        },
+        columns: [['Trusted entity', 'entity']], empty: 'No trusted entities.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'iamPolicy', listRoute: '/iam/policies', listLabel: 'Policies', detailRoute: '/iam/policies/:id',
+    path: 'iam.policies', key: 'name', titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Policy name', field: 'name' },
+      { label: 'ARN', field: 'arn', mono: true },
+      { label: 'Type', field: 'type' },
+      { label: 'Attached entities', field: 'attachedEntities' },
+      { label: 'Created', field: 'created' },
+      { label: 'Edited', field: 'updated' },
+    ],
+    tabs: [
+      { label: 'Permissions', fields: [{ label: 'Description', field: 'description' }, { label: 'Policy type', field: 'type' }] },
+      { label: 'Entities attached', rows: (r) => Array.from({ length: Number(r.attachedEntities) || 0 }, (_, i) => ({ n: i + 1 })),
+        columns: [['#', 'n']], empty: 'This policy is not attached to any entity.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'iamGroup', listRoute: '/iam/groups', listLabel: 'User groups', detailRoute: '/iam/groups/:id',
+    path: 'iam.groups', key: 'name', titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Group name', field: 'name' },
+      { label: 'ARN', field: 'arn', mono: true },
+      { label: 'Created', field: 'created' },
+      { label: 'Path', field: 'path' },
+    ],
+    tabs: [
+      { label: 'Users', rows: (r) => (r.users || []).map((u) => ({ name: u })),
+        columns: [['User name', 'name']], empty: 'This group has no users.' },
+      { label: 'Permissions', rows: (r) => (r.policies || []).map((p) => ({ name: p })),
+        columns: [['Policy name', 'name']], empty: 'This group has no permissions policies.' },
+    ],
+  },
+  {
+    id: 'logGroup', listRoute: '/cloudwatch/logs', listLabel: 'Log groups',
+    detailRoute: '/cloudwatch/logs/:id', path: 'cloudwatch.logGroups', key: 'name',
+    titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Log group name', field: 'name', mono: true },
+      { label: 'Retention', field: 'retentionDays', format: (v) => (v ? `${v} days` : 'Never expire') },
+      { label: 'Stored bytes', field: 'storedBytes' },
+      { label: 'Created', field: 'created' },
+    ],
+    tabs: [
+      // The seed carries a stream COUNT, not the streams themselves. Rendering a list from a
+      // number would mean inventing stream names, so this reports what is actually known and
+      // points at the view that holds the events.
+      { label: 'Details', fields: [
+        { label: 'Retention', field: 'retentionDays', format: (v) => (v ? `${v} days` : 'Never expire') },
+        { label: 'Stored bytes', field: 'storedBytes' },
+        { label: 'Log streams', field: 'streams' },
+        { label: 'Created', field: 'created' }] },
+      tagTab,
+    ],
+  },
+  {
+    id: 'snsTopic', listRoute: '/sns/topics', listLabel: 'Topics', detailRoute: '/sns/topics/:id',
+    path: 'sns.topics', key: 'name', titleField: 'name', tabsConfidence: 'partially_sourced',
+    summary: [
+      { label: 'Name', field: 'name' },
+      { label: 'ARN', field: 'arn', mono: true },
+      { label: 'Display name', field: 'displayName' },
+      { label: 'Type', field: 'type' },
+      { label: 'Created', field: 'created' },
+    ],
+    tabs: [
+      { label: 'Subscriptions', related: { path: 'sns.subscriptions', match: (row, res) => row.topic === res.name || row.topicArn === res.arn },
+        columns: [['Subscription ARN', 'arn'], ['Protocol', 'protocol'], ['Endpoint', 'endpoint'], ['Status', 'status']],
+        empty: 'This topic has no subscriptions.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'sqsQueue', listRoute: '/sqs/queues', listLabel: 'Queues', detailRoute: '/sqs/queues/:id',
+    path: 'sqs.queues', key: 'name', titleField: 'name', tabsConfidence: 'partially_sourced',
+    summary: [
+      { label: 'Name', field: 'name' },
+      { label: 'Type', field: 'type' },
+      { label: 'URL', field: 'url', mono: true },
+      { label: 'Messages available', field: 'messagesAvailable' },
+      { label: 'Messages in flight', field: 'messagesInFlight' },
+      { label: 'Created', field: 'created' },
+    ],
+    tabs: [
+      { label: 'Configuration', fields: [
+        { label: 'Visibility timeout', field: 'visibilityTimeout' },
+        { label: 'Message retention period', field: 'messageRetention' },
+        { label: 'Maximum message size', field: 'maxMessageSize' },
+        { label: 'Delivery delay', field: 'deliveryDelay' },
+        { label: 'Receive message wait time', field: 'receiveWaitTime' },
+        { label: 'Encryption', field: 'encryption' }] },
+      { label: 'Dead-letter queue', rows: (r) => (r.deadLetterQueue ? [{ queue: r.deadLetterQueue, maxReceives: r.maxReceives }] : []),
+        columns: [['Queue', 'queue'], ['Maximum receives', 'maxReceives']],
+        empty: 'No dead-letter queue configured for this queue.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'hostedZone', listRoute: '/route53/hosted-zones', listLabel: 'Hosted zones',
+    detailRoute: '/route53/hosted-zones/:id', path: 'route53.hostedZones', key: 'id',
+    titleField: 'name', tabsConfidence: 'inferred',
+    summary: [
+      { label: 'Hosted zone ID', field: 'id', mono: true },
+      { label: 'Domain name', field: 'name' },
+      { label: 'Type', field: 'type' },
+      { label: 'Record count', field: 'recordCount' },
+      { label: 'Created', field: 'created' },
+      { label: 'Comment', field: 'comment' },
+    ],
+    tabs: [
+      { label: 'Records', related: { path: 'route53.records', match: (row, res) => row.zoneId === res.id || row.zone === res.name },
+        columns: [['Record name', 'name'], ['Type', 'type'], ['Routing policy', 'routingPolicy'], ['Value', 'value'], ['TTL', 'ttl']],
+        empty: 'This hosted zone has no records.' },
+      tagTab,
+    ],
+  },
+  {
+    id: 'distribution', listRoute: '/cloudfront/distributions', listLabel: 'Distributions',
+    detailRoute: '/cloudfront/distributions/:id', path: 'cloudfront.distributions', key: 'id',
+    titleField: 'domainName', tabsConfidence: 'partially_sourced',
+    summary: [
+      { label: 'Distribution ID', field: 'id', mono: true },
+      { label: 'Domain name', field: 'domainName', mono: true },
+      { label: 'Status', field: 'status' },
+      { label: 'State', field: 'state' },
+      { label: 'Price class', field: 'priceClass' },
+      { label: 'Last modified', field: 'lastModified' },
+    ],
+    tabs: [
+      { label: 'Origins', rows: (r) => (r.origins || []).map((o) => (typeof o === 'string' ? { domain: o } : o)),
+        columns: [['Origin domain', 'domain'], ['Origin type', 'type']], empty: 'No origins configured.' },
+      { label: 'Behaviors', rows: (r) => (r.defaultCacheBehavior ? [{ path: 'Default (*)', policy: r.defaultCacheBehavior }] : []),
+        columns: [['Path pattern', 'path'], ['Cache policy', 'policy']] },
+      { label: 'Alternate domain names', rows: (r) => (r.alternateNames || []).map((n) => ({ name: n })),
+        columns: [['CNAME', 'name']], empty: 'No alternate domain names (CNAMEs).' },
+      tagTab,
+    ],
+  },
 ];
 
 export const byDetailRoute = Object.fromEntries(RESOURCES.map((r) => [r.detailRoute, r]));

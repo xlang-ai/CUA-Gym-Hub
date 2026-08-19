@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
 import { format } from 'date-fns';
@@ -78,7 +79,7 @@ export default function CloudWatchLogs() {
               {logGroups.map(lg => (
                 <tr key={lg.name} className={selected.includes(lg.name) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td><input type="checkbox" checked={selected.includes(lg.name)} onChange={e => setSelected(e.target.checked ? [...selected, lg.name] : selected.filter(x=>x!==lg.name))} /></td>
-                  <td className="font-medium text-aws-blue font-mono text-sm">{lg.name}</td>
+                  <td className="font-medium font-mono text-sm"><Link to={`/cloudwatch/logs/${encodeURIComponent(lg.name)}`} className="text-aws-blue hover:underline">{lg.name}</Link></td>
                   <td>{formatBytes(lg.storedBytes)}</td>
                   <td>{lg.retentionDays ? `${lg.retentionDays} days` : 'Never expire'}</td>
                   <td>{lg.streams}</td>

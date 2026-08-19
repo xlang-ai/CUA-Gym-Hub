@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -76,7 +77,7 @@ export default function VPCInternetGateways() {
             {paged.rows.map(ig => (
               <tr key={ig.id} className={selected.includes(ig.id) ? 'bg-aws-status-info-bg/50' : ''}>
                 <td><input type="checkbox" checked={selected.includes(ig.id)} onChange={e => setSelected(e.target.checked ? [...selected, ig.id] : selected.filter(x=>x!==ig.id))} /></td>
-                <td className="font-mono text-sm text-aws-blue">{ig.id}</td>
+                <td className="font-mono text-sm"><Link to={`/vpc/internet-gateways/${ig.id}`} className="text-aws-blue hover:underline">{ig.id}</Link></td>
                 <td className="font-medium">{ig.name}</td>
                 <td><span className={`aws-badge ${ig.state === 'attached' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-disabled-bg text-aws-text-secondary'}`}>{ig.state}</span></td>
                 <td className="font-mono text-sm">{ig.vpcId || '-'}</td>

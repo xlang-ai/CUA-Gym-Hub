@@ -1,4 +1,5 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { RefreshCw, Search, X, Plus } from 'lucide-react';
@@ -68,7 +69,7 @@ export default function VPCNATGateways() {
               {paged.rows.map(n => (
                 <tr key={n.id} className={selected.includes(n.id) ? 'bg-aws-status-info-bg/50' : ''}>
                   <td><input type="checkbox" checked={selected.includes(n.id)} onChange={e => setSelected(e.target.checked ? [...selected, n.id] : selected.filter(x=>x!==n.id))} /></td>
-                  <td className="font-mono text-sm text-aws-blue">{n.id}</td>
+                  <td className="font-mono text-sm"><Link to={`/vpc/nat-gateways/${n.id}`} className="text-aws-blue hover:underline">{n.id}</Link></td>
                   <td className="font-medium">{n.name}</td>
                   <td><span className={`aws-badge ${n.state === 'available' ? 'bg-aws-status-success-bg text-aws-success' : 'bg-aws-status-warning-bg text-aws-warning'}`}>{n.state}</span></td>
                   <td className="font-mono text-sm">{n.subnetId}</td>
