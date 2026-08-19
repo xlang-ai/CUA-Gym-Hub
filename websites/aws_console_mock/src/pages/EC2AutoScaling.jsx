@@ -61,7 +61,7 @@ export default function EC2AutoScaling() {
         <button className="flex items-center gap-1 text-aws-blue text-sm mb-3 hover:underline" onClick={() => setDetail(null)}><ArrowLeft size={14} /> Back to Auto Scaling groups</button>
         <div className="aws-card p-0 mb-4">
           <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
-            <h2 className="font-bold text-lg">{currentAsg.name}</h2>
+            <h1 className="font-bold text-2xl">{currentAsg.name}</h1>
             <button className="aws-btn aws-btn-primary text-xs" onClick={() => { setEditForm({ min: currentAsg.minSize, max: currentAsg.maxSize, desired: currentAsg.desiredCapacity }); setShowEdit(true); }}>Edit capacity</button>
           </div>
           <div className="p-4 grid grid-cols-3 gap-4 text-sm">

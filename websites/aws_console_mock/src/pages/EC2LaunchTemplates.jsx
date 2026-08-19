@@ -49,7 +49,7 @@ export default function EC2LaunchTemplates() {
         <button className="flex items-center gap-1 text-aws-blue text-sm mb-3 hover:underline" onClick={() => setDetail(null)}><ArrowLeft size={14} /> Back to launch templates</button>
         <div className="aws-card p-0">
           <div className="px-4 py-3 border-b border-aws-border">
-            <h2 className="font-bold text-lg">{currentLt.name}</h2>
+            <h1 className="font-bold text-2xl">{currentLt.name}</h1>
             <p className="text-sm text-aws-text-secondary font-mono">{currentLt.id}</p>
           </div>
           <div className="p-4 space-y-4">

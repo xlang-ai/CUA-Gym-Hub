@@ -55,6 +55,9 @@ export default function EC2AMIs() {
   return (
     <div>
       <div className="aws-card p-0">
+        <div className="px-4 py-3 border-b border-aws-border">
+          <h1 className="font-bold text-2xl">AMIs ({filtered.length})</h1>
+        </div>
         {/* Toolbar */}
         <div className="flex items-center gap-2 px-4 py-3 border-b border-aws-border">
           <div className="relative">

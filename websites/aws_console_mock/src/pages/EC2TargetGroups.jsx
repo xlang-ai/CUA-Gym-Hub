@@ -60,7 +60,7 @@ export default function EC2TargetGroups() {
         <button className="flex items-center gap-1 text-aws-blue text-sm mb-3 hover:underline" onClick={() => setDetail(null)}><ArrowLeft size={14} /> Back to target groups</button>
         <div className="aws-card p-0">
           <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
-            <h2 className="font-bold text-lg">{currentTg.name}</h2>
+            <h1 className="font-bold text-2xl">{currentTg.name}</h1>
             <div className="flex items-center gap-2">
               <button className="aws-btn aws-btn-primary text-xs" onClick={() => setShowRegister(true)}>Register targets</button>
             </div>

@@ -37,7 +37,7 @@ export default function EC2Dashboard() {
         <div className="col-span-2">
           <div className="aws-card">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-lg">Resources</h2>
+              <h1 className="font-bold text-2xl">Resources</h1>
               <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             </div>
             <p className="text-sm text-aws-text-secondary mb-4">

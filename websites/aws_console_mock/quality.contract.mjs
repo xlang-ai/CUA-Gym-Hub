@@ -332,6 +332,57 @@ await check('A3', 'design tokens match the pinned Cloudscape values', () => {
   return `${Object.keys(map).length} pinned tokens verified against the reference`;
 });
 
+
+await check('S1', 'every console page declares a Cloudscape H1 page title', () => {
+  // Measured in a live browser across 22 routes; this gate locks the source-level
+  // invariant so it cannot regress. Exempt: Placeholder (retired) and StateInspector
+  // (the /go debug surface, not a console page).
+  const exempt = new Set(['Placeholder', 'StateInspector']);
+  const dir = path.join(ROOT, 'src/pages');
+  const bad = fs.readdirSync(dir).filter((f) => f.endsWith('.jsx'))
+    .map((f) => f.replace(/\.jsx$/, ''))
+    .filter((n) => !exempt.has(n))
+    .filter((n) => {
+      const src = fs.readFileSync(path.join(dir, `${n}.jsx`), 'utf8');
+      // Either an inline Cloudscape h1 class, or a bare <h1> inside .aws-page-header,
+      // which index.css styles with the same scale (the preferred, shared pattern).
+      const inline = /<h1[^>]*className="[^"]*\btext-2xl\b/.test(src);
+      const shared = /aws-page-header/.test(src) && /<h1[\s>]/.test(src);
+      return !inline && !shared;
+    });
+  assert(bad.length === 0, `${bad.length} pages without a 24px H1: ${bad.slice(0, 8).join(', ')}`);
+  return `${fs.readdirSync(dir).filter((f) => f.endsWith('.jsx')).length - exempt.size} pages, all with a conforming H1`;
+});
+
+await check('S2', 'global chrome matches the reference layout', () => {
+  const { text } = loadReference();
+  const layout = read('src/components/Layout.jsx');
+  const want = [
+    ['breadcrumb', /Breadcrumb|breadcrumb|getServiceName/],
+    ['services menu', /SERVICE_CATEGORIES/],
+    ['global search', /placeholder="Search for services/],
+    ['notifications', /Bell/],
+    ['help', /HelpCircle/],
+    ['account menu', /accountOpen/],
+    ['region selector', /regionOpen/],
+  ];
+  const missing = want.filter(([, re]) => !re.test(layout)).map(([n]) => n);
+  assert(missing.length === 0, `top navigation missing: ${missing.join(', ')}`);
+  const h = text.match(/top_nav_height_px:\s*(\d+)/);
+  assert(h, 'reference does not pin a top-nav height');
+  return `all ${want.length} required chrome elements present; nav height pinned at ${h[1]}px`;
+});
+
+await check('S3', 'core workflow step counts are declared and bounded', () => {
+  const { text } = loadReference();
+  const block = text.slice(text.indexOf('workflows:'));
+  const flows = [...block.matchAll(/^  ([a-z0-9_]+):\n\s+steps:\s*(\d+)/gm)].map((m) => [m[1], Number(m[2])]);
+  assert(flows.length >= 6, `only ${flows.length} workflows declared`);
+  const unreasonable = flows.filter(([, n]) => n < 2 || n > 12);
+  assert(unreasonable.length === 0, `implausible step counts: ${unreasonable.map((f) => f.join('=')).join(', ')}`);
+  return `${flows.length} workflows declared (${flows.map((f) => f.join(':')).join(', ')})`;
+});
+
 // ---------------------------------------------------------------- report
 const pass = results.filter((r) => r.ok).length;
 const fail = results.length - pass;

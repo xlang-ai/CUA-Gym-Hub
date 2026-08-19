@@ -41,7 +41,7 @@ export default function VPCRouteTables() {
     <div className="space-y-0">
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
-          <h2 className="font-bold text-lg">Route Tables ({routeTables.length})</h2>
+          <h1 className="font-bold text-2xl">Route Tables ({routeTables.length})</h1>
           <div className="flex items-center gap-2">
             <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete</button>}

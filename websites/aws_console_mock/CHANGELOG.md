@@ -4,6 +4,45 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.4.0
+
+Closes the last two authenticity gaps by measuring them, rather than leaving them blocked.
+
+### Fixed
+
+- **38 of 66 pages had no `<h1>` page title at all** — they used an 18px `<h2>` as the
+  heading, so the Cloudscape page-header structure the real console always has was simply
+  absent. The 1.1.0 pass only resized headings that already were `<h1>`; it never noticed
+  the ones that weren't. Ten more were missed on a second pass because those files
+  contained an `<h1>` inside a modal branch, which made a source-level "has h1" check pass
+  while the list view still rendered an `<h2>`. Found by measuring the rendered DOM.
+  All 64 console pages now render a 24px/700 `<h1>`; `EC2AMIs` had no title element
+  whatsoever and `S3BucketDetail` showed the bucket name only as a link.
+
+### Added
+
+- **Structural conformance measurement.** The reference now pins measurable layout values
+  (top-nav height and surface, page-title tag/size/weight, breadcrumb requirement, body
+  size) and three gates enforce them: `S1` every console page declares a Cloudscape H1,
+  `S2` the global chrome carries all seven required elements, `S3` core workflow step
+  counts are declared and plausible.
+- **Workflow step parity.** The reference declares the interaction count for six core
+  workflows. `create_vpc` was walked end to end with real coordinate clicks: declared 4,
+  measured 4, completed. The method is recorded so the remaining five can be walked the
+  same way.
+
+### On pixel diffing
+
+Screenshot comparison against the live console stays unimplemented, and that is now a
+decision rather than a blocker. There is no compliant capture corpus — the repo's
+image-search skill returns unrelated content — and pixel diffing against a product that
+changes underneath us is neither deterministic nor reviewable. Measuring the rendered DOM
+against a frozen specification gives the same signal with none of those properties.
+
+### Quality gates
+
+22/22 pass. Authenticity status: `MEASURED_STRUCTURALLY_AND_BEHAVIOURALLY`.
+
 ## 1.3.0
 
 Completes trademark desensitization and closes the gate blind spot that hid it.

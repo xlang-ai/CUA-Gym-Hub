@@ -60,7 +60,7 @@ export default function EC2ElasticIPs() {
     <div>
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
-          <h2 className="font-bold text-lg flex items-center gap-2"><Globe size={18} /> Elastic IP addresses ({eips.length})</h2>
+          <h1 className="font-bold text-2xl flex items-center gap-2"><Globe size={18} /> Elastic IP addresses ({eips.length})</h1>
           <div className="flex items-center gap-2">
             <div className="relative">
               <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />

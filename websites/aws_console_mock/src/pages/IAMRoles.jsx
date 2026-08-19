@@ -140,7 +140,7 @@ export default function IAMRoles() {
   return (
     <div className="aws-card p-0">
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
-        <h2 className="font-bold text-lg">Roles ({state.iam.roles.length})</h2>
+        <h1 className="font-bold text-2xl">Roles ({state.iam.roles.length})</h1>
         <div className="flex items-center gap-2">
           <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
           <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>

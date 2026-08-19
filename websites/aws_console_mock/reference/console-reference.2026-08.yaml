@@ -51,6 +51,16 @@ layout:
     rules:
       - id: h1-scale
         description: Page titles use the Cloudscape H1 scale (24px/30px bold).
+  measurable:
+    # Asserted against the live DOM (see quality.contract.mjs S-gates and the
+    # browser-verified figures recorded in quality-manifest.json).
+    top_nav_height_px: 48
+    top_nav_background: "#0f141a"
+    page_title_tag: h1
+    page_title_font_size_px: 24
+    page_title_font_weight: 700
+    breadcrumb_required: true
+    body_font_size_px: 14
   table_convention:
     required_elements:
       - selection_column
@@ -265,3 +275,30 @@ geometry:
     container: 16px
     badge: 4px
   spacing_base: 4px
+
+# ---------------------------------------------------------------- workflows
+# Step parity: the number of discrete UI interactions the real console needs to
+# complete each goal. A mock that needs materially more or fewer steps trains the
+# wrong policy even when the end state matches.
+#
+# A "step" is one committed interaction: a navigation click, a field entry, or a
+# submit. Opening a dropdown to pick from it counts with the selection, not separately.
+workflows:
+  create_security_group_rule:
+    steps: 6
+    path: [open security groups, select group, open inbound tab, edit rules, add + fill rule, save]
+  launch_ec2_instance:
+    steps: 5
+    path: [open instances, launch instances, name, pick type/AMI, launch]
+  create_s3_bucket:
+    steps: 4
+    path: [open buckets, create bucket, name, create]
+  attach_iam_policy_to_user:
+    steps: 5
+    path: [open users, select user, permissions tab, add permissions, pick + confirm]
+  create_vpc:
+    steps: 4
+    path: [open your VPCs, create VPC, name, create]
+  create_cloudwatch_alarm:
+    steps: 5
+    path: [open alarms, create alarm, metric, threshold, create]

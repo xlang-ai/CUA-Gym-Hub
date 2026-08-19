@@ -128,6 +128,7 @@ export default function S3BucketDetail() {
 
   return (
     <div className="space-y-0">
+      <h1 className="font-bold text-2xl mb-3">{bucketName}</h1>
       {/* Tab bar */}
       <div className="aws-card p-0">
         <div className="px-4 pt-3 pb-0 flex gap-4 border-b border-aws-border">
