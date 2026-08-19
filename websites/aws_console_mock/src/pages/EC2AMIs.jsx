@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { Link } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Search, Image, ChevronDown, X } from 'lucide-react';
+import {Search, Image, ChevronDown, X} from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function EC2AMIs() {
@@ -65,7 +66,7 @@ export default function EC2AMIs() {
             <Search size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
             <input className="aws-input pl-7 text-sm w-56" placeholder="Search AMIs..." value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <LastUpdated />
           <button className="aws-btn aws-btn-secondary text-xs" disabled={!selected.length} onClick={() => setShowLaunch(true)}>Launch instance from AMI</button>
           <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={() => { selected.forEach(id => dispatch({ type: 'DELETE_AMI', payload: id })); addFlash('success', `${selected.length} AMI(s) deregistered.`); setSelected([]); }}>Deregister AMI</button>
         </div>

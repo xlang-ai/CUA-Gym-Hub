@@ -1,7 +1,8 @@
 import React from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
 import { Link } from 'react-router-dom';
-import { RefreshCw, ExternalLink, CheckCircle } from 'lucide-react';
+import {ExternalLink, CheckCircle} from 'lucide-react';
 
 export default function EC2Dashboard() {
   const { state, addFlash } = useStore();
@@ -38,7 +39,7 @@ export default function EC2Dashboard() {
           <div className="aws-card">
             <div className="flex items-center justify-between mb-4">
               <h1 className="font-bold text-2xl">Resources</h1>
-              <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+              <LastUpdated />
             </div>
             <p className="text-sm text-aws-text-secondary mb-4">
               You are using the following XWS EC2 resources in the {state.user.region === 'ap-southeast-1' ? 'Asia Pacific (Singapore)' : state.user.region} Region:

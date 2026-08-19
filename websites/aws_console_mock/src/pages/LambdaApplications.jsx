@@ -1,7 +1,8 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, X, LayoutGrid, Rocket, Trash2 } from 'lucide-react';
+import {X, LayoutGrid, Rocket, Trash2} from 'lucide-react';
 import { format } from 'date-fns';
 
 const TEMPLATE_SOURCES = ['XWS Serverless Application Repository', 'XWS SAM', 'XWS CDK'];
@@ -70,7 +71,7 @@ export default function LambdaApplications() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg flex items-center gap-2"><LayoutGrid size={18} /> Applications ({apps.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="aws-btn-icon" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} /></button>
+            <LastUpdated />
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create application</button>
           </div>
         </div>

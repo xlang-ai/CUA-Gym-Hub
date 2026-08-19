@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, X } from 'lucide-react';
+import {X} from 'lucide-react';
 import { format } from 'date-fns';
 
 const STATUS_COLORS = {
@@ -47,7 +48,7 @@ export default function RDSSnapshots() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Snapshots ({snapshots.length})</h1>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <LastUpdated />
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Take snapshot</button>
           </div>
         </div>

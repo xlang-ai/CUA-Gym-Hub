@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw } from 'lucide-react';
+import {} from 'lucide-react';
 
 export default function RDSSubnetGroups() {
   const { state, addFlash } = useStore();
@@ -44,7 +45,7 @@ export default function RDSSubnetGroups() {
     <div className="aws-card p-0">
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h1 className="font-bold text-2xl">Subnet groups ({subnetGroups.length})</h1>
-        <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+        <LastUpdated />
       </div>
       <table className="aws-table">
         <thead><tr><th>Name</th><th>Description</th><th>VPC</th><th>Status</th><th>Subnets</th></tr></thead>

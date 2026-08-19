@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, X, BarChart3, Database, HardDrive, Layers } from 'lucide-react';
+import {X, BarChart3, Database, HardDrive, Layers} from 'lucide-react';
 
 const formatBytes = (bytes) => {
   if (!bytes) return '0 B';
@@ -46,7 +47,7 @@ export default function S3StorageLens() {
           <p className="aws-page-header-description">XWS S3 Storage Lens delivers organization-wide visibility into object storage usage and activity trends.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="aws-btn-icon" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} /></button>
+          <LastUpdated />
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={openConfig}>Configure dashboard</button>
         </div>
       </div>

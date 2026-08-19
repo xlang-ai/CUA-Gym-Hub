@@ -1,7 +1,8 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Search } from 'lucide-react';
+import {Search} from 'lucide-react';
 
 export default function IAMRoles() {
   const { state, dispatch, addFlash } = useStore();
@@ -145,7 +146,7 @@ export default function IAMRoles() {
         <h1 className="font-bold text-2xl">Roles ({state.iam.roles.length})</h1>
         <div className="flex items-center gap-2">
           <TableToolbar p={paged} />
-            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <LastUpdated />
           <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create role</button>
         </div>

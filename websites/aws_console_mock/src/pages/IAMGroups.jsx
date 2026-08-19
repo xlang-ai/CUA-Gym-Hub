@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, X, Search } from 'lucide-react';
+import {X, Search} from 'lucide-react';
 
 export default function IAMGroups() {
   const { state, dispatch, addFlash } = useStore();
@@ -109,7 +110,7 @@ export default function IAMGroups() {
       <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
         <h1 className="font-bold text-2xl">User groups ({state.iam.groups.length})</h1>
         <div className="flex items-center gap-2">
-          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <LastUpdated />
           <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selectedGroups.length} onClick={handleDeleteGroups}>Delete</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create group</button>
         </div>

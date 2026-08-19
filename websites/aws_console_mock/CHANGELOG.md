@@ -4,6 +4,69 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.6.5
+
+Route table and security group menus from the capture — and 43 controls that announced success
+for work they never did.
+
+### 41 fake Refresh buttons
+
+Every list page carried a Refresh whose entire effect was `addFlash('success', 'Refreshed')`. An
+agent clicks it, is told it succeeded, and nothing happened — the same defect as a menu item that
+opens nothing, except louder. All 41 replaced with `LastUpdated`, the "Last updated / N minutes
+ago" stamp the console shows and this mock did not.
+
+Gate **S9** now fails any handler whose only effect is a flash claiming completion. Its first
+version missed `"Published a local sandbox version"` because that phrasing used none of its
+keywords; widened, it then found two more real fakes on the Lambda detail page:
+
+- **`Create alias`** flashed *"Alias draft saved locally"*, and the Aliases table rendered two
+  **hardcoded `<tr>` rows** — a picture of aliases rather than a list of them, which no action
+  could change.
+- **`Add trigger`** flashed *"Add trigger is simulated in mock mode"*, which at least said so.
+
+Aliases and versions now live in state and are seeded per function; create, publish and add-trigger
+all mutate and are verifiable in `state_diff`.
+
+### A data model I split in two
+
+1.6.4's subnet page wrote route-table associations to a field called `subnets`. The seed calls it
+`associations`. `RESOURCE_UPDATE` merges, so nothing failed — it silently created a **second**
+association field beside the real one, and the walkthrough I wrote asserted the invented one. Code
+and check agreed with each other and neither agreed with the data.
+
+Unified on `associations`, and the walkthrough now also fails if a stray `subnets` field reappears.
+Worth recording plainly: the menu checks caught real defects because they compare against a
+*capture*; this one hid because both sides of it came from me.
+
+### Route tables and security groups
+
+Both wired from `vpc-family-actions.2026-08-18.json` with the console's own gating:
+
+- **Route tables** — `Set main route table` disabled on the incumbent with the console's reason,
+  and promoting one demotes the other so exactly one stays main. Every VPC now has a main route
+  table, which the seed had never flagged. Deleting the main table is refused. `Edit routes`,
+  subnet/edge associations, and route propagation against a seeded virtual private gateway.
+- **Security groups** — both captured CSV exports record through `RECORD_EXPORT`; `Manage stale
+  rules` **computes** stale rules (those referencing a security group that no longer exists) rather
+  than announcing a simulation; `Copy to new security group` duplicates the rule set; `Share
+  security group` stays disabled with its reason. This replaced a hand-rolled two-item dropdown
+  whose `Manage tags` item labelled itself *"(simulated)"*.
+
+`openRuleEditor` read `detail`, derived from `detailId`, so calling it right after `setDetailId()`
+would have read the previous render's `null` and done nothing. It takes the group directly now.
+
+`npm run walk:vpcfam` — 17/17.
+
+### Also
+
+A splice by index unbalanced the security-group JSX and the build reported it 400 lines away as an
+unrelated "Unexpected return". Redone with exact-string matches. All 68 routes crawled clean of
+runtime errors afterwards, which is the check that would have caught it — `build` did not, since
+the first attempt's `RefreshCw` removal was a *runtime* ReferenceError.
+
+`action_coverage` 40.5% → **44.9%**; CFI 68.3% → **69.5%** directional, 64.2% → **65.3%** sourced.
+
 ## 1.6.4
 
 Captured VPC-family menus wired, and four gaps in my own instruments closed.

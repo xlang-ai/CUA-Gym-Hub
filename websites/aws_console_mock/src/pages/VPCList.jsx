@@ -1,10 +1,11 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/StoreContext';
 import ActionsMenu from '../components/ActionsMenu';
-import { RefreshCw, Search, X, Plus, Trash2 } from 'lucide-react';
+import {Search, X, Plus, Trash2} from 'lucide-react';
 
 // Flow-log field values as the VPC console presents them. Sourced from the VPC User Guide
 // "Create a flow log" procedure, which names each control and its choices verbatim.
@@ -174,7 +175,7 @@ export default function VPCList() {
           <h1 className="font-bold text-2xl">Your VPCs ({vpcs.length})</h1>
           <div className="flex items-center gap-2">
             <TableToolbar p={paged} />
-            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <LastUpdated />
             <ActionsMenu items={actions} />
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create VPC</button>
           </div>

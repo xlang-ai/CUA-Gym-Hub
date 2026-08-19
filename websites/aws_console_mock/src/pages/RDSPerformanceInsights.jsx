@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { RefreshCw, Download, Activity } from 'lucide-react';
+import {Download, Activity} from 'lucide-react';
 
 // Cloudscape design tokens aren't exposed as CSS custom properties in this app,
 // so chart series colors are resolved at runtime from the Tailwind utility
@@ -121,7 +122,7 @@ export default function RDSPerformanceInsights() {
           <p className="aws-page-header-description">Monitor database load, top SQL statements, and wait states for your RDS instances. Read-only view derived from live instance data.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="aws-btn-icon" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} /></button>
+          <LastUpdated />
           <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={() => addFlash('info', 'CSV export started. Check your downloads shortly.')}>
             <Download size={14} /> Download CSV
           </button>

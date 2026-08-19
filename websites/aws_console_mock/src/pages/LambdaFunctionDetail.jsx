@@ -13,6 +13,43 @@ const TEST_TEMPLATES = {
 export default function LambdaFunctionDetail() {
   const { functionName } = useParams();
   const { state, dispatch, addFlash } = useStore();
+  const [aliasForm, setAliasForm] = useState(null);
+  const [versionForm, setVersionForm] = useState(null);
+  const [triggerForm, setTriggerForm] = useState(null);
+
+  // Aliases and versions live in state so they can be created, listed and verified. The tab
+  // used to render two literal rows, which no action could change.
+  const aliases = (state.lambdaAliases || []).filter(a => a.functionName === functionName);
+  const versions = (state.lambdaVersions || []).filter(v => v.functionName === functionName);
+
+  const createAlias = (e) => {
+    e.preventDefault();
+    dispatch({ type: 'RESOURCE_CREATE', payload: { path: 'lambdaAliases', key: 'name', item: {
+      functionName, name: aliasForm.name.trim(), version: aliasForm.version, description: aliasForm.description,
+    }}});
+    addFlash('success', `Created alias ${aliasForm.name.trim()} pointing at version ${aliasForm.version}`);
+    setAliasForm(null);
+  };
+
+  const addTrigger = (e) => {
+    e.preventDefault();
+    dispatch({ type: 'RESOURCE_UPDATE', payload: { path: 'lambda', key: 'name', id: functionName,
+      fields: { triggers: [...(func.triggers || []), { ...triggerForm }] } } });
+    addFlash('success', `Added ${triggerForm.type} trigger on ${triggerForm.source} to ${functionName}`);
+    setTriggerForm(null);
+  };
+
+  const publishVersion = (e) => {
+    e.preventDefault();
+    const numbered = versions.map(v => Number(v.version)).filter(n => !Number.isNaN(n));
+    const next = String((numbered.length ? Math.max(...numbered) : 0) + 1);
+    dispatch({ type: 'RESOURCE_CREATE', payload: { path: 'lambdaVersions', key: 'version', item: {
+      functionName, version: next, description: versionForm.description,
+      published: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    }}});
+    addFlash('success', `Published version ${next} of ${functionName}`);
+    setVersionForm(null);
+  };
   const func = state.lambda.find(f => f.name === functionName);
   const [tab, setTab] = useState('Code');
   const [code, setCode] = useState('');
@@ -240,7 +277,7 @@ export default function LambdaFunctionDetail() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-sm">Triggers</h3>
-                  <button className="aws-btn aws-btn-primary text-xs flex items-center gap-1" onClick={() => addFlash('info', 'Add trigger is simulated in mock mode')}>
+                  <button className="aws-btn aws-btn-primary text-xs flex items-center gap-1" onClick={() => setTriggerForm({ type: 'S3', source: '', event: 's3:ObjectCreated:*' })}>
                     <Plus size={14} /> Add trigger
                   </button>
                 </div>
@@ -360,14 +397,30 @@ export default function LambdaFunctionDetail() {
       {tab === 'Aliases' && (
         <div className="aws-card">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-sm">Aliases</h3>
-            <button className="aws-btn aws-btn-secondary text-xs" onClick={() => addFlash('info', 'Alias draft saved locally')}>Create alias</button>
+            <h3 className="font-bold text-sm">Aliases ({aliases.length})</h3>
+            <button className="aws-btn aws-btn-secondary text-xs"
+              onClick={() => setAliasForm({ name: '', version: versions[0]?.version || '$LATEST', description: '' })}>
+              Create alias
+            </button>
           </div>
           <table className="aws-table">
-            <thead><tr><th>Name</th><th>Version</th><th>Description</th></tr></thead>
+            <thead><tr><th>Name</th><th>Version</th><th>Description</th><th /></tr></thead>
             <tbody>
-              <tr><td>prod</td><td>$LATEST</td><td>Production traffic alias</td></tr>
-              <tr><td>dev</td><td>$LATEST</td><td>Development testing alias</td></tr>
+              {aliases.map(a => (
+                <tr key={a.name}>
+                  <td className="font-medium">{a.name}</td>
+                  <td className="font-mono text-sm">{a.version}</td>
+                  <td>{a.description || '–'}</td>
+                  <td>
+                    <button className="aws-btn aws-btn-secondary text-xs"
+                      onClick={() => {
+                        dispatch({ type: 'RESOURCE_DELETE', payload: { path: 'lambdaAliases', key: 'name', id: a.name } });
+                        addFlash('success', `Deleted alias ${a.name}`);
+                      }}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+              {aliases.length === 0 && <tr><td colSpan="4" className="text-center py-6 text-aws-text-secondary">This function has no aliases.</td></tr>}
             </tbody>
           </table>
         </div>
@@ -376,16 +429,125 @@ export default function LambdaFunctionDetail() {
       {tab === 'Versions' && (
         <div className="aws-card">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-sm">Versions</h3>
-            <button className="aws-btn aws-btn-secondary text-xs" onClick={() => addFlash('success', 'Published a local sandbox version')}>Publish new version</button>
+            <h3 className="font-bold text-sm">Versions ({versions.length})</h3>
+            <button className="aws-btn aws-btn-secondary text-xs"
+              onClick={() => setVersionForm({ description: '' })}>Publish new version</button>
           </div>
           <table className="aws-table">
-            <thead><tr><th>Version</th><th>Last modified</th><th>Runtime</th><th>Code size</th></tr></thead>
+            <thead><tr><th>Version</th><th>Description</th><th>Published</th><th>Runtime</th><th>Code size</th></tr></thead>
             <tbody>
-              <tr><td>$LATEST</td><td>{new Date(func.lastModified).toLocaleString()}</td><td>{func.runtime}</td><td>{func.codeSize} bytes</td></tr>
-              <tr><td>1</td><td>{new Date(func.lastModified).toLocaleDateString()}</td><td>{func.runtime}</td><td>{func.codeSize} bytes</td></tr>
+              {versions.map(v => (
+                <tr key={v.version}>
+                  <td className="font-mono text-sm">{v.version}</td>
+                  <td>{v.description || '–'}</td>
+                  <td>{v.published || <span className="text-aws-text-secondary">Not published</span>}</td>
+                  <td>{func.runtime}</td>
+                  <td>{func.codeSize} bytes</td>
+                </tr>
+              ))}
+              {versions.length === 0 && <tr><td colSpan="5" className="text-center py-6 text-aws-text-secondary">No versions published.</td></tr>}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {triggerForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
+              <h3 className="font-bold">Add trigger</h3>
+              <button onClick={() => setTriggerForm(null)} aria-label="Close">&times;</button>
+            </div>
+            <form onSubmit={addTrigger} className="p-4 space-y-4 text-sm">
+              <div>
+                <label className="block font-bold mb-1" htmlFor="trig-type">Source</label>
+                <select id="trig-type" className="aws-input" value={triggerForm.type}
+                  onChange={e => setTriggerForm({ ...triggerForm, type: e.target.value,
+                    event: e.target.value === 'S3' ? 's3:ObjectCreated:*'
+                         : e.target.value === 'SQS' ? 'ReceiveMessage'
+                         : e.target.value === 'SNS' ? 'Publish'
+                         : 'rate(1 day)' })}>
+                  {['S3', 'SQS', 'SNS', 'EventBridge'].map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block font-bold mb-1" htmlFor="trig-source">
+                  {triggerForm.type === 'S3' ? 'Bucket' : triggerForm.type === 'SQS' ? 'Queue'
+                    : triggerForm.type === 'SNS' ? 'Topic' : 'Rule name'}
+                </label>
+                <input id="trig-source" className="aws-input" value={triggerForm.source} required
+                  onChange={e => setTriggerForm({ ...triggerForm, source: e.target.value })} />
+              </div>
+              <div>
+                <label className="block font-bold mb-1" htmlFor="trig-event">Event</label>
+                <input id="trig-event" className="aws-input font-mono" value={triggerForm.event} required
+                  onChange={e => setTriggerForm({ ...triggerForm, event: e.target.value })} />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" className="aws-btn aws-btn-secondary" onClick={() => setTriggerForm(null)}>Cancel</button>
+                <button type="submit" className="aws-btn aws-btn-primary">Add</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {aliasForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
+              <h3 className="font-bold">Create alias</h3>
+              <button onClick={() => setAliasForm(null)} aria-label="Close">&times;</button>
+            </div>
+            <form onSubmit={createAlias} className="p-4 space-y-4 text-sm">
+              <div>
+                <label className="block font-bold mb-1" htmlFor="alias-name">Name</label>
+                <input id="alias-name" className="aws-input" value={aliasForm.name} required
+                  onChange={e => setAliasForm({ ...aliasForm, name: e.target.value })} placeholder="prod" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1" htmlFor="alias-version">Version</label>
+                <select id="alias-version" className="aws-input" value={aliasForm.version}
+                  onChange={e => setAliasForm({ ...aliasForm, version: e.target.value })}>
+                  {versions.map(v => <option key={v.version} value={v.version}>{v.version}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block font-bold mb-1" htmlFor="alias-desc">Description <span className="font-normal text-aws-text-secondary">- optional</span></label>
+                <input id="alias-desc" className="aws-input" value={aliasForm.description}
+                  onChange={e => setAliasForm({ ...aliasForm, description: e.target.value })} />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" className="aws-btn aws-btn-secondary" onClick={() => setAliasForm(null)}>Cancel</button>
+                <button type="submit" className="aws-btn aws-btn-primary">Create alias</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {versionForm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
+              <h3 className="font-bold">Publish new version</h3>
+              <button onClick={() => setVersionForm(null)} aria-label="Close">&times;</button>
+            </div>
+            <form onSubmit={publishVersion} className="p-4 space-y-4 text-sm">
+              <p className="text-aws-text-secondary">
+                Publishing snapshots the current $LATEST code as an immutable numbered version.
+              </p>
+              <div>
+                <label className="block font-bold mb-1" htmlFor="version-desc">Version description <span className="font-normal text-aws-text-secondary">- optional</span></label>
+                <input id="version-desc" className="aws-input" value={versionForm.description}
+                  onChange={e => setVersionForm({ ...versionForm, description: e.target.value })} />
+              </div>
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" className="aws-btn aws-btn-secondary" onClick={() => setVersionForm(null)}>Cancel</button>
+                <button type="submit" className="aws-btn aws-btn-primary">Publish</button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

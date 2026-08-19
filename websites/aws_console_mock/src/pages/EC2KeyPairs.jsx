@@ -1,8 +1,9 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Search, X, ChevronDown, Copy } from 'lucide-react';
+import {Search, X, ChevronDown, Copy} from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function EC2KeyPairs() {
@@ -87,7 +88,7 @@ export default function EC2KeyPairs() {
           <h1 className="font-bold text-2xl">Key Pairs ({state.keyPairs.length})</h1>
           <div className="flex items-center gap-2">
             <TableToolbar p={paged} />
-            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <LastUpdated />
             <div className="relative">
               <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" disabled={!selected.length} onClick={() => setActionsOpen(!actionsOpen)}>
                 Actions <ChevronDown size={12} />

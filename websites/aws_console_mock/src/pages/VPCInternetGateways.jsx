@@ -1,8 +1,9 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Search, X, Plus } from 'lucide-react';
+import {Search, X, Plus} from 'lucide-react';
 
 export default function VPCInternetGateways() {
   const { state, dispatch, addFlash } = useStore();
@@ -51,7 +52,7 @@ export default function VPCInternetGateways() {
           <h1 className="font-bold text-2xl">Internet Gateways ({igws.length})</h1>
           <div className="flex items-center gap-2">
             <TableToolbar p={paged} />
-            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <LastUpdated />
             {selected.length === 1 && (() => {
               const igw = state.vpc.internetGateways.find(i => i.id === selected[0]);
               return igw?.state === 'detached'

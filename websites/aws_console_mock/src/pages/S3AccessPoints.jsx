@@ -1,7 +1,8 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Search, X, MapPin } from 'lucide-react';
+import {Search, X, MapPin} from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function S3AccessPoints() {
@@ -73,7 +74,7 @@ export default function S3AccessPoints() {
               <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-aws-text-disabled" />
               <input className="aws-input pl-8 text-sm w-56" placeholder="Find access points" value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            <button className="aws-btn-icon" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} /></button>
+            <LastUpdated />
             <button className="aws-btn aws-btn-secondary text-xs" disabled={!selected.length} onClick={handleDelete}>Delete</button>
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create access point</button>
           </div>

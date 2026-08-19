@@ -265,13 +265,13 @@ export default function VPCSubnets() {
           onConfirm={(rtId) => {
             dispatch({ type: 'RESOURCE_UPDATE', payload: { path: PATH, key: 'id', id: rtPick.id, fields: { routeTable: rtId } } });
             (state.vpc.routeTables || []).forEach(r => {
-              const has = (r.subnets || []).includes(rtPick.id);
+              const has = (r.associations || []).includes(rtPick.id);
               if (r.id === rtId && !has) {
                 dispatch({ type: 'RESOURCE_UPDATE', payload: { path: 'vpc.routeTables', key: 'id', id: r.id,
-                  fields: { subnets: [...(r.subnets || []), rtPick.id] } } });
+                  fields: { associations: [...(r.associations || []), rtPick.id] } } });
               } else if (r.id !== rtId && has) {
                 dispatch({ type: 'RESOURCE_UPDATE', payload: { path: 'vpc.routeTables', key: 'id', id: r.id,
-                  fields: { subnets: (r.subnets || []).filter(x => x !== rtPick.id) } } });
+                  fields: { associations: (r.associations || []).filter(x => x !== rtPick.id) } } });
               }
             });
             addFlash('success', `Associated ${rtPick.id} with route table ${rtId}`);

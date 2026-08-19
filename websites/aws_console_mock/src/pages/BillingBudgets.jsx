@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, X } from 'lucide-react';
+import {X} from 'lucide-react';
 
 export default function BillingBudgets() {
   const { state, dispatch, addFlash } = useStore();
@@ -105,7 +106,7 @@ export default function BillingBudgets() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold">All budgets ({budgets.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <LastUpdated />
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create budget</button>
           </div>
         </div>

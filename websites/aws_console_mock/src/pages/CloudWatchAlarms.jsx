@@ -1,8 +1,9 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Search, X, Plus } from 'lucide-react';
+import {Search, X, Plus} from 'lucide-react';
 import { format } from 'date-fns';
 
 const NAMESPACES = ['XWS/EC2', 'XWS/RDS', 'XWS/Lambda', 'XWS/S3', 'XWS/ApplicationELB', 'XWS/Billing', 'XWS/DynamoDB', 'XWS/SQS'];
@@ -50,7 +51,7 @@ export default function CloudWatchAlarms() {
           <h1 className="font-bold text-2xl">Alarms ({alarms.length})</h1>
           <div className="flex items-center gap-2">
             <TableToolbar p={paged} />
-            <button className="p-1.5 hover:bg-aws-disabled-bg" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+            <LastUpdated />
             {selected.length > 0 && <button className="aws-btn aws-btn-secondary text-xs" onClick={handleDelete}>Delete</button>}
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}><Plus size={14} className="inline mr-1" />Create alarm</button>
           </div>

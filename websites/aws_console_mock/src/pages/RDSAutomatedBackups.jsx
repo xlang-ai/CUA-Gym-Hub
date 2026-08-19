@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, X, Archive, Trash2 } from 'lucide-react';
+import {X, Archive, Trash2} from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function RDSAutomatedBackups() {
@@ -38,7 +39,7 @@ export default function RDSAutomatedBackups() {
       <div className="aws-card p-0 mb-4">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg flex items-center gap-2"><Archive size={18} /> Active instance backups ({active.length})</h2>
-          <button className="aws-btn-icon" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} /></button>
+          <LastUpdated />
         </div>
         <table className="aws-table">
           <thead>

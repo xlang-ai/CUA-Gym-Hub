@@ -58,7 +58,7 @@ export const RESOURCES = [
       { label: 'Available IPv4 addresses', field: 'availableIps' },
     ],
     tabs: [
-      { label: 'Route table', related: { path: 'vpc.routeTables', match: (row, res) => (row.subnets || []).includes(res.id) || row.main },
+      { label: 'Route table', related: { path: 'vpc.routeTables', match: (row, res) => (row.associations || []).includes(res.id) || row.main },
         columns: [['Route table ID', 'id'], ['Name', 'name'], ['Main', 'main', (v) => (v ? 'Yes' : 'No')]] },
       { label: 'Network ACL', related: { path: 'vpc.networkAcls', match: (row, res) => row.vpcId === res.vpcId },
         columns: [['Network ACL ID', 'id'], ['Name', 'name'], ['Default', 'isDefault', (v) => (v ? 'Yes' : 'No')]] },
@@ -78,7 +78,7 @@ export const RESOURCES = [
     tabs: [
       { label: 'Routes', rows: (r) => r.routes || [],
         columns: [['Destination', 'destination'], ['Target', 'target'], ['Status', 'status']] },
-      { label: 'Subnet associations', related: { path: 'vpc.subnets', match: (row, res) => (res.subnets || []).includes(row.id) },
+      { label: 'Subnet associations', related: { path: 'vpc.subnets', match: (row, res) => (res.associations || []).includes(row.id) },
         columns: [['Subnet ID', 'id'], ['Name', 'name'], ['IPv4 CIDR', 'cidr']] },
       { label: 'Edge associations', rows: () => [],
         columns: [['Gateway ID', 'id'], ['Type', 'type']],

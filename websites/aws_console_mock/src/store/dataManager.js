@@ -490,6 +490,18 @@ export const getDefaultData = () => ({
     }
   ],
 
+  lambdaAliases: [
+    { functionName: 'process-image-resize', name: 'prod', version: '1', description: 'Production traffic alias' },
+    { functionName: 'process-image-resize', name: 'dev', version: '$LATEST', description: 'Development testing alias' },
+    { functionName: 'api-auth-handler', name: 'live', version: '2', description: 'Live authorizer' },
+  ],
+  lambdaVersions: [
+    { functionName: 'process-image-resize', version: '$LATEST', description: 'Unpublished working copy', published: '' },
+    { functionName: 'process-image-resize', version: '1', description: 'Initial release', published: '2026-06-02 11:20:14' },
+    { functionName: 'api-auth-handler', version: '$LATEST', description: 'Unpublished working copy', published: '' },
+    { functionName: 'api-auth-handler', version: '1', description: 'First cut', published: '2026-05-11 08:03:52' },
+    { functionName: 'api-auth-handler', version: '2', description: 'Token cache added', published: '2026-07-19 14:41:09' },
+  ],
   lambdaLayers: [
     { name: "sharp-layer", arn: "arn:aws:lambda:us-east-1:123456789012:layer:sharp-layer", version: 1, runtime: "nodejs18.x", description: "Sharp image processing library", size: 8388608, created: "2024-01-15T10:00:00Z" },
     { name: "common-utils", arn: "arn:aws:lambda:us-east-1:123456789012:layer:common-utils", version: 3, runtime: "python3.12", description: "Common Python utilities and helpers", size: 1048576, created: "2024-03-01T09:00:00Z" },
@@ -644,6 +656,10 @@ export const getDefaultData = () => ({
   // VPC
   // ========================
   vpc: {
+    virtualPrivateGateways: [
+      { id: 'vgw-0a1b2c3d4e5f6a7b8', name: 'corp-vgw', state: 'attached', type: 'ipsec.1',
+        vpcId: 'vpc-0abc1234def56789', amazonSideAsn: 64512 },
+    ],
     encryptionControls: [],
     flowLogs: [],
     vpcs: [
@@ -657,11 +673,11 @@ export const getDefaultData = () => ({
       { id: "subnet-0mno7890jkl12345", name: "public-subnet-1b", vpcId: "vpc-0abc1234def56789", cidr: "10.0.4.0/24", az: "us-east-1b", availableIps: 251, autoAssignPublicIp: true, routeTable: "rtb-0pub1234", type: "public" },
     ],
     routeTables: [
-      { id: "rtb-0pub1234", name: "public-rt", vpcId: "vpc-0abc1234def56789", associations: ["subnet-0def5678abc12345", "subnet-0mno7890jkl12345"], routes: [
+      { id: "rtb-0pub1234", main: false, name: "public-rt", vpcId: "vpc-0abc1234def56789", associations: ["subnet-0def5678abc12345", "subnet-0mno7890jkl12345"], routes: [
         { destination: "10.0.0.0/16", target: "local", status: "active" },
         { destination: "0.0.0.0/0", target: "igw-0abc1234", status: "active" }
       ]},
-      { id: "rtb-0priv5678", name: "private-rt", vpcId: "vpc-0abc1234def56789", associations: ["subnet-0ghi9012def34567", "subnet-0jkl3456ghi78901"], routes: [
+      { id: "rtb-0priv5678", main: true, name: "private-rt", vpcId: "vpc-0abc1234def56789", associations: ["subnet-0ghi9012def34567", "subnet-0jkl3456ghi78901"], routes: [
         { destination: "10.0.0.0/16", target: "local", status: "active" },
         { destination: "0.0.0.0/0", target: "nat-0abc1234def56789", status: "active" }
       ]},

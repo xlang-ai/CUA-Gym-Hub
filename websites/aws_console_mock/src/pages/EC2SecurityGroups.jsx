@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import ActionsMenu from '../components/ActionsMenu';
+import LastUpdated from '../components/LastUpdated';
+import TagsDialog from '../components/dialogs/TagsDialog';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Search, X, ChevronDown, Plus, Copy } from 'lucide-react';
+import { Search, X, ChevronDown, Plus, Copy } from 'lucide-react';
+
+const PATH = 'securityGroups';
 
 
 // Real console offers named types that pin protocol + port. "Custom TCP" frees the port.
@@ -54,6 +60,9 @@ export default function EC2SecurityGroups() {
   const [actionsOpen, setActionsOpen] = useState(false);
   const [ruleTab, setRuleTab] = useState('inbound');
   const [editRules, setEditRules] = useState(null); // { direction, rules: [] }
+  const navigate = useNavigate();
+  const [tagFor, setTagFor] = useState(null);
+  const [staleFor, setStaleFor] = useState(null);
 
   const sgs = (state.securityGroups || []).filter(sg =>
     !search || sg.name.toLowerCase().includes(search.toLowerCase()) || sg.id.toLowerCase().includes(search.toLowerCase())
@@ -63,9 +72,10 @@ export default function EC2SecurityGroups() {
   const toggleAll = () => setSelected(selected.length === sgs.length ? [] : sgs.map(sg => sg.id));
 
 
-  const openRuleEditor = (direction) => {
-    if (!detail) return;
-    const src = direction === 'inbound' ? detail.inboundRules : detail.outboundRules;
+  const openRuleEditor = (direction, sg) => {
+    const target = sg || detail;
+    if (!target) return;
+    const src = direction === 'inbound' ? target.inboundRules : target.outboundRules;
     setEditRules({ direction, rules: src.map(r => ({ ...r, type: ruleTypeLabel(r), portRange: String(rulePort(r)) })) });
   };
 
@@ -130,25 +140,103 @@ export default function EC2SecurityGroups() {
     addFlash('info', `Copied: ${text}`);
   };
 
+  const chosen = state.securityGroups.filter(sg => selected.includes(sg.id));
+  const one = chosen.length === 1 ? chosen[0] : null;
+
+  const csvExport = (header, rows, filename, kind) => {
+    const body = [header, ...rows]
+      .map(r => r.map(c => (/[",\n]/.test(String(c)) ? `"${String(c).replace(/"/g, '""')}"` : c)).join(','))
+      .join('\n');
+    try {
+      const url = URL.createObjectURL(new Blob([body], { type: 'text/csv;charset=utf-8' }));
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    } catch (e) { /* sandboxes may block the download; the recorded export still stands */ }
+    dispatch({ type: 'RECORD_EXPORT', payload: { kind, filename, rows: rows.length, bytes: body.length } });
+    addFlash('success', `Exported ${rows.length} row(s) to ${filename}`);
+  };
+
+  const exportGroups = () => {
+    const src = chosen.length ? chosen : state.securityGroups;
+    csvExport(['Security group ID', 'Security group name', 'VPC ID', 'Description', 'Inbound rules', 'Outbound rules'],
+      src.map(sg => [sg.id, sg.name, sg.vpcId, sg.description, (sg.inboundRules || []).length, (sg.outboundRules || []).length]),
+      'security-groups.csv', 'security-groups-csv');
+  };
+
+  const exportRules = () => {
+    const src = chosen.length ? chosen : state.securityGroups;
+    const rows = [];
+    src.forEach(sg => {
+      (sg.inboundRules || []).forEach(r => rows.push([sg.id, sg.name, 'Inbound', r.protocol, r.port, r.source, r.description || '']));
+      (sg.outboundRules || []).forEach(r => rows.push([sg.id, sg.name, 'Outbound', r.protocol, r.port, r.source, r.description || '']));
+    });
+    csvExport(['Security group ID', 'Security group name', 'Direction', 'Protocol', 'Port range', 'Source/Destination', 'Description'],
+      rows, 'security-group-rules.csv', 'security-group-rules-csv');
+  };
+
+  // A rule is stale when it references a security group that no longer exists. Computed from
+  // current state, so the dialog reports something true rather than announcing a simulation.
+  const staleRules = (sg) => {
+    const ids = new Set(state.securityGroups.map(x => x.id));
+    const out = [];
+    ['inboundRules', 'outboundRules'].forEach(dir => {
+      (sg[dir] || []).forEach((r, i) => {
+        const ref = String(r.source || '');
+        if (/^sg-/.test(ref) && !ids.has(ref)) out.push({ dir, index: i, rule: r });
+      });
+    });
+    return out;
+  };
+
+  const copyToNew = () => {
+    const id = `sg-${Math.random().toString(16).substr(2, 17)}`;
+    dispatch({ type: 'CREATE_SECURITY_GROUP', payload: {
+      id, name: `${one.name}-copy`, description: `Copy of ${one.name}`, vpcId: one.vpcId,
+      inboundRules: (one.inboundRules || []).map(r => ({ ...r })),
+      outboundRules: (one.outboundRules || []).map(r => ({ ...r })),
+      ownerId: one.ownerId || '123456789012',
+    }});
+    addFlash('success', `Created ${id} as a copy of ${one.id}`);
+  };
+
+  // Item list captured from the live VPC console on 2026-08-18:
+  // reference/capture/extracted/vpc-family-actions.2026-08-18.json.
+  const actions = [
+    { label: 'Create security group', onSelect: () => setShowCreate(true) },
+    { label: 'Export security groups to CSV', onSelect: exportGroups },
+    { label: 'Export security groups inbound/outbound rules', onSelect: exportRules },
+    { separator: true },
+    { label: 'View details', disabled: !one, reason: 'Select exactly one security group',
+      onSelect: () => navigate(`/ec2/security-groups/${one.id}`) },
+    { label: 'Edit inbound rules', disabled: !one, reason: 'Select exactly one security group',
+      onSelect: () => { setDetailId(one.id); openRuleEditor('inbound', one); } },
+    { label: 'Edit outbound rules', disabled: !one, reason: 'Select exactly one security group',
+      onSelect: () => { setDetailId(one.id); openRuleEditor('outbound', one); } },
+    { separator: true },
+    { label: 'Manage tags', disabled: !one, reason: 'Select exactly one security group',
+      onSelect: () => setTagFor(one) },
+    { label: 'Manage stale rules', disabled: !one, reason: 'Select exactly one security group',
+      onSelect: () => setStaleFor(one) },
+    { label: 'Copy to new security group', disabled: !one, reason: 'Select exactly one security group',
+      onSelect: copyToNew },
+    { label: 'Share security group', disabled: true,
+      reason: 'Sharing a security group requires XWS Resource Access Manager, which is not modelled',
+      onSelect: () => {} },
+    { separator: true },
+    { label: 'Delete security groups', danger: true, disabled: chosen.length === 0,
+      reason: 'Select at least one security group', onSelect: handleDelete },
+  ];
+
   return (
     <div className="space-y-0">
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h1 className="font-bold text-2xl">Security Groups ({state.securityGroups.length})</h1>
           <div className="flex items-center gap-2">
-            <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
-            <div className="relative">
-              <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" disabled={!selected.length} onClick={() => setActionsOpen(!actionsOpen)}>
-                Actions <ChevronDown size={12} />
-              </button>
-              {actionsOpen && selected.length > 0 && (
-                <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-aws-border shadow-lg z-20" style={{ borderRadius: 8 }}>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', `Copied ARN for ${selected.length} security group(s)`); setActionsOpen(false); }}>Copy ARN</button>
-                  <button className="w-full text-left px-4 py-2 text-sm hover:bg-aws-status-info-bg/30" onClick={() => { addFlash('info', `Manage tags for ${selected.length} security group(s) (simulated)`); setActionsOpen(false); }}>Manage tags</button>
-                </div>
-              )}
-            </div>
-            <button className="aws-btn aws-btn-secondary text-xs text-aws-error" disabled={!selected.length} onClick={handleDelete}>Delete security group</button>
+            <LastUpdated />
+            <ActionsMenu items={actions} />
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create security group</button>
           </div>
         </div>
@@ -418,6 +506,53 @@ export default function EC2SecurityGroups() {
           </div>
         </div>
       )}
+      {staleFor && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white shadow-xl w-full max-w-2xl border border-aws-border">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
+              <h3 className="font-bold">Manage stale rules</h3>
+              <button onClick={() => setStaleFor(null)} aria-label="Close"><X size={18} /></button>
+            </div>
+            <div className="p-4 space-y-3 text-sm">
+              <p className="text-aws-text-secondary">
+                Security group: <span className="font-mono">{staleFor.id}</span>. A rule is stale when it
+                references a security group that no longer exists.
+              </p>
+              {staleRules(staleFor).length === 0 ? (
+                <p className="text-aws-text-secondary">No stale rules. Every referenced security group still exists.</p>
+              ) : (
+                <table className="aws-table">
+                  <thead><tr><th>Direction</th><th>Protocol</th><th>Port range</th><th>Reference</th><th /></tr></thead>
+                  <tbody>
+                    {staleRules(staleFor).map((sr, i) => (
+                      <tr key={i}>
+                        <td>{sr.dir === 'inboundRules' ? 'Inbound' : 'Outbound'}</td>
+                        <td>{sr.rule.protocol}</td>
+                        <td>{sr.rule.port}</td>
+                        <td className="font-mono">{sr.rule.source}</td>
+                        <td>
+                          <button className="aws-btn aws-btn-secondary text-xs"
+                            onClick={() => {
+                              const next = (staleFor[sr.dir] || []).filter((_, k) => k !== sr.index);
+                              dispatch({ type: 'RESOURCE_UPDATE', payload: { path: PATH, key: 'id', id: staleFor.id, fields: { [sr.dir]: next } } });
+                              addFlash('success', `Removed a stale ${sr.dir === 'inboundRules' ? 'inbound' : 'outbound'} rule from ${staleFor.id}`);
+                              setStaleFor({ ...staleFor, [sr.dir]: next });
+                            }}>Remove</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              <div className="flex justify-end pt-2">
+                <button className="aws-btn aws-btn-primary" onClick={() => setStaleFor(null)}>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tagFor && <TagsDialog path={PATH} keyField="id" resource={tagFor} label="Security group" onClose={() => setTagFor(null)} />}
     </div>
   );
 }

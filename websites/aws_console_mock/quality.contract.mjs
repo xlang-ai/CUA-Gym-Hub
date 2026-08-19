@@ -550,6 +550,26 @@ await check('S8', 'every registry route is actually routed', () => {
 });
 
 
+await check('S9', 'no control announces success for work it did not do', () => {
+  // 41 pages carried a Refresh button whose entire effect was addFlash('success', 'Refreshed').
+  // That is the same defect as a menu item that opens nothing, except louder: the agent is told
+  // the action succeeded. Replaced by LastUpdated, which moves something the user can see.
+  const files = sh("find src/pages src/components -name '*.jsx'").split('\n').filter(Boolean);
+  const bad = [];
+  for (const f of files) {
+    const src = read(f);
+    // A flash whose message claims completion, in a handler that does nothing else.
+    for (const m of src.matchAll(/onClick=\{\(\) => addFlash\('(?:success|info)',\s*'([^']*)'\)\}/g)) {
+      if (/refresh|reload|updated?|saved?|deleted?|created?|published?|applied|sandbox|locally|simulated/i.test(m[1])) {
+        bad.push(`${f.replace(/^src\//, '')}: "${m[1]}"`);
+      }
+    }
+  }
+  assert(bad.length === 0, [...new Set(bad)].join('; '));
+  return `${files.length} files, no success message stands in for an action`;
+});
+
+
 // ---------------------------------------------------------------- report
 const pass = results.filter((r) => r.ok).length;
 const fail = results.length - pass;

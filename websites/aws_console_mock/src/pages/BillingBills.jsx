@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, Download, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import {Download, ChevronDown, ChevronLeft, ChevronRight} from 'lucide-react';
 import { format } from 'date-fns';
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -111,7 +112,7 @@ export default function BillingBills() {
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-sm">Charges by service</h2>
-          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <LastUpdated />
         </div>
         <table className="aws-table">
           <thead>
@@ -136,7 +137,7 @@ export default function BillingBills() {
       <div className="aws-card p-0">
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-sm">All bills ({bills.length})</h2>
-          <button className="p-1.5 hover:bg-aws-disabled-bg rounded" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} className="text-aws-text-secondary" /></button>
+          <LastUpdated />
         </div>
         <table className="aws-table">
           <thead><tr><th>Period</th><th>Total</th><th>Status</th><th>Due date</th><th>Paid date</th><th></th></tr></thead>

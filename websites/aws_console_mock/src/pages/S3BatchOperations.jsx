@@ -1,7 +1,8 @@
 import { usePaged, TableToolbar, TablePager } from '../components/TablePaging';
+import LastUpdated from '../components/LastUpdated';
 import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
-import { RefreshCw, X, ListChecks, Play, Ban, Trash2 } from 'lucide-react';
+import {X, ListChecks, Play, Ban, Trash2} from 'lucide-react';
 import { format } from 'date-fns';
 
 const OPERATIONS = ['PUT_OBJECT_COPY', 'PUT_OBJECT_TAGGING', 'PUT_OBJECT_ACL', 'S3_INITIATE_RESTORE_OBJECT', 'S3_REPLICATE_OBJECT'];
@@ -79,7 +80,7 @@ export default function S3BatchOperations() {
         <div className="flex items-center justify-between px-4 py-3 border-b border-aws-border">
           <h2 className="font-bold text-lg flex items-center gap-2"><ListChecks size={18} /> Jobs ({jobs.length})</h2>
           <div className="flex items-center gap-2">
-            <button className="aws-btn-icon" onClick={() => addFlash('success', 'Refreshed')}><RefreshCw size={16} /></button>
+            <LastUpdated />
             <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowCreate(true)}>Create job</button>
           </div>
         </div>
