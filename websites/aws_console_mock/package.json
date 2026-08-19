@@ -13,7 +13,9 @@
     "depth": "node depth-report.mjs",
     "walk:ec2": "node walkthroughs/ec2-actions.mjs",
     "walk:types": "node walkthroughs/instance-types.mjs",
-    "walk:details": "node walkthroughs/detail-pages.mjs"
+    "walk:details": "node walkthroughs/detail-pages.mjs",
+    "walk:vpcfam": "node walkthroughs/vpc-family.mjs",
+    "walk": "for w in vpc-actions vpc-family ec2-actions instance-types detail-pages; do node walkthroughs/$w.mjs || exit 1; done"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",

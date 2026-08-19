@@ -39,7 +39,7 @@ for (const r of RESOURCES) {
       tabs: [...document.querySelectorAll('[role=tab]')].map((t) => t.innerText.trim()),
       bad: /Something went wrong|Unknown resource|Resource not found/i.test(document.body.innerText),
     }));
-    const empty = [], hollow = [];
+    const empty = [], hollow = [], dead = [];
     for (const t of m.tabs) {
       await page.evaluate((l) => [...document.querySelectorAll('[role=tab]')].find((x) => x.innerText.trim() === l).click(), t);
       await new Promise((res) => setTimeout(res, 130));
@@ -47,17 +47,32 @@ for (const r of RESOURCES) {
         const p = document.querySelector('[role=tabpanel]');
         if (!p) return null;
         const vals = [...p.querySelectorAll('dd')].map((d) => d.innerText.trim());
-        return { text: p.innerText.trim(), values: vals };
+        // Table columns matter as much as field grids. Checking only <dd> let a table whose
+        // column keys did not match the resource's fields pass, because the OTHER columns in
+        // the same table still resolved — the wrong keys just rendered a dash forever.
+        const cols = [];
+        for (const tb of p.querySelectorAll('table')) {
+          const heads = [...tb.querySelectorAll('thead th')].map((h) => h.innerText.trim());
+          const rows = [...tb.querySelectorAll('tbody tr')];
+          if (!rows.length) continue;
+          heads.forEach((h, i) => {
+            const cells = rows.map((r) => (r.cells[i]?.innerText || '').trim());
+            if (cells.length && cells.every((c) => c === '–' || c === '')) cols.push(h);
+          });
+        }
+        return { text: p.innerText.trim(), values: vals, deadColumns: cols };
       });
       if (!panel || !panel.text) { empty.push(t); continue; }
       if (panel.values.length && panel.values.every((v) => v === '–' || v === '')) hollow.push(t);
+      if (panel.deadColumns.length) dead.push(`${t}[${panel.deadColumns.join('/')}]`);
     }
-    const ok = !m.bad && m.tabs.length === r.tabs.length && !empty.length && !hollow.length;
+    const ok = !m.bad && m.tabs.length === r.tabs.length && !empty.length && !hollow.length && !dead.length;
     const notes = [
       m.bad && 'CRASHED',
       m.tabs.length !== r.tabs.length && `tabs ${m.tabs.length}/${r.tabs.length}`,
       empty.length && `EMPTY:${empty.join(',')}`,
       hollow.length && `ALL-PLACEHOLDER:${hollow.join(',')}`,
+      dead.length && `DEAD-COLUMN:${dead.join(',')}`,
     ].filter(Boolean).join(' ');
     console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${r.detailRoute.padEnd(32)} "${m.h1.slice(0, 24)}" ${m.tabs.length} tabs ${notes}`);
     if (ok) pass++; else { fail++; problems.push(`${r.detailRoute}: ${notes}`); }

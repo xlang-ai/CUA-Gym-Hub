@@ -1,0 +1,541 @@
+{
+  "base": "http://127.0.0.1:5273",
+  "routes": [
+    {
+      "route": "/",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 782,
+      "h1": "Console Home Info"
+    },
+    {
+      "route": "/ec2",
+      "rows": 5,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 885,
+      "h1": "Instances (5)"
+    },
+    {
+      "route": "/ec2/dashboard",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 1078,
+      "h1": "Resources"
+    },
+    {
+      "route": "/ec2/instance-types",
+      "rows": 10,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 1007,
+      "h1": "Instance types (16)"
+    },
+    {
+      "route": "/ec2/launch-templates",
+      "rows": 2,
+      "linked": 2,
+      "tabs": 0,
+      "chars": 528,
+      "h1": "Launch templates (2)"
+    },
+    {
+      "route": "/ec2/amis",
+      "rows": 2,
+      "linked": 2,
+      "tabs": 2,
+      "chars": 548,
+      "h1": "AMIs (2)"
+    },
+    {
+      "route": "/ec2/volumes",
+      "rows": 1,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 360,
+      "h1": "Volumes (0)"
+    },
+    {
+      "route": "/ec2/snapshots",
+      "rows": 3,
+      "linked": 3,
+      "tabs": 0,
+      "chars": 671,
+      "h1": "Snapshots (3)"
+    },
+    {
+      "route": "/ec2/security-groups",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 895,
+      "h1": "Security Groups (4)"
+    },
+    {
+      "route": "/ec2/key-pairs",
+      "rows": 3,
+      "linked": 3,
+      "tabs": 0,
+      "chars": 691,
+      "h1": "Key Pairs (3)"
+    },
+    {
+      "route": "/ec2/elastic-ips",
+      "rows": 3,
+      "linked": 3,
+      "tabs": 0,
+      "chars": 655,
+      "h1": "Elastic IP addresses (3)"
+    },
+    {
+      "route": "/ec2/load-balancers",
+      "rows": 2,
+      "linked": 2,
+      "tabs": 0,
+      "chars": 595,
+      "h1": "Load Balancers (2)"
+    },
+    {
+      "route": "/ec2/target-groups",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 468,
+      "h1": "Target groups (2)"
+    },
+    {
+      "route": "/ec2/auto-scaling-groups",
+      "rows": 1,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 434,
+      "h1": "Auto Scaling groups (1)"
+    },
+    {
+      "route": "/s3",
+      "rows": 1,
+      "linked": 0,
+      "tabs": 3,
+      "chars": 362,
+      "h1": "Buckets"
+    },
+    {
+      "route": "/s3/access-points",
+      "rows": 3,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 856,
+      "h1": "Access Points"
+    },
+    {
+      "route": "/s3/batch-operations",
+      "rows": 3,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 769,
+      "h1": "Batch Operations"
+    },
+    {
+      "route": "/s3/storage-lens",
+      "rows": 5,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 840,
+      "h1": "Storage Lens"
+    },
+    {
+      "route": "/lambda",
+      "rows": 4,
+      "linked": 4,
+      "tabs": 0,
+      "chars": 622,
+      "h1": "Functions (4)"
+    },
+    {
+      "route": "/lambda/dashboard",
+      "rows": 4,
+      "linked": 4,
+      "tabs": 0,
+      "chars": 494,
+      "h1": "Lambda Dashboard"
+    },
+    {
+      "route": "/lambda/layers",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 359,
+      "h1": "Layers (2)"
+    },
+    {
+      "route": "/lambda/applications",
+      "rows": 3,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 864,
+      "h1": "Applications"
+    },
+    {
+      "route": "/rds",
+      "rows": 3,
+      "linked": 3,
+      "tabs": 0,
+      "chars": 496,
+      "h1": "Databases (3)"
+    },
+    {
+      "route": "/rds/dashboard",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 437,
+      "h1": "XWS RDS Dashboard"
+    },
+    {
+      "route": "/rds/snapshots",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 617,
+      "h1": "Snapshots (4)"
+    },
+    {
+      "route": "/rds/subnet-groups",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 374,
+      "h1": ""
+    },
+    {
+      "route": "/rds/parameter-groups",
+      "rows": 3,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 619,
+      "h1": ""
+    },
+    {
+      "route": "/rds/query-editor",
+      "rows": 3,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 1009,
+      "h1": "Query Editor"
+    },
+    {
+      "route": "/rds/performance-insights",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 1146,
+      "h1": "Performance Insights"
+    },
+    {
+      "route": "/rds/automated-backups",
+      "rows": 3,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 1115,
+      "h1": "Automated backups"
+    },
+    {
+      "route": "/iam",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 495,
+      "h1": "IAM Dashboard"
+    },
+    {
+      "route": "/iam/users",
+      "rows": 5,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 493,
+      "h1": "Users (5)"
+    },
+    {
+      "route": "/iam/groups",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 354,
+      "h1": "User groups (4)"
+    },
+    {
+      "route": "/iam/roles",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 571,
+      "h1": "Roles (4)"
+    },
+    {
+      "route": "/iam/policies",
+      "rows": 10,
+      "linked": 10,
+      "tabs": 3,
+      "chars": 1291,
+      "h1": "Policies (10)"
+    },
+    {
+      "route": "/iam/identity-providers",
+      "rows": 1,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 321,
+      "h1": "Identity providers (1)"
+    },
+    {
+      "route": "/iam/account-settings",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 714,
+      "h1": "Account Settings"
+    },
+    {
+      "route": "/billing",
+      "rows": 7,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 1871,
+      "h1": "Billing and Cost Management home Info"
+    },
+    {
+      "route": "/billing/cost-explorer",
+      "rows": 6,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 525,
+      "h1": "Cost Explorer"
+    },
+    {
+      "route": "/billing/bills",
+      "rows": 9,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 736,
+      "h1": "Bills"
+    },
+    {
+      "route": "/billing/budgets",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 313,
+      "h1": "Budgets"
+    },
+    {
+      "route": "/billing/payment-methods",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 227,
+      "h1": "Payment methods"
+    },
+    {
+      "route": "/billing/tax-settings",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 387,
+      "h1": "Tax Settings"
+    },
+    {
+      "route": "/cloudwatch",
+      "rows": 5,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 622,
+      "h1": "CloudWatch Dashboard"
+    },
+    {
+      "route": "/cloudwatch/alarms",
+      "rows": 5,
+      "linked": 5,
+      "tabs": 0,
+      "chars": 758,
+      "h1": "Alarms (5)"
+    },
+    {
+      "route": "/cloudwatch/logs",
+      "rows": 8,
+      "linked": 8,
+      "tabs": 0,
+      "chars": 696,
+      "h1": "Log Groups (8)"
+    },
+    {
+      "route": "/cloudwatch/dashboards",
+      "rows": 3,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 351,
+      "h1": "Dashboards (3)"
+    },
+    {
+      "route": "/vpc",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 423,
+      "h1": "VPC Dashboard"
+    },
+    {
+      "route": "/vpc/vpcs",
+      "rows": 2,
+      "linked": 2,
+      "tabs": 0,
+      "chars": 428,
+      "h1": "Your VPCs (2)"
+    },
+    {
+      "route": "/vpc/encryption-controls",
+      "rows": 1,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 392,
+      "h1": "VPC encryption controls (0)"
+    },
+    {
+      "route": "/vpc/subnets",
+      "rows": 4,
+      "linked": 4,
+      "tabs": 0,
+      "chars": 700,
+      "h1": "Subnets (4)"
+    },
+    {
+      "route": "/vpc/route-tables",
+      "rows": 2,
+      "linked": 2,
+      "tabs": 0,
+      "chars": 374,
+      "h1": "Route Tables (2)"
+    },
+    {
+      "route": "/vpc/internet-gateways",
+      "rows": 1,
+      "linked": 1,
+      "tabs": 0,
+      "chars": 327,
+      "h1": "Internet Gateways (1)"
+    },
+    {
+      "route": "/vpc/nat-gateways",
+      "rows": 1,
+      "linked": 1,
+      "tabs": 0,
+      "chars": 391,
+      "h1": "NAT Gateways (1)"
+    },
+    {
+      "route": "/dynamodb",
+      "rows": 3,
+      "linked": 3,
+      "tabs": 0,
+      "chars": 405,
+      "h1": "Tables (3)"
+    },
+    {
+      "route": "/dynamodb/tables",
+      "rows": 3,
+      "linked": 3,
+      "tabs": 0,
+      "chars": 405,
+      "h1": "Tables (3)"
+    },
+    {
+      "route": "/sns",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 591,
+      "h1": "Topics (4)"
+    },
+    {
+      "route": "/sns/topics",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 591,
+      "h1": "Topics (4)"
+    },
+    {
+      "route": "/sqs",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 315,
+      "h1": "Queues (4)"
+    },
+    {
+      "route": "/sqs/queues",
+      "rows": 4,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 315,
+      "h1": "Queues (4)"
+    },
+    {
+      "route": "/route53",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 284,
+      "h1": "Hosted zones (2)"
+    },
+    {
+      "route": "/route53/hosted-zones",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 284,
+      "h1": "Hosted zones (2)"
+    },
+    {
+      "route": "/cloudfront",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 409,
+      "h1": "Distributions (2)"
+    },
+    {
+      "route": "/cloudfront/distributions",
+      "rows": 2,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 409,
+      "h1": "Distributions (2)"
+    },
+    {
+      "route": "/cloudtrail",
+      "rows": 1,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 641,
+      "h1": "Event history"
+    },
+    {
+      "route": "/cloudtrail/events",
+      "rows": 1,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 641,
+      "h1": "Event history"
+    },
+    {
+      "route": "/go",
+      "rows": 0,
+      "linked": 0,
+      "tabs": 0,
+      "chars": 116651,
+      "h1": ""
+    }
+  ]
+}

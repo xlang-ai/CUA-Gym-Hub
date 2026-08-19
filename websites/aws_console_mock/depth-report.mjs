@@ -51,6 +51,7 @@ for (const r of routes) {
         linked,
         tabs: document.querySelectorAll('[role=tab]').length,
         chars: document.body.innerText.length,
+        h1: (document.querySelector('h1')?.innerText || '').trim(),
       };
     })) });
   } catch (e) { out.push({ route: r, error: e.message }); }
@@ -71,6 +72,15 @@ if (dead.length) {
   for (const o of dead.sort((a, b) => b.rows - a.rows)) {
     console.log(`    ${o.route.padEnd(32)} ${String(o.rows).padStart(3)} rows`);
   }
+}
+// A route that renders no <h1> has no page title, whatever the source says. The source-level
+// gate cannot see that an h1 lives only inside a detail branch.
+// /go is the state-inspection surface the harness reads, not a console page.
+const TITLE_EXEMPT = new Set(['/go']);
+const noTitle = out.filter((o) => !o.error && !o.h1 && !TITLE_EXEMPT.has(o.route));
+if (noTitle.length) {
+  console.log(`\n  routes rendering no <h1> (${noTitle.length}) — source-level gate S1 cannot see this`);
+  for (const o of noTitle) console.log(`    ${o.route}`);
 }
 const errs = out.filter((o) => o.error);
 if (errs.length) console.log(`\n  ${errs.length} route(s) failed: ${errs.map((e) => e.route).join(', ')}`);

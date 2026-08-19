@@ -788,8 +788,9 @@ function reducer(prev, action) {
     }
     case 'RESOURCE_SET_TAGS':
     case 'RESOURCE_UPDATE':
+    case 'RESOURCE_CREATE':
     case 'RESOURCE_DELETE': {
-      const { path, key = 'id', id, fields, tags } = action.payload;
+      const { path, key = 'id', id, fields, tags, item } = action.payload;
       const segs = path.split('.');
       const apply = (node, i) => {
         if (i === segs.length - 1) {
@@ -797,8 +798,10 @@ function reducer(prev, action) {
           const next =
             action.type === 'RESOURCE_DELETE'
               ? list.filter((r) => r[key] !== id)
-              : list.map((r) => r[key] !== id ? r
-                  : action.type === 'RESOURCE_SET_TAGS' ? { ...r, tags } : { ...r, ...fields });
+              : action.type === 'RESOURCE_CREATE'
+                ? [...list, item]
+                : list.map((r) => r[key] !== id ? r
+                    : action.type === 'RESOURCE_SET_TAGS' ? { ...r, tags } : { ...r, ...fields });
           return { ...node, [segs[i]]: next };
         }
         return { ...node, [segs[i]]: apply(node[segs[i]] || {}, i + 1) };

@@ -4,6 +4,64 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.6.4
+
+Captured VPC-family menus wired, and four gaps in my own instruments closed.
+
+### Five wrong-branch page titles
+
+Three EC2 pages and two RDS pages rendered **no `<h1>` at all** in their list view — the page's
+default state. Each declared one, but only inside its *detail* branch, so the source-level gate
+S1 passed while the rendered list had no title. This is the same wrong-branch defect as 1.2.0's
+unreachable IAM modal, and a source scan structurally cannot see it.
+
+`depth-report.mjs` now reads the rendered `h1` on every route and lists the ones that have none;
+gate **S1b** is a meta-gate keeping that check in place, since S1 would keep passing without it.
+All 67 routes now render a title.
+
+### A back link that quietly went to Console Home
+
+1.6.3 added a network-ACL **detail** page whose `listRoute` had no `<Route>` at all, so its back
+link fell through to the catch-all and landed on Console Home. Nothing caught it — the 404
+surface renders its own `h1`, so even the new rendered-title crawl read it as healthy.
+
+Gate **S8** now asserts every registry route is routed, and `/vpc/network-acls` exists as a real
+page with the seven captured menu items, rule editors for both directions, subnet associations,
+and a guard that refuses to delete the default ACL.
+
+### `walk:details` only checked half of each panel
+
+The tab check inspected field grids (`<dd>`) and ignored **table cells entirely**, so a table
+whose column keys did not match the resource's fields passed silently — the wrong keys just
+rendered a dash forever while the other columns in the same table resolved. Extended to flag any
+column whose every cell is a placeholder. It immediately found five: security-group rules (no
+`ruleId`; outbound stores its peer in `source`), target-group targets (no zone), network-ACL rules
+(`ruleNumber`/`allow`, not `rule`/`action`), Route 53 records (no routing policy), CloudFront
+origins (`domainName`/`id`). All corrected.
+
+### H3 could not see one directory down
+
+The trademark gate globbed `src/components/*.jsx`, which does not reach `src/components/dialogs/` —
+a directory this release creates. A trademark string in a shared dialog would have shipped unseen,
+the same blind spot that once hid 38 strings in `dataManager.js`. Now a recursive `find`, and H3b
+requires it stay one.
+
+### Subnet and network-ACL menus, from the capture
+
+Both wired from `vpc-family-actions.2026-08-18.json`, with the console's own gating: `Edit IPv6
+CIDRs` disabled when the subnet has no IPv6 association, `Share subnet` permanently disabled
+because Resource Access Manager is not modelled — each stating its reason rather than doing
+nothing. `Edit route table association` updates **both sides** of the association.
+
+Shared dialogs extracted so the next four pages do not each grow their own copy: `TagsDialog`,
+`PickerDialog`, `FlowLogDialog`, plus a generic `RESOURCE_CREATE`.
+
+`npm run walk:vpcfam` — 9/9, including that both menus equal the captured list **with no extras**,
+so an invented item fails the run instead of scoring under `action_coverage`.
+
+`action_coverage` 37.8% → **40.5%**. Sourced CFI 63.4% → **64.2%** — it moved this time, because
+this work is checked against the console rather than inferred.
+
 ## 1.6.3
 
 The second layer across 26 resources, and the VPC menu corrected against the console.

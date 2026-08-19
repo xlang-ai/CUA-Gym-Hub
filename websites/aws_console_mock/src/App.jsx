@@ -72,6 +72,7 @@ import CloudWatchDashboards from './pages/CloudWatchDashboards';
 import VPCDashboard from './pages/VPCDashboard';
 import VPCList from './pages/VPCList';
 import VPCEncryptionControls from './pages/VPCEncryptionControls';
+import VPCNetworkAcls from './pages/VPCNetworkAcls';
 import ResourceDetailPage from './pages/ResourceDetailPage';
 import { RESOURCES } from './lib/resourceRegistry';
 import VPCSubnets from './pages/VPCSubnets';
@@ -220,6 +221,7 @@ function App() {
             <Route path="/vpc" element={<VPCDashboard />} />
             <Route path="/vpc/vpcs" element={<VPCList />} />
             <Route path="/vpc/encryption-controls" element={<VPCEncryptionControls />} />
+            <Route path="/vpc/network-acls" element={<VPCNetworkAcls />} />
             <Route path="/vpc/subnets" element={<VPCSubnets />} />
             <Route path="/vpc/route-tables" element={<VPCRouteTables />} />
             <Route path="/vpc/internet-gateways" element={<VPCInternetGateways />} />

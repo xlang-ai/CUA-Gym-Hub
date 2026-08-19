@@ -99,11 +99,11 @@ export const RESOURCES = [
     ],
     tabs: [
       { label: 'Inbound rules', rows: (r) => r.inboundRules || [],
-        columns: [['Security group rule ID', 'ruleId'], ['Port range', 'portRange'], ['Protocol', 'protocol'],
-                  ['Source', 'source'], ['Description', 'description']] },
+        columns: [['Protocol', 'protocol'], ['Port range', 'port'], ['Source', 'source'], ['Description', 'description']] },
+      // Outbound rules store the peer in `source` too, so the console's "Destination" heading
+      // reads that field rather than a `destination` key the data does not have.
       { label: 'Outbound rules', rows: (r) => r.outboundRules || [],
-        columns: [['Security group rule ID', 'ruleId'], ['Port range', 'portRange'], ['Protocol', 'protocol'],
-                  ['Destination', 'destination'], ['Description', 'description']] },
+        columns: [['Protocol', 'protocol'], ['Port range', 'port'], ['Destination', 'source'], ['Description', 'description']] },
       tagTab,
     ],
   },
@@ -302,7 +302,7 @@ export const RESOURCES = [
     ],
     tabs: [
       { label: 'Targets', rows: (r) => r.targets || [],
-        columns: [['Instance ID', 'id'], ['Port', 'port'], ['Zone', 'az'], ['Health status', 'health']],
+        columns: [['Instance ID', 'id'], ['Port', 'port'], ['Health status', 'health']],
         empty: 'No targets registered with this target group.' },
       // healthCheck is an object, not a scalar — rendering it directly threw
       // "Objects are not valid as a React child". Expanded into its real keys.
@@ -406,9 +406,11 @@ export const RESOURCES = [
     ],
     tabs: [
       { label: 'Inbound rules', rows: (r) => r.inbound || [],
-        columns: [['Rule number', 'rule'], ['Type', 'type'], ['Protocol', 'protocol'], ['Port range', 'portRange'], ['Source', 'source'], ['Allow/Deny', 'action']] },
+        columns: [['Rule number', 'ruleNumber'], ['Protocol', 'protocol'], ['Port range', 'portRange'],
+                  ['Source', 'source'], ['Allow/Deny', 'allow', (v) => (v ? 'Allow' : 'Deny')]] },
       { label: 'Outbound rules', rows: (r) => r.outbound || [],
-        columns: [['Rule number', 'rule'], ['Type', 'type'], ['Protocol', 'protocol'], ['Port range', 'portRange'], ['Destination', 'destination'], ['Allow/Deny', 'action']] },
+        columns: [['Rule number', 'ruleNumber'], ['Protocol', 'protocol'], ['Port range', 'portRange'],
+                  ['Destination', 'destination'], ['Allow/Deny', 'allow', (v) => (v ? 'Allow' : 'Deny')]] },
       { label: 'Subnet associations', rows: (r) => (r.associations || []).map((a) => (typeof a === 'string' ? { id: a } : a)),
         columns: [['Subnet ID', 'id']], empty: 'This network ACL is not associated with any subnet.' },
       tagTab,
@@ -549,7 +551,7 @@ export const RESOURCES = [
     ],
     tabs: [
       { label: 'Records', related: { path: 'route53.records', match: (row, res) => row.zoneId === res.id || row.zone === res.name },
-        columns: [['Record name', 'name'], ['Type', 'type'], ['Routing policy', 'routingPolicy'], ['Value', 'value'], ['TTL', 'ttl']],
+        columns: [['Record name', 'name'], ['Type', 'type'], ['Value', 'value'], ['TTL', 'ttl']],
         empty: 'This hosted zone has no records.' },
       tagTab,
     ],
@@ -567,8 +569,8 @@ export const RESOURCES = [
       { label: 'Last modified', field: 'lastModified' },
     ],
     tabs: [
-      { label: 'Origins', rows: (r) => (r.origins || []).map((o) => (typeof o === 'string' ? { domain: o } : o)),
-        columns: [['Origin domain', 'domain'], ['Origin type', 'type']], empty: 'No origins configured.' },
+      { label: 'Origins', rows: (r) => (r.origins || []).map((o) => (typeof o === 'string' ? { domainName: o, id: o } : o)),
+        columns: [['Origin domain', 'domainName'], ['Origin name', 'id']], empty: 'No origins configured.' },
       { label: 'Behaviors', rows: (r) => (r.defaultCacheBehavior ? [{ path: 'Default (*)', policy: r.defaultCacheBehavior }] : []),
         columns: [['Path pattern', 'path'], ['Cache policy', 'policy']] },
       { label: 'Alternate domain names', rows: (r) => (r.alternateNames || []).map((n) => ({ name: n })),
