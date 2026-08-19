@@ -460,5 +460,9 @@ export default defineConfig({
     host: true,
     allowedHosts: true
   },
-  preview: { port: 0, host: '0.0.0.0', allowedHosts: true }
+  // `host: true` binds dual-stack. With '0.0.0.0' the preview server is IPv4-only, so any
+  // harness whose client resolves localhost to ::1 (Node's fetch does) gets ECONNREFUSED
+  // while curl silently succeeds by falling back to IPv4 — an intermittent-looking failure
+  // that is actually deterministic per client.
+  preview: { port: 0, host: true, allowedHosts: true }
 })

@@ -1,7 +1,7 @@
 {
   "app": "aws_console_mock",
   "display_name": "XWS Console Mock",
-  "app_version": "1.4.1",
+  "app_version": "1.4.2",
   "baseline_git_sha": "f9e1b06ccf680c59c388852641221426899cb7de",
   "reference": {
     "product": "AWS Management Console",
@@ -14,8 +14,8 @@
   },
   "gates": {
     "runner": "node quality.contract.mjs --base http://localhost:5273",
-    "passed": 23,
-    "total": 23,
+    "passed": 24,
+    "total": 24,
     "blocking_failures": 0,
     "detail": {
       "G1.1_state_diff_clean_on_partial_inject": "PASS",
@@ -40,7 +40,8 @@
       "S1_every_page_has_cloudscape_h1": "PASS",
       "S2_global_chrome_matches_reference": "PASS",
       "S3_workflow_step_counts_declared": "PASS",
-      "S4_all_workflows_walked_end_to_end": "PASS"
+      "S4_all_workflows_walked_end_to_end": "PASS",
+      "R1_preview_binds_dual_stack": "PASS"
     }
   },
   "metrics": {
@@ -242,6 +243,11 @@
       "walked": 6,
       "completed": 6,
       "step_count_mismatches": 0
+    },
+    "runtime_parity": {
+      "dev_server": "24/24",
+      "preview_server": "24/24",
+      "note": "Tasks run against vite preview, not the dev server. The contract is now run against both."
     }
   },
   "authenticity": {

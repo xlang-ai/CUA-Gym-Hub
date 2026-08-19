@@ -405,6 +405,20 @@ await check('S4', 'every declared workflow has a completed end-to-end walkthroug
   return `${declared.length} workflows, all walked and completed at the declared step count`;
 });
 
+
+await check('R1', 'preview server binds dual-stack', () => {
+  // Tasks run against `vite preview`, not the dev server. With host:'0.0.0.0' the preview
+  // listener is IPv4-only, so a harness whose client resolves localhost to ::1 — Node's
+  // fetch does — gets ECONNREFUSED while curl silently succeeds by falling back to IPv4.
+  // That reads as a flaky environment but is deterministic per client.
+  const cfg = read('vite.config.js');
+  const m = cfg.match(/preview:\s*\{[^}]*\}/);
+  assert(m, 'no preview block in vite.config.js');
+  assert(!/host:\s*'0\.0\.0\.0'/.test(m[0]), "preview host is '0.0.0.0' (IPv4 only); use host: true");
+  assert(/host:\s*true/.test(m[0]), 'preview host is not dual-stack');
+  return 'preview binds dual-stack (host: true)';
+});
+
 // ---------------------------------------------------------------- report
 const pass = results.filter((r) => r.ok).length;
 const fail = results.length - pass;

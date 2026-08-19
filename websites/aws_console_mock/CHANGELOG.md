@@ -4,6 +4,27 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.4.2
+
+Fixes an environment defect that only appears against the server tasks actually run on.
+
+### Fixed
+
+- **The preview server was unreachable from Node clients.** `vite.config.js` set
+  `preview: { host: '0.0.0.0' }`, which binds IPv4 only. Node's `fetch` resolves
+  `localhost` to IPv6 `::1`, so any harness using it got `ECONNREFUSED` against the
+  preview server while `curl` silently succeeded by falling back to IPv4 — a failure that
+  looks intermittent but is deterministic per client. Bound dual-stack with `host: true`.
+
+  This was invisible for four releases because every check ran against the *dev* server.
+  The contract is now run against both: dev 24/24, preview 24/24.
+
+- Gate `R1` fails the release if the preview host is ever narrowed to IPv4 again.
+
+### Quality gates
+
+24/24 on dev and on preview.
+
 ## 1.4.1
 
 Walks every declared workflow end to end, which found two defects no static gate could see.
