@@ -1,0 +1,54 @@
+{
+  "service": "vpc",
+  "captured": "2026-08-18",
+  "method": "Live console, read-only. Labels only; account id and resource ids scrubbed before extraction.",
+  "confidence": "sourced",
+  "pages": {
+    "#vpcs:": {
+      "title": "Your VPCs",
+      "list_level_tabs": ["VPCs", "VPC encryption controls"],
+      "columns_default": ["Name","VPC ID","State","Encryption control ID","Encryption control mode","Block Public Access","IPv4 CIDR","IPv6 CIDR","DHCP option set","Main route table","Main network ACL","Tenancy","Default VPC","Owner ID"],
+      "primary_actions": ["Actions","Create VPC"],
+      "search_placeholder": "Find VPCs by attribute or tag",
+      "split_panel_empty_state": "Select a VPC above"
+    },
+    "#subnets:": {
+      "title": "Subnets",
+      "columns_default": ["Name","Subnet ID","State","VPC","Block Public Access","IPv4 CIDR","IPv6 CIDR","IPv6 CIDR association ID","Available IPv4 addresses","Availability Zone","Network border group","Route table","Network ACL","Default subnet","Auto-assign public IPv4 address","Auto-assign customer-owned IPv4 address","Customer-owned IPv4 pool","Auto-assign IPv6 address","Owner ID"],
+      "primary_actions": ["Actions","Create subnet"],
+      "split_panel_empty_state": "Select a subnet"
+    },
+    "#RouteTables:": {
+      "title": "Route tables",
+      "columns_default": ["Name","Route table ID","Explicit subnet associations","Edge associations","Main","VPC","Owner ID"],
+      "primary_actions": ["Actions","Create route table"],
+      "split_panel_empty_state": "Select a route table"
+    },
+    "#igws:": {
+      "title": "Internet gateways",
+      "columns_default": ["Name","Internet gateway ID","State","VPC ID","Owner"],
+      "primary_actions": ["Actions","Create internet gateway"],
+      "split_panel_empty_state": "Select an internet gateway above"
+    }
+  },
+  "detail_pages": {
+    "vpc": {
+      "route": "#VpcDetails:VpcId=<id>",
+      "summary_section": "Details",
+      "tabs": ["Resource map","CIDRs","Flow logs","Tags","Related resources","Integrations"],
+      "tab_contents": {
+        "Resource map": { "sections": ["VPC","Subnets","Route tables","Network Connections"], "note": "visual graph, not a table" },
+        "CIDRs": { "tables": [["Address family","CIDR","Status"]] },
+        "Flow logs": { "tables": [["Name","Flow log ID","Traffic type","Destination type","Destination name","IAM role ARN","Maximum aggregation interval","Creation time","Status","Log line format","Cross account IAM role","Tag field specifications"]] },
+        "Tags": { "tables": [["Key","Value"]] },
+        "Related resources": { "sections": ["Related resources"] },
+        "Integrations": { "sections": ["CloudWatch Internet Monitor"] }
+      }
+    }
+  },
+  "corrections_to_prior_reference": [
+    "Doc-derived research reported VPC detail pages as having no tabs. The live console shows six.",
+    "The VPC list carries list-level tabs (VPCs / VPC encryption controls); the prior spec modelled it as a bare table.",
+    "Encryption control ID, Encryption control mode and Block Public Access are default columns and were absent from the prior spec entirely."
+  ]
+}

@@ -762,6 +762,35 @@ function reducer(prev, action) {
       };
       break;
     }
+    // ---- generic resource actions ----------------------------------------------
+    // Every list page carries the same three verbs behind its Actions menu (tag, delete,
+    // toggle-a-field) over ~30 differently-shaped collections: some top-level arrays
+    // ('ec2'), some nested ('vpc.subnets'), keyed by id, name, or arn. Writing those by
+    // hand 30 times is how the earlier bulk edits went wrong. `path` addresses the
+    // collection, `key` names its identity field.
+    //
+    // Resource-specific cases (DELETE_VPC and friends) are kept and still preferred where
+    // deletion has to cascade — this does not cascade, it only removes the row.
+    case 'RESOURCE_SET_TAGS':
+    case 'RESOURCE_UPDATE':
+    case 'RESOURCE_DELETE': {
+      const { path, key = 'id', id, fields, tags } = action.payload;
+      const segs = path.split('.');
+      const apply = (node, i) => {
+        if (i === segs.length - 1) {
+          const list = node[segs[i]] || [];
+          const next =
+            action.type === 'RESOURCE_DELETE'
+              ? list.filter((r) => r[key] !== id)
+              : list.map((r) => r[key] !== id ? r
+                  : action.type === 'RESOURCE_SET_TAGS' ? { ...r, tags } : { ...r, ...fields });
+          return { ...node, [segs[i]]: next };
+        }
+        return { ...node, [segs[i]]: apply(node[segs[i]] || {}, i + 1) };
+      };
+      Object.assign(newState, apply(prev, 0));
+      break;
+    }
     case 'UPDATE_VPC': {
       const { id, ...fields } = action.payload;
       newState.vpc = { ...prev.vpc, vpcs: prev.vpc.vpcs.map(v => v.id === id ? { ...v, ...fields } : v) };

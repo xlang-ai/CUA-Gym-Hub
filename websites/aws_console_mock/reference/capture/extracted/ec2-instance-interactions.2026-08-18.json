@@ -1,0 +1,46 @@
+{
+  "resource": "ec2_instance",
+  "captured": "2026-08-18",
+  "confidence": "sourced",
+  "method": "Live console, read-only. Actions menu opened against a stopped instance and a running instance; every item's aria-disabled recorded. Nothing was invoked.",
+  "why_this_matters": "Column inventories are the easy thing to measure and the wrong thing to optimise. What separates this mock from the console is interaction grammar: what a selection enables, what state a command requires, and what an action leaves behind. The state-dependence below is the part that makes a task non-trivial — 'change the instance type' is a three-step task because the console refuses it while the instance runs.",
+
+  "selection_semantics": {
+    "nothing_selected": {
+      "Actions": "enabled — the trigger is never disabled; individual items are",
+      "Instance state": "enabled",
+      "Connect": "disabled"
+    },
+    "one_selected": {
+      "heading": "Instances (1/29) — the heading carries selected/total, not just total",
+      "split_panel": ["Status checks", "Volume monitoring", "Alarm details for <id>", "Change auto-recovery behavior"],
+      "Connect": "enabled when the instance is running"
+    }
+  },
+
+  "actions_menu": {
+    "total_entries": 71,
+    "structure": "nested — six submenus plus a top-level group, separated by dividers",
+    "top_level": ["Launch instances","Launch instance from template","Migrate a server","Connect","Stop instance","Start instance","Reboot instance","Hibernate instance","Terminate (delete) instance","Instance diagnostics"],
+    "submenus": {
+      "Instance settings": ["Attach to Auto Scaling Group","Change stop protection","Change termination protection","Change shutdown behavior","Change auto-recovery behavior","Change instance migration on reboot","Protect with Elastic Disaster Recovery","Change instance type","Change CPU options","Modify instance placement","Modify Capacity Reservation settings","Change Nitro Enclaves","Connect RDS database","Change credit specification","Change resource based naming options","Edit user data","Modify SQL High Availability settings","Allow tags in instance metadata","Modify instance metadata options","Manage tags"],
+      "Networking": ["Attach network interface","Detach network interface","Manage IP addresses","Disassociate Elastic IP address","Change source/destination check","Manage ENA express","Manage ENA queues","Manage bandwidth"],
+      "Security": ["Change security groups","Modify IAM role","Get Windows password"],
+      "Image and templates": ["Create image","Create template from instance","Launch more like this"],
+      "Storage": ["Attach volume","Detach volume","Replace root volume"],
+      "Monitor and troubleshoot": ["Manage detailed monitoring","Manage CloudWatch alarms","Configure CloudWatch agent","Get system log","Get instance screenshot","Connect to serial port","Replace root volume","Visit SSM Fleet Manager"]
+    }
+  },
+
+  "state_dependent_enablement": {
+    "note": "Derived by diffing the menu against a stopped instance and a running instance in the same account.",
+    "enabled_only_when_running": ["Connect","Stop instance","Reboot instance","Attach to Auto Scaling Group","Protect with Elastic Disaster Recovery","Connect RDS database","Change credit specification","Replace root volume","Configure CloudWatch agent","Get instance screenshot","Connect to serial port"],
+    "enabled_only_when_stopped": ["Start instance","Change instance type","Change CPU options","Modify instance placement","Modify Capacity Reservation settings","Change Nitro Enclaves","Manage ENA queues"],
+    "disabled_in_both_states": {
+      "items": ["Hibernate instance","Modify SQL High Availability settings","Manage ENA express","Manage bandwidth","Get Windows password"],
+      "reason": "Each depends on a property the sampled instances lack — hibernation not enabled at launch, not a SQL Server or Windows AMI, ENA Express unsupported on the instance type. These are capability-gated rather than state-gated, and a faithful mock should gate them on the same properties."
+    }
+  },
+
+  "task_design_implication": "Because the console refuses Change instance type while an instance runs, resizing is inherently multi-step: stop, wait for the state transition, change, start. A mock that lets the type be changed at any time erases that structure and with it the training signal."
+}

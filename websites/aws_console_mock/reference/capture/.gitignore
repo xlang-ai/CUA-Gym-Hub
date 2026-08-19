@@ -1,0 +1,9 @@
+# Captures come from the maintainer's live AWS account. They carry the real account ID,
+# ARNs, resource names and possibly billing figures, and this repo is pushed to a remote.
+# Only the *structure* extracted from them — tab labels, column headers, button text, URL
+# patterns — belongs in the reference spec. The raw captures stay local.
+screens/
+pages/
+*.png
+*.json
+!extracted/**

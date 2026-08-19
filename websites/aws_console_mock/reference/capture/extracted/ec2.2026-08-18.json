@@ -1,0 +1,105 @@
+{
+  "service": "ec2",
+  "captured": "2026-08-18",
+  "method": "Live console, read-only. Table headers, Preferences column chooser, and detail-page tab structure read from the DOM. Labels only — no cell values — and account id plus resource ids scrubbed in-page before extraction.",
+  "region_context": "single region, one account; row counts reflect that account and are not part of the spec",
+  "confidence": "sourced",
+  "pages": {
+    "#Instances:": {
+      "title": "Instances",
+      "columns_default": ["Name","Instance ID","Instance state","Instance type","Status check","Availability Zone","Public IPv4 DNS","Public IPv4 address","Elastic IP","IPv6 IPs","Monitoring","Security group name","Key name","Launch time","Platform details","Managed","Operator"],
+      "columns_optional": ["Alarm status","Private DNS name","Private IP address","Security group IDs","Owner ID","Volume ID","Root device name","Root device type","EBS optimized","Image ID","Kernel ID","RAM disk ID","AMI launch index","Reservation ID","VPC ID","Subnet IDs","Instance lifecycle","Architecture","Virtualization type","Platform","IAM instance profile ARN","Tenancy","Affinity","Host ID","Placement group","Partition number","Capacity Reservation ID","State transition reason code","State transition reason message","Stop-hibernation behavior","Outpost ARN","Product codes","Availability Zone ID","IMDSv2","Usage operation"],
+      "primary_actions": ["Connect","Instance state","Actions","Launch instances","Choose filter set"],
+      "search_placeholder": "Find Instance by attribute or tag (case-sensitive)",
+      "split_panel": ["Instance alarm states","Service health","Health events affecting EC2 instances"],
+      "preferences": {
+        "page_sizes": ["10 resources","25 resources","50 resources"],
+        "display_options": ["Wrap lines","Striped rows","Use tags as suggestion options","Context menu","Row click selection","Compact table mode"],
+        "sticky_columns": { "first": ["None","First column","First two columns"], "last": ["None","Last column"] },
+        "column_chooser": { "reorderable": true, "filter_box": "Filter columns", "total": 51 }
+      }
+    },
+    "#Volumes:": {
+      "title": "Volumes",
+      "columns_default": ["Name","Volume ID","Type","Size","IOPS","Throughput","Snapshot ID","Source volume ID","Created","Availability Zone","Volume state","Alarm status","Attached resources","Status check","Initialization state","Encryption","KMS key ID","KMS key alias","Fast snapshot restored","Multi-Attach enabled","Managed","Operator"],
+      "primary_actions": ["Recycle Bin","Actions","Create volume"],
+      "side_widgets": ["Fault tolerance for all volumes in this Region","Snapshot summary"]
+    },
+    "#Snapshots:": {
+      "title": "Snapshots",
+      "columns_default": ["Name","Snapshot ID","Full snapshot size","Volume size","Description","Storage tier","Snapshot status","Started","Progress","Encryption","KMS key ID","KMS key alias","Availability Zone (Local Zone)","Outposts ARN"],
+      "primary_actions": ["Recycle Bin","Actions","Create snapshot","Owned by me"],
+      "split_panel_empty_state": "Select a snapshot above."
+    },
+    "#Images:": {
+      "title": "Amazon Machine Images (AMIs)",
+      "columns_default": ["Name","AMI name","AMI ID","Source","Owner","Visibility","Status","Creation date","Platform","Root device type","Block devices","Virtualization","Deprecation time","Last launched time","Deregistration protection","Source AMI ID","Source AMI Region"],
+      "primary_actions": ["Recycle Bin","EC2 Image Builder","Actions","Launch instance from AMI","Owned by me"],
+      "search_placeholder": "Find AMI by attribute or tag",
+      "split_panel_empty_state": "Select an AMI"
+    },
+    "#SecurityGroups:": {
+      "title": "Security Groups",
+      "columns_default": ["Name","Security group ID","Security group name","VPC ID","Description","Owner","Inbound rules count","Outbound rules count"],
+      "primary_actions": ["Actions","Export security groups to CSV","Create security group"],
+      "search_placeholder": "Find security groups by attribute or tag",
+      "split_panel_empty_state": "Select a security group"
+    },
+    "#KeyPairs:": {
+      "title": "Key pairs",
+      "columns_default": ["Name","Type","Created","Fingerprint","ID"],
+      "primary_actions": ["Actions","Create key pair"],
+      "search_placeholder": "Find Key Pair by attribute or tag",
+      "note": "No split panel and no detail page observed; key pairs are list-only."
+    },
+    "#Addresses:": {
+      "title": "Elastic IP addresses",
+      "columns_default": ["Name","Allocated IPv4 address","Type","Allocation ID","Reverse DNS record","Associated instance ID","Private IP address","Association ID","Network interface owner account ID","Network border group"],
+      "primary_actions": ["Actions","Allocate Elastic IP address"],
+      "search_placeholder": "Find elastic IP addresses by attribute or tag",
+      "split_panel_empty_state": "Select an elastic IP address"
+    },
+    "#LaunchTemplates:": {
+      "title": "Launch templates",
+      "columns_default": ["Launch template ID","Launch template name","Default version","Latest version","Create time","Created by","Managed","Operator"],
+      "primary_actions": ["Actions","Create launch template"],
+      "split_panel_empty_state": "Select a launch template"
+    },
+    "#NIC:": {
+      "title": "Network interfaces",
+      "columns_default": ["Name","Network interface ID","Subnet ID","VPC ID","Availability Zone","Security group names","Security group IDs","Interface Type","Description","Instance ID","Status","Public IPv4 address","Primary private IPv4 address","Secondary public IPv4 addresses","Secondary private IPv4 addresses","IPv6 addresses","Primary IPv6 address","IPv4 prefix","IPv6 prefix","Owner ID","Outpost ID","ENA Express","ENA Express UDP","ENA queues","Managed","Operator"],
+      "primary_actions": ["Actions","Create network interface"],
+      "split_panel_empty_state": "Select a network interface"
+    },
+    "#LoadBalancers:": {
+      "title": "Load balancers",
+      "columns_default": ["Name","State","Type","Scheme","IP address type","VPC ID","Availability Zones","Security groups","DNS name","ARN","Date created"],
+      "primary_actions": ["Actions","Create load balancer"],
+      "search_placeholder": "Filter load balancers",
+      "split_panel_empty_state": "0 load balancers selected"
+    }
+  },
+  "detail_pages": {
+    "instance": {
+      "route": "#InstanceDetails:instanceId=<id>",
+      "title": "Instance details",
+      "tabs": ["Details","Status and alarms","Monitoring","Security","Networking","Storage","Tags"],
+      "header_actions": ["Connect","Instance state","Actions"],
+      "tab_contents": {
+        "Details": { "sections": ["Instance details","Host and placement group","Capacity reservation"] },
+        "Status and alarms": { "sections": ["Status checks"], "tables": [["Name","State","Description","Metric name","State reason"]] },
+        "Monitoring": { "sections": [], "note": "CloudWatch metric graph grid; no table" },
+        "Security": { "tables": [
+          ["Name","Security group rule ID","Port range","Protocol","Source","Security groups","Description"],
+          ["Name","Security group rule ID","Port range","Protocol","Destination","Security groups","Description"]] },
+        "Networking": { "sections": ["IP addresses","Hostname and DNS","Network Interfaces","Elastic IP addresses"],
+          "tables": [["Interface ID","Device index","Card index","Description","Public IPv4 address","Private IPv4 address","Private IPv4 DNS","IPv6 addresses","Primary IPv6 address","IPv4 Prefixes","IPv6 Prefixes","Attachment time","Interface owner","Attachment status","VPC ID","Subnet ID","Delete on terminate","Source / destination check","Security groups","Interface type","ENA Express","ENA Express UDP","ENA queues"],
+                      ["Name","Allocated IPv4 address","Type","Address pool","Allocation ID"]] },
+        "Storage": { "sections": ["Volume monitoring"], "tables": [
+          ["Volume ID","Device name","Volume size (GiB)","Volume State","Attachment status","EBS card index","Attachment time","Encrypted","KMS key ID","Delete on termination"],
+          ["Task ID","Task state","Snapshot ID","Image ID","Start time","Completion time","Tags"]] },
+        "Tags": { "tables": [["Key","Value"]] }
+      }
+    }
+  }
+}
