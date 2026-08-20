@@ -2,74 +2,6 @@
   "generated_by": "fleet/audit-static.mjs",
   "sites": [
     {
-      "site": "openreview_mock",
-      "files": 15,
-      "lines": 3477,
-      "findings": [
-        {
-          "id": "href_hash_only",
-          "severity": "medium",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 17,
-          "files": 2,
-          "examples": [
-            "<a href=\"#\" className=\"donate-link\" style={{ color: '#3e6775' }} onCli",
-            "<a href=\"#\" style={{ fontSize: 15 }} onClick={e =>",
-            "<a href=\"#\" onClick={e =>"
-          ]
-        }
-      ],
-      "score": 17
-    },
-    {
-      "site": "bamboohr_mock",
-      "files": 18,
-      "lines": 6835,
-      "findings": [
-        {
-          "id": "href_hash_only",
-          "severity": "medium",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 8,
-          "files": 2,
-          "examples": [
-            "<a href=\"#\" title=\"Add LinkedIn link\" style={{ color: '#ccc', display:",
-            "<a href=\"#\" title=\"Add Twitter/X link\" style={{ color: '#ccc', display",
-            "<a href=\"#\" style={{ fontSize: 12, color: '#73C41D', display: 'block',"
-          ]
-        }
-      ],
-      "score": 8
-    },
-    {
-      "site": "Canvas-LMS_mock",
-      "files": 37,
-      "lines": 6829,
-      "findings": [
-        {
-          "id": "placeholder_component",
-          "severity": "high",
-          "guide": "No gray placeholder graveyards",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "<Placeholder"
-          ]
-        },
-        {
-          "id": "empty_handler",
-          "severity": "high",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "onClick={() => {}}"
-          ]
-        }
-      ],
-      "score": 6
-    },
-    {
       "site": "google_sheets_mock",
       "files": 19,
       "lines": 5869,
@@ -89,100 +21,22 @@
       "score": 6
     },
     {
-      "site": "klaviyo_mock",
-      "files": 22,
-      "lines": 3343,
+      "site": "Canvas-LMS_mock",
+      "files": 37,
+      "lines": 6951,
       "findings": [
         {
-          "id": "href_hash_only",
-          "severity": "medium",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 6,
-          "files": 2,
-          "examples": [
-            "<a href=\"#\" onClick={e =>",
-            "<a href=\"#\" onClick={e =>",
-            "<a href=\"#\" style=\"display:inline-block;background:#000;color:#fff;pad"
-          ]
-        }
-      ],
-      "score": 6
-    },
-    {
-      "site": "amplitude_mock",
-      "files": 25,
-      "lines": 5732,
-      "findings": [
-        {
-          "id": "href_hash_only",
-          "severity": "medium",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 4,
-          "files": 4,
-          "examples": [
-            "<a href=\"#\" onClick={e =>",
-            "<a href=\"#\" onClick={e =>",
-            "<a href=\"#\" onClick={e"
-          ]
-        }
-      ],
-      "score": 4
-    },
-    {
-      "site": "gitlab_mock",
-      "files": 57,
-      "lines": 7058,
-      "findings": [
-        {
-          "id": "coming_soon",
+          "id": "placeholder_component",
           "severity": "high",
-          "guide": "No obvious clickable placeholder remains",
+          "guide": "No gray placeholder graveyards",
           "count": 1,
           "files": 1,
           "examples": [
-            "'Fixed the sidebar and form layout. PR coming soon.'"
-          ]
-        },
-        {
-          "id": "todo_marker",
-          "severity": "low",
-          "guide": "Inventory fake affordances",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "TODO\\n- [ ] Update token refresh logic\\n- [ ] Add tests\\n- [ ] U"
+            "<Placeholder"
           ]
         }
       ],
-      "score": 3.25
-    },
-    {
-      "site": "google_docs_mock",
-      "files": 23,
-      "lines": 5204,
-      "findings": [
-        {
-          "id": "toast_only_handler",
-          "severity": "high",
-          "guide": "Prefer real, minimal local behavior over fake feedback",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "onClick={() => showToast('Spell check completed: no issues found')}"
-          ]
-        },
-        {
-          "id": "todo_marker",
-          "severity": "low",
-          "guide": "Inventory fake affordances",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "XXX</p><h2>Team</h2><p>Project Lead: [Name]</p><p>Team Members:"
-          ]
-        }
-      ],
-      "score": 3.25
+      "score": 3
     },
     {
       "site": "adp_mock",
@@ -215,6 +69,26 @@
           "files": 1,
           "examples": [
             "onClick={() => showToast('Packing slips printed', 'info')}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "amplitude_mock",
+      "files": 25,
+      "lines": 5732,
+      "findings": [
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 3,
+          "files": 3,
+          "examples": [
+            "<a href=\"#\" onClick={e => e.preventDefault()} style={{ color: 'var(--p",
+            "<a href=\"#\" onClick={e => e.preventDefault()} style={{ color: 'var(--p",
+            "<a href=\"#\" onClick={e => e.preventDefault()} style={{ color: 'var(--p"
           ]
         }
       ],
@@ -257,24 +131,6 @@
       "score": 3
     },
     {
-      "site": "cloudflare_mock",
-      "files": 30,
-      "lines": 6560,
-      "findings": [
-        {
-          "id": "coming_soon",
-          "severity": "high",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "'This feature is available on paid plans or coming soon.'"
-          ]
-        }
-      ],
-      "score": 3
-    },
-    {
       "site": "expedia_mock",
       "files": 26,
       "lines": 8399,
@@ -305,6 +161,24 @@
           "files": 1,
           "examples": [
             "onClick={() => showToast('Xmail Help Center — not available in mock')}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "google_docs_mock",
+      "files": 23,
+      "lines": 5204,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Spell check completed: no issues found')}"
           ]
         }
       ],
@@ -396,19 +270,9 @@
           "examples": [
             "disabled={true}"
           ]
-        },
-        {
-          "id": "todo_marker",
-          "severity": "low",
-          "guide": "Inventory fake affordances",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "TODO\\n\\n- [ ] Learn TypeScript\\n- [x] Set up CI/CD\\n- [ ] Write "
-          ]
         }
       ],
-      "score": 1.25
+      "score": 1
     },
     {
       "site": "mailchimp_mock",
@@ -422,7 +286,7 @@
           "count": 1,
           "files": 1,
           "examples": [
-            "<a href=\"#\" style={{ color: '#007C89' }}>"
+            "<a href=\"#\" style={{ color: '#007C89' }}>{block.content.unsubscribeTex"
           ]
         }
       ],
@@ -440,11 +304,29 @@
           "count": 1,
           "files": 1,
           "examples": [
-            "<a href=\"#\" onClick={e =>"
+            "<a href=\"#\" onClick={e => e.preventDefault()} style={{ color: '#4F44E0"
           ]
         }
       ],
       "score": 1
+    },
+    {
+      "site": "gitlab_mock",
+      "files": 57,
+      "lines": 7058,
+      "findings": [
+        {
+          "id": "todo_marker",
+          "severity": "low",
+          "guide": "Inventory fake affordances",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "TODO\\n- [ ] Update token refresh logic\\n- [ ] Add tests\\n- [ ] U"
+          ]
+        }
+      ],
+      "score": 0.25
     },
     {
       "site": "12306_mock",
@@ -524,6 +406,13 @@
       "score": 0
     },
     {
+      "site": "bamboohr_mock",
+      "files": 18,
+      "lines": 6835,
+      "findings": [],
+      "score": 0
+    },
+    {
       "site": "booking_com_mock",
       "files": 20,
       "lines": 4767,
@@ -553,6 +442,13 @@
     },
     {
       "site": "clio_mock",
+      "files": 29,
+      "lines": 6535,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "cloudflare_mock",
       "files": 29,
       "lines": 6535,
       "findings": [],
@@ -727,6 +623,13 @@
       "score": 0
     },
     {
+      "site": "klaviyo_mock",
+      "files": 22,
+      "lines": 3343,
+      "findings": [],
+      "score": 0
+    },
+    {
       "site": "lattice_mock",
       "files": 25,
       "lines": 5270,
@@ -778,7 +681,7 @@
     {
       "site": "miro_mock",
       "files": 15,
-      "lines": 5352,
+      "lines": 5428,
       "findings": [],
       "score": 0
     },
@@ -793,6 +696,13 @@
       "site": "notion_mock",
       "files": 21,
       "lines": 6845,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "openreview_mock",
+      "files": 15,
+      "lines": 3477,
       "findings": [],
       "score": 0
     },

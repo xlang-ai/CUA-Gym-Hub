@@ -92,6 +92,37 @@ React requires an `onChange` alongside a `checked` prop, and wiring a real one t
 double-toggles — the row handler and the change handler both fire and cancel. `onChange` is now
 excluded from that detector.
 
+A fourth pass triaged **all 35 `href_hash_only` hits**, the highest-volume detector:
+
+| app | hits | real | false positive |
+|---|---:|---:|---:|
+| `openreview_mock` | 17 | 17 | 0 |
+| `bamboohr_mock` | 8 | 8 | 0 |
+| `klaviyo_mock` | 6 | **0** | **6** |
+| `amplitude_mock` | 4 | 1 | 3 |
+
+The errors **clustered rather than spread** — 0% in two apps, 100% in another — and had two
+mechanically identifiable causes: an anchor whose `onClick` does real work (the `#` is styling),
+and `href="#"` inside an email template's stored HTML, which is content being edited rather than
+a control. Both are now excluded, and the detector reproduces the triage exactly: 0, 0, 0, 3.
+
+Getting there took three attempts, each of which **failed silently in the same direction**:
+
+1. A tag-bounded regex `<a ... [^>]*>` truncated at the `>` inside `e =>`, so it never saw any
+   handler.
+2. A 260-character window ran out before a multi-line handler closed.
+3. Only brace-balancing worked.
+
+Each failure returned "no handler found" and so flagged a working anchor as dead. A filter that
+cannot tell "no handler" from "I could not parse the handler" reports the same numbers whether it
+works or not — which is why the fix was checked against the triage table rather than against the
+count going down.
+
+One residual false-positive class is left deliberately, documented in the detector: an anchor
+that only calls `preventDefault()` while nested in a row whose own `onClick` does the work, since
+the click still bubbles. Line-based matching cannot see DOM ancestry, so the detector says so
+instead of guessing.
+
 Running precision: **26 of 42 triaged findings real (62%)**, with every error so far traceable to
 a detector matching a legitimate React idiom rather than to a judgement call. Two detectors have
 been narrowed as a result, and the fleet total fell from 116 findings to 59 — the drop is almost

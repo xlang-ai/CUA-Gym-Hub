@@ -79,7 +79,48 @@ const DETECTORS = [
     id: 'href_hash_only',
     guide: 'No obvious clickable placeholder remains',
     severity: 'medium',
-    test: (s) => [...s.matchAll(/<a\s[^>]*href=["']#["'][^>]*>/g)].map((m) => m[0].slice(0, 70)),
+    // Triage of all 35 fleet hits: 26 real, 9 false positives, and the errors clustered rather
+    // than spread — 0% FP in two apps, 100% in another. Two mechanically identifiable causes,
+    // both excluded here:
+    //
+    //   1. `<a href="#" onClick={...real work...}>`. The hash is styling; the handler navigates.
+    //      A handler that ONLY calls preventDefault is still flagged, since that anchor does
+    //      nothing on its own.
+    //   2. `href="#"` inside fixture/template DATA rather than app chrome — an email builder's
+    //      stored HTML, rendered read-only. That is the content being edited, and real email
+    //      tools do default a button's href to `#` until a marketer sets one.
+    //
+    // KNOWN RESIDUAL FALSE POSITIVE, not encodable in a line regex: an anchor that only calls
+    // preventDefault while nested inside a row whose own onClick does the work — the click still
+    // bubbles. Three amplitude_mock hits were of this kind. Check ancestry before acting on a
+    // finding from this detector.
+    test: (s) => [...s.matchAll(/<a\s[^>]*href=["']#["']/g)]
+      .filter((m) => {
+        // A window from the anchor onward, NOT the tag matched by `[^>]*` — an arrow function
+        // contains `>`, so a tag-bounded regex truncates at `onClick={e =>` and never sees the
+        // handler. That flaw made this exclusion silently inert on every anchor it was written
+        // for, which is the failure mode of a filter nobody checks: it reports the same numbers
+        // whether it works or not.
+        // Find the handler by BALANCING braces rather than by a non-greedy match or a fixed
+        // window. A multi-line handler containing a template literal defeats both: the first
+        // attempt truncated at the `>` inside `e =>`, the second ran past its 260-char window.
+        // Each failure silently returned "no handler", flagging a working anchor as dead.
+        const win = s.slice(m.index, m.index + 900);
+        const closeTag = win.indexOf('</a>');
+        const tag = closeTag > 0 ? win.slice(0, closeTag) : win;
+        const at = tag.search(/on[A-Z]\w+=\{/);
+        if (at < 0) return true;                         // no handler at all — a dead anchor
+        let i = tag.indexOf('{', at), depth = 0, close = -1;
+        for (let j = i; j < tag.length; j++) {
+          if (tag[j] === '{') depth++;
+          else if (tag[j] === '}') { depth--; if (depth === 0) { close = j; break; } }
+        }
+        if (close < 0) return true;                      // unbalanced — treat as unknown, flag it
+        const body = tag.slice(i + 1, close);
+        const onlyPrevents = /^\s*(?:\(?\s*\w*\s*\)?\s*=>\s*)?\{?\s*\w*\.?preventDefault\(\)\s*;?\s*\}?\s*$/.test(body);
+        return onlyPrevents;                             // real work in the handler — not a defect
+      })
+      .map((m) => s.slice(m.index, m.index + 70).replace(/\s+/g, ' ')),
   },
   {
     id: 'toast_only_handler',
@@ -158,7 +199,11 @@ for (const site of sites) {
   for (const f of files) {
     const raw = fs.readFileSync(f, 'utf8');
     lines += raw.split('\n').length;
-    const s = userFacing(raw);
+    let s = userFacing(raw);
+    // Strip stored HTML fixtures — an email template's saved markup is content being edited, not
+    // a control a user clicks. klaviyo_mock's six `href="#"` hits were all of this kind.
+    s = s.replace(/(htmlContent|template|body|html|content)\s*:\s*`[\s\S]*?`/g, '$1: ``')
+         .replace(/(htmlContent|template|body|html|content)\s*:\s*(['"])(?:\\.|(?!\2).)*\2/g, '$1: ""');
     for (const d of DETECTORS) {
       const hits = d.test(s);
       if (!hits.length) continue;
