@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/emit-defaults.mjs && vite build",
     "preview": "vite preview",
     "gates": "node quality.contract.mjs",
     "fidelity": "node fidelity-score.mjs",
@@ -16,7 +16,9 @@
     "walk:details": "node walkthroughs/detail-pages.mjs",
     "walk:vpcfam": "node walkthroughs/vpc-family.mjs",
     "walk": "for w in vpc-actions vpc-family ec2-actions instance-types ec2-preferences detail-pages; do node walkthroughs/$w.mjs || exit 1; done",
-    "walk:prefs": "node walkthroughs/ec2-preferences.mjs"
+    "walk:prefs": "node walkthroughs/ec2-preferences.mjs",
+    "defaults": "node scripts/emit-defaults.mjs",
+    "gates:hardened": "CUA_GYM_HARDENED=1 CUA_GYM_ADMIN_TOKEN=$CUA_GYM_ADMIN_TOKEN node quality.contract.mjs --base ${BASE:-http://127.0.0.1:5399}"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",

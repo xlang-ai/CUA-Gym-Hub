@@ -27,6 +27,18 @@ const BASE = (() => {
   return i >= 0 && args[i + 1] ? args[i + 1].replace(/\/$/, '') : 'http://localhost:5273';
 })();
 
+// Hardened mode is how tasks actually run: CUA_GYM_HARDENED=1 hands /post and /go to the
+// shared plugin instead of this app's own middleware. Every gate here had only ever run
+// against the dev server, so the plugin path — the production path — was never exercised, and
+// a reward-signal defect lived there unnoticed while these gates passed.
+//
+//   node quality.contract.mjs --base http://127.0.0.1:5399 --admin-token <token>
+const ADMIN_TOKEN = (() => {
+  const i = args.indexOf('--admin-token');
+  return i >= 0 && args[i + 1] ? args[i + 1] : process.env.CUA_GYM_ADMIN_TOKEN || null;
+})();
+const AUTH = ADMIN_TOKEN ? { 'x-cua-admin-token': ADMIN_TOKEN } : {};
+
 const results = [];
 function check(id, title, fn) {
   return Promise.resolve()
@@ -40,14 +52,14 @@ const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
 const sid = (tag) => `contract-${tag}-${process.pid}`;
 
 async function api(pathname) {
-  const r = await fetch(`${BASE}${pathname}`);
+  const r = await fetch(`${BASE}${pathname}`, { headers: AUTH });
   assert(r.ok, `${pathname} returned HTTP ${r.status}`);
   return r.json();
 }
 async function post(pathname, body) {
   const r = await fetch(`${BASE}${pathname}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...AUTH },
     body: JSON.stringify(body),
   });
   assert(r.ok, `POST ${pathname} returned HTTP ${r.status}`);
@@ -567,6 +579,47 @@ await check('S9', 'no control announces success for work it did not do', () => {
   }
   assert(bad.length === 0, [...new Set(bad)].join('; '));
   return `${files.length} files, no success message stands in for an action`;
+});
+
+
+await check('R2', 'the app declares its ephemeral keys to the hardened server', () => {
+  // In hardened mode the shared plugin owns /post and /go, not this app's middleware — so the
+  // app's own EPHEMERAL_STATE_KEYS never applies there, and a toast leaked into state_diff on
+  // the path tasks actually run on. Every gate had only ever been run against dev, which is why
+  // it went unseen. The plugin takes the list as an option; this keeps the two in step.
+  const cfg = read('vite.config.js');
+  const m = cfg.match(/secureMockApiPlugin\(\{([^}]*)\}\)/);
+  assert(m, 'secureMockApiPlugin is called without options; ephemeral keys cannot reach it');
+  assert(/ephemeralKeys\s*:/.test(m[1]), 'no ephemeralKeys passed to secureMockApiPlugin');
+  const own = cfg.match(/EPHEMERAL_STATE_KEYS = new Set\(\[([^\]]*)\]/);
+  if (own) {
+    for (const k of own[1].split(',').map((x) => x.trim().replace(/['"]/g, '')).filter(Boolean)) {
+      assert(m[1].includes(`'${k}'`), `'${k}' is ephemeral for the dev path but not declared to the plugin`);
+    }
+  }
+  return 'dev and hardened paths agree on which keys are ephemeral';
+});
+
+
+await check('R3', 'mock.defaults.json is in step with getDefaultData()', async () => {
+  // The hardened server fills partial injections against this file. A generated copy that
+  // drifts from the source is worse than no copy at all, because it drifts silently: the
+  // environment would come up with stale defaults and every check reading them would be wrong
+  // for a reason nothing reports. Regenerate with `npm run defaults`.
+  const file = path.join(ROOT, 'mock.defaults.json');
+  assert(fs.existsSync(file), 'mock.defaults.json is missing; run npm run defaults');
+  const onDisk = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const { getDefaultData } = await import('./src/store/dataManager.js');
+  const live = getDefaultData();
+  const a = JSON.stringify(onDisk), b = JSON.stringify(live);
+  if (a !== b) {
+    const ka = Object.keys(onDisk), kb = Object.keys(live);
+    const missing = kb.filter((k) => !ka.includes(k));
+    const extra = ka.filter((k) => !kb.includes(k));
+    const changed = kb.filter((k) => ka.includes(k) && JSON.stringify(onDisk[k]) !== JSON.stringify(live[k]));
+    assert(false, `stale — ${missing.length} missing, ${extra.length} extra, changed: ${changed.slice(0, 5).join(', ') || 'none'}`);
+  }
+  return `${Object.keys(live).length} top-level keys, byte-identical to getDefaultData()`;
 });
 
 

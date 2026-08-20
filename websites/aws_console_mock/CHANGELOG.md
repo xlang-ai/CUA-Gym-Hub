@@ -4,6 +4,38 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.7.0
+
+**The reward signal was broken on the path tasks actually run on, for all 98 sites.**
+
+`CUA_GYM_HARDENED=1` hands `/post` and `/go` to `shared/secureMockApiPlugin.mjs` instead of this
+app's own middleware. Every gate here had only ever been run against the dev server, so the
+plugin path was never exercised — and three defects lived there while these gates passed green:
+
+1. **Fabricated `state_diff` entries.** `set` stored the partial injected fragment as the
+   baseline, so `/go` diffed a 2-key initial against the app's fully-populated current state and
+   reported every default as an agent change, before the agent acted. Fixed by deferring the
+   baseline to the app's first `set_current`, which is the merged state and arrives on mount.
+2. **Defaults never applied server-side.** A verifier reading `/go` without loading the page saw
+   only the injected fragment, so "the account has three VPCs" failed for want of a `vpc` key.
+   The plugin now fills against `mock.defaults.json`, generated from `getDefaultData()`.
+3. **Toast state leaked into the diff.** The app's `EPHEMERAL_STATE_KEYS` only ever applied to
+   the dev path; the plugin now takes `ephemeralKeys` as an option.
+
+Gates now run in both modes — `npm run gates:hardened` — and 31/31 pass on each. Gate **R2**
+keeps the two paths' ephemeral-key lists in step; **R3** fails if `mock.defaults.json` drifts
+from `getDefaultData()`, since a stale generated copy is worse than none.
+
+The plugin fix is covered by two tests that failed before it and pass after, including a guard
+that a genuine post-baseline change still shows up.
+
+### Also
+
+EC2 columns 7 → 52 from the console's Preferences panel, with a rebuilt two-column Preferences
+modal (filter box, Cancel discards / Confirm applies) and real pagination replacing a pager that
+rendered a hardcoded `1`. Reference updated from the capture, raising `columns_default` 11 → 17
+and `columns_optional` 14 → 35, both now `sourced`.
+
 ## 1.6.6
 
 The EC2 column set and Preferences dialog, from the console's own Preferences panel.

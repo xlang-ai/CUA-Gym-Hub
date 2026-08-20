@@ -96,10 +96,19 @@ function readBody(req) {
   });
 }
 
-function computeDiff(initial, current, prefix = '') {
+/**
+ * Keys whose value is UI noise rather than environment state — a toast queue, a transient
+ * banner. They change as a side effect of any action and then clear themselves, so leaving them
+ * in `state_diff` tells a reward function the agent changed something when all it did was see a
+ * message. Declared per site, because only the site knows which of its keys are ephemeral.
+ */
+const EMPTY_SET = new Set();
+
+function computeDiff(initial, current, prefix = '', ephemeral = EMPTY_SET) {
   const diff = {};
   const allKeys = new Set([...Object.keys(initial || {}), ...Object.keys(current || {})]);
   for (const key of allKeys) {
+    if (!prefix && ephemeral.has(key)) continue;
     const nextPath = prefix ? `${prefix}.${key}` : key;
     const oldVal = initial?.[key];
     const newVal = current?.[key];
@@ -111,7 +120,7 @@ function computeDiff(initial, current, prefix = '') {
       newVal !== null &&
       !Array.isArray(newVal)
     ) {
-      Object.assign(diff, computeDiff(oldVal, newVal, nextPath));
+      Object.assign(diff, computeDiff(oldVal, newVal, nextPath, ephemeral));
     } else if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
       diff[nextPath] = { old: oldVal, new: newVal };
     }
@@ -206,8 +215,56 @@ function localStorageShim() {
 `;
 }
 
+
+/**
+ * Fill a partial injected state against the app's defaults.
+ *
+ * A task author injects the handful of keys the task is about. Everything else has to come from
+ * somewhere, and in hardened mode nothing was filling it: the plugin stored the fragment as-is,
+ * so a verifier reading `/go` without first loading the page saw a one-key environment. A check
+ * like "the account has three VPCs" then fails for want of a `vpc` key rather than for being
+ * wrong.
+ *
+ * Semantics deliberately match each app's own client-side merge:
+ *   - defaults supply only keys the task omitted; task values always win
+ *   - explicit null/undefined in the task payload is skipped, keeping the default
+ *   - arrays are replaced wholesale, never merged element-wise
+ *   - keys the defaults do not know about are preserved as-is
+ */
+function deepMergeWithDefaults(defaults, custom) {
+  if (!custom || typeof custom !== 'object' || Array.isArray(custom)) return custom ?? defaults;
+  if (!defaults || typeof defaults !== 'object' || Array.isArray(defaults)) return custom;
+  const result = { ...defaults };
+  for (const key of Object.keys(custom)) {
+    const value = custom[key];
+    if (value === null || value === undefined) continue;
+    result[key] = (Array.isArray(value) || typeof value !== 'object')
+      ? value
+      : deepMergeWithDefaults(defaults[key], value);
+  }
+  return result;
+}
+
+/** Defaults may be given inline or as a path to JSON emitted at build time. */
+function loadDefaults(defaults) {
+  if (!defaults) return null;
+  if (typeof defaults === 'object') return defaults;
+  try {
+    return JSON.parse(fs.readFileSync(defaults, 'utf8'));
+  } catch (error) {
+    console.warn(`[cua-gym-hub] could not read defaults from ${defaults}: ${error.message}`);
+    return null;
+  }
+}
+
 export function secureMockApiPlugin(options = {}) {
   const stateDir = options.stateDir || path.join(process.cwd(), '.mock-secure-states');
+  // Sites opt in by passing their defaults, or by shipping mock.defaults.json in the site root.
+  const defaultsSource = options.defaults
+    || (fs.existsSync(path.join(process.cwd(), 'mock.defaults.json'))
+      ? path.join(process.cwd(), 'mock.defaults.json') : null);
+  const DEFAULTS = loadDefaults(defaultsSource);
+  const EPHEMERAL = new Set(options.ephemeralKeys || []);
   const sessions = new Map();
   const setupTokens = new Map();
 
@@ -217,6 +274,23 @@ export function secureMockApiPlugin(options = {}) {
 
   function initialPath(sid) {
     return path.join(stateDir, `${sanitizeSid(sid)}_initial.json`);
+  }
+
+  /**
+   * Marks a baseline as provisional — written by `set`, cleared by the app's first `set_current`.
+   *
+   * `set` carries only the keys a task author chose to specify. The app merges its own defaults
+   * before rendering and pushes the complete object back, so storing the partial object as the
+   * baseline makes `/go` diff a 2-key initial against a 30-key current and report every default
+   * as an agent change, before the agent has acted. Every reward function reading `state_diff`
+   * inherits that error.
+   *
+   * The server cannot fix this alone: only the app knows its defaults. So the baseline is
+   * deferred to the first `set_current`, which is exactly the fully-populated state, and which
+   * the app sends on mount — before any agent interaction is possible.
+   */
+  function pendingPath(sid) {
+    return path.join(stateDir, `${sanitizeSid(sid)}_pending_baseline`);
   }
 
   function isAdmin(req) {
@@ -267,7 +341,7 @@ export function secureMockApiPlugin(options = {}) {
 
     ensureDir(stateDir);
     if (action === 'reset') {
-      for (const file of [statePath(sid), initialPath(sid)]) {
+      for (const file of [statePath(sid), initialPath(sid), pendingPath(sid)]) {
         if (fs.existsSync(file)) fs.unlinkSync(file);
       }
       sendJson(res, 200, { status: 'ok', action: 'reset' });
@@ -275,8 +349,19 @@ export function secureMockApiPlugin(options = {}) {
     }
 
     if (action === 'set' || action === 'set_current') {
-      writeJson(statePath(sid), data.state || {});
-      if (action === 'set') writeJson(initialPath(sid), data.state || {});
+      // With defaults known, the fragment is filled here and both sides start complete. Without
+      // them the baseline stays provisional until the app pushes the merged state back.
+      const incoming = DEFAULTS && action === 'set'
+        ? deepMergeWithDefaults(DEFAULTS, data.state || {})
+        : (data.state || {});
+      writeJson(statePath(sid), incoming);
+      if (action === 'set') {
+        writeJson(initialPath(sid), incoming);
+        if (!DEFAULTS) fs.writeFileSync(pendingPath(sid), '1');
+      } else if (fs.existsSync(pendingPath(sid))) {
+        writeJson(initialPath(sid), incoming);
+        fs.unlinkSync(pendingPath(sid));
+      }
 
       const response = { status: 'ok', action };
       if (admin && action === 'set') {
@@ -339,7 +424,7 @@ export function secureMockApiPlugin(options = {}) {
     sendJson(res, 200, {
       initial_state: initialState,
       current_state: currentState,
-      state_diff: computeDiff(initialState, currentState),
+      state_diff: computeDiff(initialState, currentState, '', EPHEMERAL),
     });
   }
 

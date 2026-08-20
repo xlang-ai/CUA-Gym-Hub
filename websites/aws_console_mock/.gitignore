@@ -9,3 +9,6 @@
 # Fidelity measurement scratch
 .quality/
 fidelity.json
+
+# runtime session state written by the hardened server
+.mock-secure-states/

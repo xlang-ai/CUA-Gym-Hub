@@ -191,7 +191,7 @@ function parseMultipart(buf, boundary) {
 }
 
 export default defineConfig({
-  plugins: [secureMockApiPlugin(), 
+  plugins: [secureMockApiPlugin({ ephemeralKeys: ['flash'] }), 
     react(),
     {
       name: 'mock-api',
