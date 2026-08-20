@@ -1,0 +1,657 @@
+{
+  "product": "Trello",
+  "captured": "2026-08-20",
+  "method": "WebFetch from support.atlassian.com/trello/docs: navigation-in-trello, the-board-menu, add-and-customize-cards-and-lists, workspace-views, viewing-all-of-your-cards, archiving-and-deleting-cards. Additional searches for boards list and workspace navigation.",
+  "entry_screen": {
+    "title": "Home / Boards List",
+    "description": "Primary entry point showing recent boards, starred boards, and workspace organization",
+    "primary_nav": [
+      "Boards",
+      "Templates",
+      "Apps & more",
+      "Settings",
+      "Help"
+    ],
+    "header_elements": [
+      "App switcher",
+      "Trello logo (home)",
+      "Search",
+      "Create button",
+      "Feedback",
+      "Notifications",
+      "Help",
+      "Profile menu"
+    ],
+    "board_switcher": [
+      "Starred boards",
+      "Recent boards",
+      "Workspace boards"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "global_header",
+      "title": "Global Navigation Header",
+      "description": "Top header bar visible on all pages with primary navigation and controls",
+      "route_shape": "/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Search",
+        "Create board",
+        "Create workspace view"
+      ],
+      "actions_menu": [
+        "Feedback",
+        "Notifications",
+        "Help",
+        "Profile settings",
+        "Logout"
+      ],
+      "controls": [
+        "app_switcher",
+        "workspace_selector",
+        "search_global",
+        "notifications_panel"
+      ],
+      "features": [
+        "8 header elements per docs",
+        "Quick create dropdown",
+        "Notification access"
+      ],
+      "confidence": {
+        "header_elements": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "board_switcher",
+      "title": "Board Switcher / Navigation Bar",
+      "description": "Left sidebar showing boards organized by starred/recent/workspace",
+      "route_shape": "/boards",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Starred",
+        "Recent",
+        "Workspace list"
+      ],
+      "primary_actions": [
+        "Create new board",
+        "Browse templates",
+        "Pin board"
+      ],
+      "actions_menu": [
+        "Star board",
+        "Archive board",
+        "Edit board name"
+      ],
+      "controls": [
+        "search_boards",
+        "sort_by_name",
+        "pin_to_sidebar",
+        "board_filter"
+      ],
+      "features": [
+        "Board search",
+        "Star/favorite toggle",
+        "Persistent panel option",
+        "Workspace filtering"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "boards_list_view",
+      "title": "Boards List View",
+      "description": "Main page showing all boards in current workspace",
+      "route_shape": "/u/:username/boards",
+      "columns_default": [
+        "Board name",
+        "Board preview/background",
+        "Last activity indicator",
+        "Member avatars"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "My boards",
+        "Starred",
+        "Recent"
+      ],
+      "primary_actions": [
+        "Create new board",
+        "Browse templates",
+        "Search boards"
+      ],
+      "actions_menu": [
+        "Star",
+        "Archive",
+        "Delete",
+        "Edit board settings"
+      ],
+      "controls": [
+        "search",
+        "filter_by_workspace",
+        "sort_options",
+        "view_toggle"
+      ],
+      "features": [
+        "Board grid/list view",
+        "Star/favorite",
+        "Create from template",
+        "Board search"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "board_view",
+      "title": "Board View",
+      "description": "Main board canvas showing lists with cards organized in columns",
+      "route_shape": "/b/:boardId/:boardName",
+      "columns_default": [
+        "Lists as vertical columns",
+        "Cards within lists"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "Board",
+        "Table",
+        "Calendar",
+        "Dashboard"
+      ],
+      "primary_actions": [
+        "Create card",
+        "Add list",
+        "Filter cards",
+        "Search",
+        "Board menu"
+      ],
+      "actions_menu": [
+        "Board settings",
+        "Power-Ups",
+        "Automation",
+        "Export board",
+        "Archive board"
+      ],
+      "controls": [
+        "list_view",
+        "table_view",
+        "calendar_view",
+        "dashboard_view",
+        "filter_by_member",
+        "filter_by_label",
+        "filter_by_due_date",
+        "search_cards",
+        "drag_drop_cards",
+        "drag_drop_lists"
+      ],
+      "features": [
+        "Kanban columns",
+        "Card drag-drop",
+        "Multiple view types",
+        "Filtering",
+        "Power-Ups",
+        "Automation",
+        "Members"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "sourced",
+        "controls": "sourced",
+        "actions_menu": "sourced"
+      }
+    },
+    {
+      "id": "board_table_view",
+      "title": "Board Table View",
+      "description": "Alternative view showing cards in table/list format with columns",
+      "route_shape": "/b/:boardId/:boardName?tab=table",
+      "columns_default": [
+        "Card name",
+        "List",
+        "Labels",
+        "Members",
+        "Due dates"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "Board",
+        "Table",
+        "Calendar",
+        "Dashboard"
+      ],
+      "primary_actions": [
+        "Create card",
+        "Filter",
+        "Sort"
+      ],
+      "actions_menu": [
+        "Edit cell",
+        "Delete row",
+        "Archive card"
+      ],
+      "controls": [
+        "filter_by_label",
+        "filter_by_member",
+        "filter_by_due_date",
+        "sort_by_column",
+        "column_visibility",
+        "inline_cell_edit"
+      ],
+      "features": [
+        "Table layout",
+        "Inline editing",
+        "Column filtering",
+        "Sorting"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "columns_default": "sourced",
+        "primary_actions": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "board_calendar_view",
+      "title": "Board Calendar View",
+      "description": "Calendar view of cards organized by due dates",
+      "route_shape": "/b/:boardId/:boardName?tab=calendar",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Board",
+        "Table",
+        "Calendar",
+        "Dashboard"
+      ],
+      "primary_actions": [
+        "Create card",
+        "Navigate dates"
+      ],
+      "actions_menu": [
+        "Edit card",
+        "View card details"
+      ],
+      "controls": [
+        "month_view",
+        "week_view",
+        "date_navigation",
+        "filter_by_member"
+      ],
+      "features": [
+        "Calendar layout",
+        "Due date visualization",
+        "Date navigation"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "board_dashboard_view",
+      "title": "Dashboard View",
+      "description": "Analytics and workload overview dashboard for project management",
+      "route_shape": "/b/:boardId/:boardName?tab=dashboard",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Board",
+        "Table",
+        "Calendar",
+        "Dashboard"
+      ],
+      "primary_actions": [
+        "Configure dashboard",
+        "View metrics"
+      ],
+      "actions_menu": [
+        "Refresh",
+        "Export"
+      ],
+      "controls": [
+        "metric_selection",
+        "time_range",
+        "member_filter"
+      ],
+      "features": [
+        "Workload tracking",
+        "Process overview",
+        "Bottleneck prevention",
+        "Analytics"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "features": "sourced"
+      }
+    },
+    {
+      "id": "card_detail",
+      "title": "Card Detail View",
+      "description": "Detailed card information modal or back-side view with full metadata",
+      "route_shape": "/c/:cardId/:cardName",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Details",
+        "Activity"
+      ],
+      "primary_actions": [
+        "Edit title",
+        "Add description",
+        "Add checklist",
+        "Add due date",
+        "Add members",
+        "Add labels",
+        "Attach files"
+      ],
+      "actions_menu": [
+        "Archive card",
+        "Delete card",
+        "Copy card",
+        "Move card",
+        "Merge cards",
+        "Close detail view"
+      ],
+      "controls": [
+        "inline_editing",
+        "date_picker",
+        "member_selector",
+        "label_selector",
+        "file_upload",
+        "checklist_management",
+        "comment_section"
+      ],
+      "features": [
+        "Card cover image",
+        "Description",
+        "Checklist",
+        "Due dates",
+        "Members",
+        "Labels",
+        "Attachments",
+        "Custom fields",
+        "Comments",
+        "Card linking"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "sourced",
+        "features": "sourced"
+      }
+    },
+    {
+      "id": "board_menu",
+      "title": "Board Menu",
+      "description": "Board settings and administration panel accessed via menu button",
+      "route_shape": "/b/:boardId/:boardName/menu",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "About This Board",
+        "Activity Log"
+      ],
+      "primary_actions": [
+        "Edit board description",
+        "Manage permissions",
+        "Enable Power-Ups",
+        "Create automation"
+      ],
+      "actions_menu": [
+        "Close menu"
+      ],
+      "controls": [
+        "commenting_permission",
+        "voting_permission",
+        "activity_filter",
+        "activity_load_more"
+      ],
+      "features": [
+        "Board admins display",
+        "Board description",
+        "Permissions management",
+        "Power-Ups configuration",
+        "Automation setup",
+        "Activity log",
+        "Comment filtering"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "features": "sourced"
+      }
+    },
+    {
+      "id": "workspace_views",
+      "title": "Workspace Views",
+      "description": "Cross-board views showing cards from multiple boards",
+      "route_shape": "/w/:workspaceId/views",
+      "columns_default": [
+        "Card name",
+        "Board",
+        "List",
+        "Labels",
+        "Members",
+        "Due dates"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "Workspace Table",
+        "Workspace Calendar"
+      ],
+      "primary_actions": [
+        "Create workspace view",
+        "Select boards",
+        "Filter cards"
+      ],
+      "actions_menu": [
+        "Edit view",
+        "Delete view",
+        "Change visibility"
+      ],
+      "controls": [
+        "board_selector",
+        "filter_by_label",
+        "filter_by_list",
+        "filter_by_member",
+        "sort_options",
+        "visibility_toggle"
+      ],
+      "features": [
+        "Table layout",
+        "Calendar layout",
+        "Multi-board filtering",
+        "Auto-save changes",
+        "Private/workspace visibility"
+      ],
+      "availability": "Premium and Enterprise only",
+      "confidence": {
+        "tabs": "sourced",
+        "columns_default": "sourced",
+        "primary_actions": "sourced",
+        "controls": "sourced",
+        "features": "sourced"
+      }
+    },
+    {
+      "id": "your_cards",
+      "title": "Your Cards View",
+      "description": "Aggregated view of all cards the user is a member of",
+      "route_shape": "/u/:username/cards",
+      "columns_default": [
+        "Card name",
+        "Board",
+        "Due date",
+        "Status"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "All cards",
+        "My cards"
+      ],
+      "primary_actions": [
+        "Filter cards",
+        "Sort cards"
+      ],
+      "actions_menu": [
+        "Archive",
+        "Delete"
+      ],
+      "controls": [
+        "sort_by_board",
+        "sort_by_due_date",
+        "filter_dropdown",
+        "search_cards"
+      ],
+      "features": [
+        "Cross-board card view",
+        "Sort by board",
+        "Sort by due date",
+        "Filtering"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "primary_actions": "sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "search",
+      "title": "Search",
+      "description": "Global search for boards and cards",
+      "route_shape": "/search",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Boards",
+        "Cards"
+      ],
+      "primary_actions": [
+        "Search query input",
+        "Filter results"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "search_by_keyword",
+        "filter_by_workspace",
+        "sort_results"
+      ],
+      "features": [
+        "Board search",
+        "Card search",
+        "Keyword matching",
+        "Workspace filtering"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "account_settings",
+      "title": "Account Settings",
+      "description": "User account and preference configuration",
+      "route_shape": "/account",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Profile",
+        "Security",
+        "Notifications",
+        "Preferences"
+      ],
+      "primary_actions": [
+        "Edit profile",
+        "Change password",
+        "Configure notifications"
+      ],
+      "actions_menu": [
+        "Two-factor authentication",
+        "Connected applications",
+        "Logout"
+      ],
+      "controls": [
+        "profile_edit",
+        "email_verification",
+        "password_change",
+        "notification_settings"
+      ],
+      "features": [
+        "Profile information",
+        "Security settings",
+        "Notification preferences"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Create automation",
+      "available_when": "user is board admin",
+      "unavailable_when": "user is member only",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Enable Power-Ups",
+      "available_when": "board admin and board not archived",
+      "unavailable_when": "user is member only or board is archived",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Archive board",
+      "available_when": "user is board admin",
+      "unavailable_when": "user is member only",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Delete card",
+      "available_when": "user is card creator or board admin",
+      "unavailable_when": "user is viewer only",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Access workspace views",
+      "available_when": "workspace has Premium or Enterprise plan",
+      "unavailable_when": "workspace has Free plan",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Merge cards",
+      "available_when": "board admin or card owner",
+      "unavailable_when": "user is member only",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Exact list of columns in Boards List view not explicitly sourced - inferred from common Trello usage",
+    "Board customization options (colors, backgrounds) not detailed in sourced documentation",
+    "List-level actions and context menus not established",
+    "Planner surface mentioned in navigation docs but not detailed",
+    "Inbox surface functionality not researched",
+    "Mobile-specific surfaces and navigation not researched",
+    "Advanced Power-Up configuration surfaces not covered",
+    "Notification panel structure not detailed",
+    "Exact Privacy/Workspace visibility options not fully established",
+    "Custom Fields configuration interface not researched",
+    "Template creation and management surfaces not covered"
+  ]
+}

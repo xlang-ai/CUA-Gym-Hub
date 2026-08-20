@@ -204,6 +204,14 @@ export function createInitialData() {
         { id: 'tag_3', boardId: 'board_1', title: 'Blocked', color: 'yellow' },
       ],
     },
+    // Additive: per-board checklist (top bar "Checklist" panel). Keyed by boardId -> array of
+    // { id, text, done, createdAt }. Empty object is a safe default for older saved states.
+    checklists: {
+      board_1: [
+        { id: 'chk_1', text: 'Fix flaky CI pipeline', done: false, createdAt: '2025-02-10T09:00:00Z' },
+        { id: 'chk_2', text: 'Schedule documentation day', done: true, createdAt: '2025-02-10T09:05:00Z' },
+      ],
+    },
   };
 }
 

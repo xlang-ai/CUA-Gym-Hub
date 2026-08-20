@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { useToast } from '../components/Toast';
 import { getPriorityLabel, getPriorityColor, getIncidentStateLabel, getUserDisplayName, getGroupDisplayName } from '../utils/dataManager';
 import { formatDistanceToNow } from 'date-fns';
 
 export default function IncidentList() {
   const { state, dispatch } = useApp();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sid = searchParams.get('sid');
@@ -89,15 +91,17 @@ export default function IncidentList() {
   };
 
   const handleBulkAssign = () => {
-    if (selectedRows.size === 0 || !bulkGroup) { alert('Select incidents and an assignment group.'); return; }
+    if (selectedRows.size === 0 || !bulkGroup) { showToast('Select incidents and an assignment group.', 'error'); return; }
     [...selectedRows].forEach(incId => {
       const inc = state.incidents.find(i => i.sys_id === incId);
       if (inc) {
         dispatch({ type: 'UPDATE_INCIDENT', payload: { ...inc, assignment_group: bulkGroup, updated_at: new Date().toISOString() } });
       }
     });
+    const count = selectedRows.size;
     setSelectedRows(new Set());
     setBulkGroup('');
+    showToast(`${count} incident(s) assigned to ${getGroupDisplayName(state.groups, bulkGroup)}.`, 'success');
   };
 
   return (

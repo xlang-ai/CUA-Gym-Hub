@@ -382,7 +382,8 @@ export const getDefaultData = () => {
     dislikedVideos: [],
     watchLater: ['video-4', 'video-9', 'video-14', 'video-19', 'video-24', 'video-30', 'video-38'],
     playlists: ['playlist-1', 'playlist-2', 'playlist-3', 'playlist-4', 'playlist-5'],
-    searchHistory: ['react tutorial', 'gaming setup', 'cooking recipe']
+    searchHistory: ['react tutorial', 'gaming setup', 'cooking recipe'],
+    notificationPreferences: {}         // channelId -> 'all' | 'personalized' | 'none' (new)
   };
 
   const playlists = [

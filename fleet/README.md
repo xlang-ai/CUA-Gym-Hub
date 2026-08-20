@@ -19,7 +19,8 @@ Nothing here replaces that guide. This measures it.
 | layer | needs | covers | cost |
 |---|---|---|---|
 | **1. Source screen** — `fleet/audit-static.mjs` | nothing | all 98 today | seconds |
-| **2. Runtime harness** — per-app `quality.contract.mjs`, `walkthroughs/`, `depth-report.mjs` | install + build | apps that have one | minutes/app |
+| **2a. Portable runtime audit** — `fleet/audit-runtime.mjs` | a served app | any app that can be served | ~1 min/app |
+| **2b. Per-app harness** — `quality.contract.mjs`, `walkthroughs/`, `depth-report.mjs` | install + build + authoring | apps that have one | days/app |
 | **3. Real-product reference** — `reference/` + capture | a live account or public docs | apps with a reference | hours/app |
 
 They answer different questions and none subsumes the others. Layer 1 reads source and cannot
@@ -103,6 +104,31 @@ Built out in `websites/aws_console_mock` and portable in shape, not in content:
 - `depth-report.mjs` — navigational depth: does a row lead anywhere, does every route render a
   title.
 
+## Layer 2a: the portable runtime audit
+
+```
+node fleet/audit-runtime.mjs --base http://127.0.0.1:5173
+```
+
+Everything judgeable from the DOM with no reference and no knowledge of the app: crashes and
+uncaught errors, routes with no `<h1>`, populated tables whose rows link nowhere, and enabled
+controls that change nothing when clicked.
+
+Two design choices worth stating:
+
+- **Routes are discovered by following links**, not parsed from source. Three separate
+  source-reading instruments in this project went blind to pages the moment those pages moved to
+  generated routes, and each kept reporting success while covering less. A crawler that follows
+  what the app actually renders cannot fail that way.
+- **A toast is not a response.** A handler whose only effect is a success message is the defect,
+  not the reaction to it. One honest exception exists — a control correctly reporting "there is
+  nothing to do here" — so toast-only results are labelled rather than counted, and a human
+  decides. Making the control lie to satisfy the probe would be the wrong fix.
+
+It also inherits two corrections learned the hard way in the per-app scorer: an already-selected
+tab is not a probe subject, and opening a menu counts as a response even when the text barely
+moves. Carrying those over took minutes; rediscovering them cost a release each.
+
 ## Layer 3: real-product references
 
 The half the fleet does not have. `reference/page-depth.*.json` states what the real product
@@ -141,11 +167,12 @@ node fleet/validate-reference.mjs
 ```
 
 - **Source screen**: 98 sites measured, 29 flagged. `fleet/BASELINE.md`.
-- **Runtime harness**: 1 of 98 (`aws_console_mock`). Everything in its `quality.contract.mjs`,
-  `walkthroughs/` and `fidelity-score.mjs` is portable in shape; only the reference content is
-  app-specific.
-- **Product references**: 4 of 98 — `aws_console_mock` (from the live console),
-  `slack_mock`, `jira_mock`, `google_drive_mock` (from official documentation). Conformance is
+- **Runtime audit**: available to any app that can be served, no authoring required.
+- **Per-app harness**: 1 of 98 (`aws_console_mock`). Its gates, walkthroughs and fidelity index
+  are portable in shape; only the reference content is app-specific.
+- **Product references**: 6 of 98 — `aws_console_mock` (from the live console), and
+  `slack_mock`, `jira_mock`, `google_drive_mock`, `notion_mock`, `trello_mock` (from official
+  documentation, 60–86% sourced with 9–11 recorded gaps each). Conformance is
   checked by `fleet/validate-reference.mjs`, which exists because an agent's summary of its own
   output is not evidence: it rejects a file whose every field is marked `sourced`, or whose
   `gaps` is empty while anything is inferred.

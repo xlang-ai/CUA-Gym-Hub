@@ -380,6 +380,51 @@ export function AppProvider({ children }) {
     }));
   }, [updateState]);
 
+  const recordReportExport = useCallback((record) => {
+    updateState(prev => ({
+      ...prev,
+      reportExports: [...(prev.reportExports || []), record]
+    }));
+  }, [updateState]);
+
+  // Events Manager: pixel settings, token, test events, partner integrations
+  const updatePixelSettings = useCallback((updates) => {
+    updateState(prev => {
+      const em = prev.eventsManager || {};
+      const pixels = (em.pixels || []).map((p, idx) =>
+        idx === 0 ? { ...p, ...updates, updatedAt: new Date().toISOString() } : p
+      );
+      return { ...prev, eventsManager: { ...em, pixels } };
+    });
+  }, [updateState]);
+
+  const regeneratePixelAccessToken = useCallback((newToken) => {
+    updateState(prev => {
+      const em = prev.eventsManager || {};
+      const pixels = (em.pixels || []).map((p, idx) =>
+        idx === 0 ? { ...p, accessToken: newToken, tokenRegeneratedAt: new Date().toISOString() } : p
+      );
+      return { ...prev, eventsManager: { ...em, pixels } };
+    });
+  }, [updateState]);
+
+  const addTestEvent = useCallback((event) => {
+    updateState(prev => {
+      const em = prev.eventsManager || {};
+      return { ...prev, eventsManager: { ...em, testEvents: [event, ...(em.testEvents || [])] } };
+    });
+  }, [updateState]);
+
+  const updatePartnerIntegration = useCallback((id, status) => {
+    updateState(prev => {
+      const em = prev.eventsManager || {};
+      const partnerIntegrations = (em.partnerIntegrations || []).map(p =>
+        p.id === id ? { ...p, status, connectedAt: status === 'connected' ? new Date().toISOString() : null } : p
+      );
+      return { ...prev, eventsManager: { ...em, partnerIntegrations } };
+    });
+  }, [updateState]);
+
   if (loading || !state) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#F0F2F5', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif', color: '#65676B', fontSize: 14 }}>
@@ -404,7 +449,8 @@ export function AppProvider({ children }) {
       setSelectedTab, setDateRange, setVisibleColumns, setActiveBreakdown, setFilters, setSearchQuery,
       setSelectedRows, setSidebarCollapsed,
       markNotificationRead, markAllNotificationsRead,
-      updateSettings, updateAccount, createSavedReport,
+      updateSettings, updateAccount, createSavedReport, recordReportExport,
+      updatePixelSettings, regeneratePixelAccessToken, addTestEvent, updatePartnerIntegration,
       saveState
     }}>
       {children}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { AppProvider } from './context/AppContext';
+import { ToastProvider } from './components/Toast';
 import Banner from './components/Banner';
 import Navigator from './components/Navigator';
 import Dashboard from './pages/Dashboard';
@@ -84,10 +85,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <AppProvider>
-        <Routes>
-          <Route path="/go" element={<StateInspector />} />
-          <Route path="/*" element={<AppLayout />} />
-        </Routes>
+        <ToastProvider>
+          <Routes>
+            <Route path="/go" element={<StateInspector />} />
+            <Route path="/*" element={<AppLayout />} />
+          </Routes>
+        </ToastProvider>
       </AppProvider>
     </BrowserRouter>
   );

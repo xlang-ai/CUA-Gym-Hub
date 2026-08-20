@@ -638,6 +638,7 @@ export function createInitialData() {
       { id: 'report_002', name: 'Monthly Campaign Comparison', columns: ['name', 'results', 'reach', 'impressions', 'clicks', 'amountSpent', 'costPerResult', 'roas'], dateRange: 'last_30_days', filters: {}, breakdown: null, createdAt: '2025-06-15T14:00:00Z' },
       { id: 'report_003', name: 'Audience Insights - Age', columns: ['name', 'results', 'reach', 'impressions', 'amountSpent'], dateRange: 'last_14_days', filters: {}, breakdown: 'age', createdAt: '2025-07-01T09:00:00Z' }
     ],
+    reportExports: [],
     eventsManager: {
       pixels: [
         {
@@ -649,8 +650,20 @@ export function createInitialData() {
           lastActivity: '2 minutes ago',
           eventsToday: 4521,
           eventsYesterday: 5102,
-          createdAt: '2024-08-15T10:00:00Z'
+          createdAt: '2024-08-15T10:00:00Z',
+          firstPartyCookies: true,
+          automaticAdvancedMatching: true,
+          accessToken: 'EAABwzLixnjYBAK4ZBmw9x7QvR2NcT8pLdY3sHk6'
         }
+      ],
+      testEvents: [],
+      partnerIntegrations: [
+        { id: 'partner_shopify', name: 'Shopify', category: 'E-commerce', status: 'connected', connectedAt: '2025-01-10T09:00:00Z' },
+        { id: 'partner_woocommerce', name: 'WooCommerce', category: 'E-commerce', status: 'not_connected', connectedAt: null },
+        { id: 'partner_gtm', name: 'Google Tag Manager', category: 'Tag Manager', status: 'connected', connectedAt: '2025-02-01T09:00:00Z' },
+        { id: 'partner_zapier', name: 'Zapier', category: 'Automation', status: 'not_connected', connectedAt: null },
+        { id: 'partner_hubspot', name: 'HubSpot', category: 'CRM', status: 'not_connected', connectedAt: null },
+        { id: 'partner_segment', name: 'Segment', category: 'CDP', status: 'not_connected', connectedAt: null }
       ],
       events: [
         { id: 'evt_001', name: 'PageView', source: 'pixel', status: 'active', eventsReceived: 245000, eventsMatched: 198000, matchRate: 80.8, lastReceived: '2 min ago', parameters: ['url', 'referrer', 'user_agent'], attributionWindow: '7-day click, 1-day view', optimizationAvailable: true, recentErrors: [] },

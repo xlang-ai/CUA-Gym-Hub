@@ -33,6 +33,7 @@ function appReducer(state, action) {
         boardItems: { ...state.boardItems, [newBoard.id]: [] },
         comments: { ...state.comments, [newBoard.id]: [] },
         tags: { ...state.tags, [newBoard.id]: [] },
+        checklists: { ...(state.checklists || {}), [newBoard.id]: [] },
       };
     }
 
@@ -53,12 +54,15 @@ function appReducer(state, action) {
       delete newComments[boardId];
       const newTags = { ...state.tags };
       delete newTags[boardId];
+      const newChecklists = { ...(state.checklists || {}) };
+      delete newChecklists[boardId];
       return {
         ...state,
         boards: state.boards.filter(b => b.id !== boardId),
         boardItems: newBoardItems,
         comments: newComments,
         tags: newTags,
+        checklists: newChecklists,
         projects: state.projects.map(p => ({
           ...p,
           boardIds: p.boardIds.filter(id => id !== boardId),
@@ -103,12 +107,15 @@ function appReducer(state, action) {
         start: item.start ? { ...item.start, itemId: idMap[item.start.itemId] || item.start.itemId } : undefined,
         end: item.end ? { ...item.end, itemId: idMap[item.end.itemId] || item.end.itemId } : undefined,
       }));
+      const originalChecklist = (state.checklists || {})[original.id] || [];
+      const newChecklist = originalChecklist.map(chk => ({ ...chk, id: generateId() }));
       return {
         ...state,
         boards: [...state.boards, newBoard],
         boardItems: { ...state.boardItems, [newBoardId]: finalItems },
         comments: { ...state.comments, [newBoardId]: [] },
         tags: { ...state.tags, [newBoardId]: [] },
+        checklists: { ...(state.checklists || {}), [newBoardId]: newChecklist },
       };
     }
 
@@ -199,6 +206,42 @@ function appReducer(state, action) {
       };
     }
 
+    case 'ADD_CHECKLIST_ITEM': {
+      const { boardId, item } = action.payload;
+      const existing = (state.checklists || {})[boardId] || [];
+      return {
+        ...state,
+        checklists: {
+          ...(state.checklists || {}),
+          [boardId]: [...existing, { ...item, createdAt: now }],
+        },
+      };
+    }
+
+    case 'TOGGLE_CHECKLIST_ITEM': {
+      const { boardId, itemId } = action.payload;
+      const existing = (state.checklists || {})[boardId] || [];
+      return {
+        ...state,
+        checklists: {
+          ...(state.checklists || {}),
+          [boardId]: existing.map(chk => chk.id === itemId ? { ...chk, done: !chk.done } : chk),
+        },
+      };
+    }
+
+    case 'DELETE_CHECKLIST_ITEM': {
+      const { boardId, itemId } = action.payload;
+      const existing = (state.checklists || {})[boardId] || [];
+      return {
+        ...state,
+        checklists: {
+          ...(state.checklists || {}),
+          [boardId]: existing.filter(chk => chk.id !== itemId),
+        },
+      };
+    }
+
     case 'ADD_PROJECT': {
       const newProject = {
         id: action.payload.id || generateId(),
@@ -223,6 +266,7 @@ const UNDOABLE_ACTIONS = new Set([
   'ADD_ITEM', 'UPDATE_ITEM', 'DELETE_ITEM', 'MOVE_ITEM', 'RESIZE_ITEM',
   'ADD_BOARD', 'UPDATE_BOARD', 'DELETE_BOARD', 'STAR_BOARD', 'DUPLICATE_BOARD',
   'MOVE_BOARD_TO_PROJECT', 'ADD_PROJECT',
+  'ADD_CHECKLIST_ITEM', 'TOGGLE_CHECKLIST_ITEM', 'DELETE_CHECKLIST_ITEM',
 ]);
 
 export function AppProvider({ children }) {

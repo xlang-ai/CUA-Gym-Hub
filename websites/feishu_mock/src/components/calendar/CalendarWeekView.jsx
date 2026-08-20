@@ -28,8 +28,11 @@ export default function CalendarWeekView({ selectedDate, onSelectDate, onCreateE
   const weekStart = weekDates[0].getTime();
   const weekEnd = weekDates[6].getTime() + 86400000;
 
-  // Get events for this week
-  const weekEvents = state.events.filter(e => e.startTime < weekEnd && e.endTime >= weekStart);
+  // Get events for this week, restricted to calendars the user has toggled visible
+  const visibleCalendarIds = new Set(state.calendars.filter(c => c.isVisible).map(c => c.id));
+  const weekEvents = state.events.filter(e =>
+    e.startTime < weekEnd && e.endTime >= weekStart && (!e.calendarId || visibleCalendarIds.has(e.calendarId))
+  );
   const allDayEvents = weekEvents.filter(e => e.isAllDay);
   const timedEvents = weekEvents.filter(e => !e.isAllDay);
 

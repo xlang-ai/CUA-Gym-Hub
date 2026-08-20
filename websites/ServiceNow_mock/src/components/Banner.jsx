@@ -85,19 +85,15 @@ export default function Banner() {
   };
 
   const handleImpersonate = () => {
+    // Switch the user-menu dropdown into a picker of real users instead of a native prompt.
+    setShowImpersonatePicker(true);
+  };
+
+  const handleImpersonateSelect = (newUser) => {
+    dispatch({ type: 'SET_CURRENT_USER', payload: newUser });
+    setShowImpersonatePicker(false);
     setShowUserMenu(false);
-    // Show a simple prompt to pick user to impersonate
-    const userList = state.users.filter(u => u.sys_id !== state.currentUser.sys_id);
-    const names = userList.map((u, i) => `${i + 1}. ${u.first_name} ${u.last_name} (${u.user_name})`).join('\n');
-    const input = window.prompt(`Impersonate User\n\nSelect a user to impersonate:\n${names}\n\nEnter number:`);
-    if (input) {
-      const idx = parseInt(input.trim(), 10) - 1;
-      if (idx >= 0 && idx < userList.length) {
-        const newUser = userList[idx];
-        dispatch({ type: 'SET_CURRENT_USER', payload: newUser });
-        alert(`Now impersonating: ${newUser.first_name} ${newUser.last_name}`);
-      }
-    }
+    showToast(`Now impersonating: ${newUser.first_name} ${newUser.last_name}`, 'success');
   };
 
   const handleLogout = () => {

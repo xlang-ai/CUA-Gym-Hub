@@ -20,6 +20,7 @@ export default function CMDBDetail() {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState(ci ? { ...ci } : null);
   const [activeTab, setActiveTab] = useState('related_incidents');
+  const [fieldErrors, setFieldErrors] = useState({});
 
   if (!ci) return <div className="sn-page-body"><p>Configuration item not found. <a onClick={() => navigate('/cmdb/list' + sp)}>Back to list</a></p></div>;
 
@@ -28,16 +29,21 @@ export default function CMDBDetail() {
   const relatedProblems = state.problems.filter(p => p.cmdb_ci === ci.sys_id);
   const relatedChanges = state.changeRequests.filter(c => c.cmdb_ci === ci.sys_id);
 
-  const update = (field, value) => setForm(f => ({ ...f, [field]: value }));
+  const update = (field, value) => {
+    setForm(f => ({ ...f, [field]: value }));
+    if (fieldErrors[field]) setFieldErrors(e => ({ ...e, [field]: null }));
+  };
 
   const handleSave = () => {
-    if (!form.name.trim()) { alert('Name is required.'); return; }
+    if (!form.name.trim()) { setFieldErrors(e => ({ ...e, name: 'Name is required.' })); return; }
     dispatch({ type: 'UPDATE_CMDB_ITEM', payload: form });
     setEditing(false);
+    setFieldErrors({});
   };
 
   const handleCancel = () => {
     setForm({ ...ci });
+    setFieldErrors({});
     setEditing(false);
   };
 
@@ -48,7 +54,10 @@ export default function CMDBDetail() {
       <label className="sn-form-label">{label}</label>
       <div className="sn-form-field">
         {editing && !readOnly ? (
-          <input className="sn-form-input" value={form[field] || ''} onChange={e => update(field, e.target.value)} />
+          <>
+            <input className={`sn-form-input${fieldErrors[field] ? ' sn-input-invalid' : ''}`} value={form[field] || ''} onChange={e => update(field, e.target.value)} />
+            {fieldErrors[field] && <div className="sn-field-error">{fieldErrors[field]}</div>}
+          </>
         ) : (
           <span style={{ fontSize: 13 }}>{ci[field] || '\u2014'}</span>
         )}

@@ -2,6 +2,23 @@ import React, { useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAppState } from '../context/AppContext'
 import { getNoteTitle, getNoteAuthors, getNoteAuthorIds, getInvitationShortName } from '../utils/dataManager'
+import InfoModal from '../components/InfoModal'
+
+function buildRevisions(note) {
+  const revisions = [{ label: 'Version 1 · Submitted', date: note.cdate }]
+  if (note.mdate && note.mdate !== note.cdate) {
+    revisions.push({ label: 'Version 2 · Last revised', date: note.mdate })
+  }
+  return revisions
+}
+
+function buildBibTeX(note, authors, venueId, title) {
+  const firstAuthorLast = (authors[0] || 'anonymous').trim().split(/\s+/).pop().toLowerCase().replace(/[^a-z]/g, '') || 'anonymous'
+  const year = new Date(note.cdate).getFullYear()
+  const firstTitleWord = (title || '').split(/\s+/)[0]?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'paper'
+  const citeKey = `${firstAuthorLast}${year}${firstTitleWord}`
+  return `@inproceedings{${citeKey},\n  title={${title}},\n  author={${authors.join(' and ')}},\n  booktitle={${venueId}},\n  year={${year}}\n}`
+}
 
 const INVITATION_COLORS = {
   'Comment':          { backgroundColor: '#bfb', color: '#2c3a4a' },
@@ -24,6 +41,7 @@ function getInvitationColor(invitationType) {
 function ForumReply({ note, depth, state, appendSid }) {
   const [collapsed, setCollapsed] = useState(false)
   const [contentExpanded, setContentExpanded] = useState(true)
+  const [showRevisions, setShowRevisions] = useState(false)
 
   const invitationId = note.invitations?.[0] || ''
   const invitationType = getInvitationShortName(invitationId)

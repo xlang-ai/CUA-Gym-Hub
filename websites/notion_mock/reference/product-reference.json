@@ -1,0 +1,624 @@
+{
+  "product": "Notion",
+  "captured": "2026-08-20",
+  "method": "WebFetch from notion.com/help pages: navigate-with-the-sidebar, views-filters-and-sorts, intro-to-databases, search, guides/using-database-views. Additional search on help pages for settings and templates.",
+  "entry_screen": {
+    "title": "Home",
+    "description": "The default view when opening Notion, displaying upcoming events, recent pages, favorites, agents, and organized sections",
+    "primary_nav": [
+      "Home",
+      "Chats with Notion AI",
+      "Meetings",
+      "Inbox",
+      "Search"
+    ],
+    "sidebar_sections": [
+      "Teamspaces",
+      "Shared",
+      "Private",
+      "Favorites",
+      "Trash"
+    ],
+    "sidebar_actions": [
+      "Settings",
+      "Templates",
+      "+ Add a page"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "sidebar",
+      "title": "Sidebar Navigation",
+      "description": "Left-side persistent navigation panel for workspace content organization",
+      "route_shape": "/app",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Teamspaces",
+        "Shared",
+        "Private",
+        "Favorites"
+      ],
+      "primary_actions": [
+        "Add a page",
+        "Settings",
+        "Templates"
+      ],
+      "actions_menu": [
+        "Archive",
+        "Delete",
+        "Duplicate",
+        "Share",
+        "More options"
+      ],
+      "controls": [
+        "collapse_sections",
+        "drag_reorder",
+        "favorites_star",
+        "nested_pages"
+      ],
+      "features": [
+        "Item count display",
+        "Custom sorting"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "page_view",
+      "title": "Page View",
+      "description": "Individual page display with content, properties, and collaboration features",
+      "route_shape": "/app/:workspace/:pageId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Page content",
+        "Comments",
+        "Backlinks"
+      ],
+      "primary_actions": [
+        "Edit",
+        "Share",
+        "Add block",
+        "Copy link"
+      ],
+      "actions_menu": [
+        "Lock",
+        "Customize page",
+        "Delete",
+        "Duplicate",
+        "Move to"
+      ],
+      "controls": [
+        "text_formatting",
+        "block_insertion",
+        "slash_commands",
+        "mentions"
+      ],
+      "features": [
+        "Property display",
+        "Database relation",
+        "Comments section",
+        "Backlinks"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "database_table_view",
+      "title": "Table View (Database)",
+      "description": "Spreadsheet-like database view showing rows as database items and columns as properties",
+      "route_shape": "/app/:workspace/:databaseId?v=:viewId",
+      "columns_default": [
+        "Name (or primary property)",
+        "Type-specific columns"
+      ],
+      "columns_optional": [
+        "Any database property can be shown/hidden"
+      ],
+      "tabs": [
+        "Table",
+        "Board",
+        "Calendar",
+        "Gallery",
+        "Timeline",
+        "List",
+        "Chart"
+      ],
+      "primary_actions": [
+        "New",
+        "Search",
+        "Filter",
+        "Sort",
+        "Group",
+        "Settings"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Property visibility",
+        "Freeze columns",
+        "Duplicate view",
+        "Delete view",
+        "Lock view"
+      ],
+      "controls": [
+        "filter",
+        "sort",
+        "group",
+        "search",
+        "property_visibility",
+        "pagination",
+        "column_resize"
+      ],
+      "features": [
+        "Inline property editing",
+        "Multiple view types",
+        "Freeze column",
+        "Bulk operations"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "columns_default": "partially_sourced",
+        "actions_menu": "partially_sourced"
+      }
+    },
+    {
+      "id": "database_board_view",
+      "title": "Board View (Kanban)",
+      "description": "Kanban-style database view with cards grouped by a property (typically status)",
+      "route_shape": "/app/:workspace/:databaseId?v=:viewId",
+      "columns_default": [
+        "Grouped by property value"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "Table",
+        "Board",
+        "Calendar",
+        "Gallery",
+        "Timeline",
+        "List",
+        "Chart"
+      ],
+      "primary_actions": [
+        "New",
+        "Filter",
+        "Sort",
+        "Settings",
+        "Group by"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Property visibility",
+        "Duplicate view",
+        "Delete view"
+      ],
+      "controls": [
+        "filter",
+        "sort",
+        "group",
+        "drag_drop_cards",
+        "property_visibility"
+      ],
+      "features": [
+        "Drag-and-drop cards",
+        "Group by any property",
+        "Inline editing"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "database_calendar_view",
+      "title": "Calendar View",
+      "description": "Calendar-based database view showing items by their date property",
+      "route_shape": "/app/:workspace/:databaseId?v=:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Table",
+        "Board",
+        "Calendar",
+        "Gallery",
+        "Timeline",
+        "List",
+        "Chart"
+      ],
+      "primary_actions": [
+        "New",
+        "Filter",
+        "Sort",
+        "Settings"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Date property selection",
+        "Duplicate view",
+        "Delete view"
+      ],
+      "controls": [
+        "filter",
+        "sort",
+        "date_range_navigation",
+        "calendar_toggle"
+      ],
+      "features": [
+        "Display by date property",
+        "Month/week navigation"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "database_gallery_view",
+      "title": "Gallery View",
+      "description": "Image-focused database view emphasizing Files & media properties",
+      "route_shape": "/app/:workspace/:databaseId?v=:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Table",
+        "Board",
+        "Calendar",
+        "Gallery",
+        "Timeline",
+        "List",
+        "Chart"
+      ],
+      "primary_actions": [
+        "New",
+        "Filter",
+        "Sort",
+        "Settings"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Cover image settings",
+        "Duplicate view",
+        "Delete view"
+      ],
+      "controls": [
+        "filter",
+        "sort",
+        "image_selection"
+      ],
+      "features": [
+        "Emphasizes Files & media",
+        "Grid layout"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced"
+      }
+    },
+    {
+      "id": "database_timeline_view",
+      "title": "Timeline View",
+      "description": "Project timeline view showing items by duration and timing",
+      "route_shape": "/app/:workspace/:databaseId?v=:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Table",
+        "Board",
+        "Calendar",
+        "Gallery",
+        "Timeline",
+        "List",
+        "Chart"
+      ],
+      "primary_actions": [
+        "New",
+        "Filter",
+        "Sort",
+        "Settings"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Timeline property selection",
+        "Duplicate view",
+        "Delete view"
+      ],
+      "controls": [
+        "filter",
+        "sort",
+        "timeline_range"
+      ],
+      "features": [
+        "Gantt-style timeline",
+        "Duration visualization"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced"
+      }
+    },
+    {
+      "id": "database_list_view",
+      "title": "List View",
+      "description": "Minimal clean layout for database items",
+      "route_shape": "/app/:workspace/:databaseId?v=:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Table",
+        "Board",
+        "Calendar",
+        "Gallery",
+        "Timeline",
+        "List",
+        "Chart"
+      ],
+      "primary_actions": [
+        "New",
+        "Filter",
+        "Sort",
+        "Settings"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Duplicate view",
+        "Delete view"
+      ],
+      "controls": [
+        "filter",
+        "sort"
+      ],
+      "features": [
+        "Minimal design",
+        "List layout"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced"
+      }
+    },
+    {
+      "id": "database_chart_view",
+      "title": "Chart View",
+      "description": "Data visualization using bar, line, or donut charts",
+      "route_shape": "/app/:workspace/:databaseId?v=:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Table",
+        "Board",
+        "Calendar",
+        "Gallery",
+        "Timeline",
+        "List",
+        "Chart"
+      ],
+      "primary_actions": [
+        "Chart type selector",
+        "Settings"
+      ],
+      "actions_menu": [
+        "Chart settings",
+        "Duplicate view",
+        "Delete view"
+      ],
+      "controls": [
+        "chart_type_selection",
+        "filter",
+        "sort"
+      ],
+      "features": [
+        "Bar charts",
+        "Line charts",
+        "Donut charts",
+        "Data aggregation"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "search",
+      "title": "Search Modal",
+      "description": "Workspace-wide search interface for finding pages and content",
+      "route_shape": "/search",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Results"
+      ],
+      "primary_actions": [
+        "Search query input",
+        "Filter apply"
+      ],
+      "actions_menu": [
+        "Sort by best matches",
+        "Sort by last edited",
+        "Sort by created date"
+      ],
+      "controls": [
+        "search_filter",
+        "title_only_toggle",
+        "created_by_filter",
+        "teamspace_filter",
+        "location_filter",
+        "date_range_filter",
+        "ai_search_toggle"
+      ],
+      "features": [
+        "Recent searches",
+        "Relevance ranking",
+        "Multiple sort options",
+        "Advanced filters"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "controls": "sourced",
+        "actions_menu": "sourced"
+      }
+    },
+    {
+      "id": "templates",
+      "title": "Templates Surface",
+      "description": "Template picker and management interface",
+      "route_shape": "/templates",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Browse templates",
+        "Search templates",
+        "Create from template"
+      ],
+      "actions_menu": [
+        "Save as template",
+        "Duplicate",
+        "Delete template"
+      ],
+      "controls": [
+        "template_search",
+        "category_filter",
+        "creator_filter",
+        "sorting"
+      ],
+      "features": [
+        "Template marketplace",
+        "30000+ templates",
+        "250+ categories",
+        "Database templates"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "controls": "partially_sourced",
+        "features": "sourced"
+      }
+    },
+    {
+      "id": "workspace_settings",
+      "title": "Workspace Settings",
+      "description": "Workspace-level configuration and administration",
+      "route_shape": "/settings/workspace",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "General",
+        "Members",
+        "Security",
+        "Preferences",
+        "Export"
+      ],
+      "primary_actions": [
+        "Edit settings",
+        "Export workspace",
+        "Invite members"
+      ],
+      "actions_menu": [
+        "Toggle page view analytics",
+        "Disable export",
+        "Disable public sharing",
+        "Delete workspace"
+      ],
+      "controls": [
+        "member_management",
+        "permission_settings",
+        "analytics_toggle",
+        "export_tools"
+      ],
+      "features": [
+        "Page view analytics",
+        "Bulk export",
+        "Security settings",
+        "Member roles"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "preferences",
+      "title": "Preferences Settings",
+      "description": "User preference configuration",
+      "route_shape": "/settings/preferences",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Toggle options"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "command_search_toggle",
+        "notification_settings",
+        "theme_selection"
+      ],
+      "features": [
+        "Command search enable/disable",
+        "Theme preferences"
+      ],
+      "confidence": {
+        "primary_actions": "partially_sourced",
+        "controls": "partially_sourced"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Create database view",
+      "available_when": "user has edit access to the database",
+      "unavailable_when": "user has read-only access",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Delete workspace",
+      "available_when": "user is workspace admin",
+      "unavailable_when": "user is member",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Invite members",
+      "available_when": "user has admin or manage permissions",
+      "unavailable_when": "user has view-only access",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Toggle page view analytics",
+      "available_when": "user has full or edit access",
+      "unavailable_when": "user has view-only or guest access",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Archive page",
+      "available_when": "user has edit access to the page",
+      "unavailable_when": "user has read-only access",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Card/page-opening behavior (side peek, center peek, full page) options not fully sourced - referenced in search but not detailed in fetched pages",
+    "Database template properties configuration not fully detailed - only mentioned abstractly in search results",
+    "Exact menu structure for database property customization not fully established",
+    "Teamspace-specific surfaces and navigation not covered",
+    "Mobile-specific surfaces not researched",
+    "Shared workspace view controls not detailed",
+    "AI features and agents interface not researched",
+    "Database relations and rollup property interfaces not established",
+    "Exact buttons and controls for bulk database operations not sourced"
+  ]
+}

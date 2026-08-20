@@ -34,6 +34,7 @@ export default function CMDBList() {
     name: '', sys_class_name: 'cmdb_ci_server', status: 'Installed', environment: 'Production',
     category: 'Hardware', assigned_to: '', department: '', location: '', ip_address: '', serial_number: '', manufacturer: '', model: '',
   });
+  const [nameError, setNameError] = useState('');
 
   const filtered = useMemo(() => {
     let items = state.cmdbItems;
@@ -63,10 +64,11 @@ export default function CMDBList() {
   const SortIndicator = ({ col }) => <>{sortCol === col ? (sortDir === 'asc' ? ' \u25B2' : ' \u25BC') : ''}</>;
 
   const handleCreate = () => {
-    if (!createForm.name.trim()) { alert('Name is required.'); return; }
+    if (!createForm.name.trim()) { setNameError('Name is required.'); return; }
     const newItem = { ...createForm, sys_id: generateId() };
     dispatch({ type: 'ADD_CMDB_ITEM', payload: newItem });
     setShowCreateForm(false);
+    setNameError('');
     setCreateForm({ name: '', sys_class_name: 'cmdb_ci_server', status: 'Installed', environment: 'Production', category: 'Hardware', assigned_to: '', department: '', location: '', ip_address: '', serial_number: '', manufacturer: '', model: '' });
   };
 
@@ -78,7 +80,7 @@ export default function CMDBList() {
           {classFilter && CLASS_MAP[classFilter] && ` \u2014 ${CLASS_LABELS[CLASS_MAP[classFilter]] || classFilter}`}
         </h1>
         <div className="sn-page-header-actions">
-          <button className="sn-btn sn-btn-primary" onClick={() => setShowCreateForm(!showCreateForm)}>
+          <button className="sn-btn sn-btn-primary" onClick={() => { setShowCreateForm(!showCreateForm); setNameError(''); }}>
             {showCreateForm ? 'Cancel' : 'New'}
           </button>
         </div>
@@ -91,7 +93,10 @@ export default function CMDBList() {
             <div>
               <div className="sn-form-row">
                 <label className="sn-form-label">Name <span className="mandatory">*</span></label>
-                <div className="sn-form-field"><input className="sn-form-input" value={createForm.name} onChange={e => setCreateForm(f => ({ ...f, name: e.target.value }))} /></div>
+                <div className="sn-form-field">
+                  <input className={`sn-form-input${nameError ? ' sn-input-invalid' : ''}`} value={createForm.name} onChange={e => { setCreateForm(f => ({ ...f, name: e.target.value })); if (nameError) setNameError(''); }} />
+                  {nameError && <div className="sn-field-error">{nameError}</div>}
+                </div>
               </div>
               <div className="sn-form-row">
                 <label className="sn-form-label">Class</label>

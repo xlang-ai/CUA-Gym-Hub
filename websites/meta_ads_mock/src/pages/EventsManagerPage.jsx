@@ -87,7 +87,10 @@ function EventRow({ event, expanded, onToggle }) {
 }
 
 export default function EventsManagerPage() {
-  const { state, updateState } = useApp();
+  const {
+    state, updateState,
+    updatePixelSettings, regeneratePixelAccessToken, addTestEvent, updatePartnerIntegration
+  } = useApp();
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState('overview');
   const [expandedEvent, setExpandedEvent] = useState(null);
@@ -96,6 +99,12 @@ export default function EventsManagerPage() {
   const [newConvEvent, setNewConvEvent] = useState('');
   const [newConvRule, setNewConvRule] = useState('url_contains');
   const [newConvValue, setNewConvValue] = useState('');
+  const [showTestEvents, setShowTestEvents] = useState(false);
+  const [showPartners, setShowPartners] = useState(false);
+  const [testEventCode, setTestEventCode] = useState('TEST12345');
+  const [testEventName, setTestEventName] = useState('PageView');
+  const [fpCookies, setFpCookies] = useState(state.eventsManager?.pixels?.[0]?.firstPartyCookies !== false);
+  const [autoMatching, setAutoMatching] = useState(state.eventsManager?.pixels?.[0]?.automaticAdvancedMatching !== false);
 
   const eventsManager = state.eventsManager || {
     pixels: [
@@ -146,6 +155,8 @@ export default function EventsManagerPage() {
   const events = eventsManager.events || [];
   const customConversions = eventsManager.customConversions || [];
   const diagnostics = eventsManager.diagnostics || {};
+  const testEvents = eventsManager.testEvents || [];
+  const partnerIntegrations = eventsManager.partnerIntegrations || [];
 
   function handleCreateConversion() {
     if (!newConvName.trim()) { showToast('Please enter a conversion name.'); return; }
@@ -183,6 +194,51 @@ export default function EventsManagerPage() {
     showToast('Custom conversion deleted.');
   }
 
+  function generatePixelToken() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = 'EAAB';
+    for (let i = 0; i < 36; i++) token += chars[Math.floor(Math.random() * chars.length)];
+    return token;
+  }
+
+  async function handleCopyToken() {
+    const token = pixel?.accessToken || '';
+    try {
+      await navigator.clipboard.writeText(token);
+      showToast('Token copied to clipboard.');
+    } catch (e) {
+      showToast('Could not copy the token — clipboard access was blocked by the browser.');
+    }
+  }
+
+  function handleRegenerateToken() {
+    regeneratePixelAccessToken(generatePixelToken());
+    showToast('New access token generated.');
+  }
+
+  function handleSavePixelSettings() {
+    updatePixelSettings({ firstPartyCookies: fpCookies, automaticAdvancedMatching: autoMatching });
+    showToast('Pixel settings saved.');
+  }
+
+  function handleSendTestEvent() {
+    if (!testEventCode.trim()) { showToast('Enter a test event code from your browser or app first.'); return; }
+    addTestEvent({
+      id: `test_${Date.now()}`,
+      eventName: testEventName,
+      testCode: testEventCode.trim(),
+      source: 'browser',
+      receivedAt: new Date().toISOString()
+    });
+    showToast(`${testEventName} test event received.`);
+  }
+
+  function handleTogglePartner(partner) {
+    const nextStatus = partner.status === 'connected' ? 'not_connected' : 'connected';
+    updatePartnerIntegration(partner.id, nextStatus);
+    showToast(nextStatus === 'connected' ? `${partner.name} connected.` : `${partner.name} disconnected.`);
+  }
+
   const tabs = [
     { key: 'overview', label: 'Overview' },
     { key: 'customConversions', label: 'Custom Conversions' },
@@ -207,10 +263,10 @@ export default function EventsManagerPage() {
           </div>
         </div>
         <div className="em-header-actions">
-          <button className="btn-outline" onClick={() => showToast('Test events tool opened.')}>
+          <button className="btn-outline" onClick={() => setShowTestEvents(true)}>
             Test Events
           </button>
-          <button className="btn-outline" onClick={() => showToast('Partner integrations opened.')}>
+          <button className="btn-outline" onClick={() => setShowPartners(true)}>
             <ExternalLink size={14} />
             Partner Integrations
           </button>
@@ -552,7 +608,7 @@ export default function EventsManagerPage() {
                 <label className="field-label">First-party cookies</label>
                 <div className="em-toggle-row">
                   <span>Enable first-party cookies for improved tracking</span>
-                  <button className="toggle-btn toggle-btn--on" onClick={() => showToast('Setting toggled.')}>
+                  <button className={`toggle-btn ${fpCookies ? 'toggle-btn--on' : ''}`} onClick={() => setFpCookies(v => !v)}>
                     <span className="toggle-thumb" />
                   </button>
                 </div>
@@ -561,12 +617,12 @@ export default function EventsManagerPage() {
                 <label className="field-label">Automatic advanced matching</label>
                 <div className="em-toggle-row">
                   <span>Send hashed customer info to improve match rates</span>
-                  <button className="toggle-btn toggle-btn--on" onClick={() => showToast('Setting toggled.')}>
+                  <button className={`toggle-btn ${autoMatching ? 'toggle-btn--on' : ''}`} onClick={() => setAutoMatching(v => !v)}>
                     <span className="toggle-thumb" />
                   </button>
                 </div>
               </div>
-              <button className="btn-primary" style={{ marginTop: 12 }} onClick={() => showToast('Pixel settings saved.')}>
+              <button className="btn-primary" style={{ marginTop: 12 }} onClick={handleSavePixelSettings}>
                 Save Changes
               </button>
             </div>
@@ -580,15 +636,129 @@ export default function EventsManagerPage() {
               <div className="field-group">
                 <label className="field-label">Access token</label>
                 <div className="em-token-field">
-                  <input className="field-input" type="password" defaultValue="EAABw..." style={{ flex: 1 }} readOnly />
-                  <button className="btn-outline btn-sm" onClick={() => showToast('Token copied to clipboard.')}>Copy</button>
-                  <button className="btn-outline btn-sm" onClick={() => showToast('New token generated.')}>Regenerate</button>
+                  <input className="field-input" type="password" value={pixel?.accessToken || ''} style={{ flex: 1 }} readOnly />
+                  <button className="btn-outline btn-sm" onClick={handleCopyToken}>Copy</button>
+                  <button className="btn-outline btn-sm" onClick={handleRegenerateToken}>Regenerate</button>
                 </div>
               </div>
               <div className="field-group">
                 <label className="field-label">Server endpoint</label>
                 <div className="em-readonly-field">https://graph.facebook.com/v18.0/{pixel?.pixelId}/events</div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Test Events modal */}
+      {showTestEvents && (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowTestEvents(false); }}>
+          <div className="modal-container" style={{ width: 560 }}>
+            <div className="modal-header">
+              <div className="modal-tabs">
+                <button className="modal-tab modal-tab--active">Test Events</button>
+              </div>
+              <button className="modal-close" onClick={() => setShowTestEvents(false)}>&#10005;</button>
+            </div>
+            <div className="modal-body" style={{ padding: 20 }}>
+              <p style={{ fontSize: 12, color: '#65676B', marginTop: 0 }}>
+                Enter the test event code shown on your website or app, then simulate a browser event to confirm the pixel is receiving it.
+              </p>
+              <div className="field-group">
+                <label className="field-label">Test event code</label>
+                <input
+                  className="field-input"
+                  value={testEventCode}
+                  onChange={e => setTestEventCode(e.target.value)}
+                  placeholder="e.g. TEST12345"
+                />
+              </div>
+              <div className="field-group">
+                <label className="field-label">Simulate event</label>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <select className="field-select" value={testEventName} onChange={e => setTestEventName(e.target.value)} style={{ flex: 1 }}>
+                    {events.map(e => <option key={e.id} value={e.name}>{e.name}</option>)}
+                  </select>
+                  <button className="btn-primary" onClick={handleSendTestEvent}>Send test event</button>
+                </div>
+              </div>
+              <div className="em-section" style={{ marginTop: 8 }}>
+                <div className="em-section-header">
+                  <h3 className="em-section-title" style={{ fontSize: 13 }}>Received test events ({testEvents.length})</h3>
+                </div>
+                <table className="data-table-basic em-table">
+                  <thead>
+                    <tr>
+                      <th>Event</th>
+                      <th>Test code</th>
+                      <th>Source</th>
+                      <th>Received</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {testEvents.map(te => (
+                      <tr key={te.id}>
+                        <td style={{ fontWeight: 500 }}>{te.eventName}</td>
+                        <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{te.testCode}</td>
+                        <td style={{ textTransform: 'capitalize' }}>{te.source}</td>
+                        <td style={{ color: '#65676B' }}>{new Date(te.receivedAt).toLocaleTimeString()}</td>
+                      </tr>
+                    ))}
+                    {testEvents.length === 0 && (
+                      <tr>
+                        <td colSpan={4} style={{ textAlign: 'center', color: '#65676B', padding: 24 }}>
+                          No test events received yet.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn-outline" onClick={() => setShowTestEvents(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Partner Integrations modal */}
+      {showPartners && (
+        <div className="modal-overlay" onClick={e => { if (e.target === e.currentTarget) setShowPartners(false); }}>
+          <div className="modal-container" style={{ width: 480 }}>
+            <div className="modal-header">
+              <div className="modal-tabs">
+                <button className="modal-tab modal-tab--active">Partner Integrations</button>
+              </div>
+              <button className="modal-close" onClick={() => setShowPartners(false)}>&#10005;</button>
+            </div>
+            <div className="modal-body" style={{ padding: 20 }}>
+              {partnerIntegrations.map(p => (
+                <div
+                  key={p.id}
+                  className="em-toggle-row"
+                  style={{ maxWidth: 'none', padding: '10px 0', borderBottom: '1px solid var(--border-light)' }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{p.name}</div>
+                    <div style={{ fontSize: 12 }}>
+                      {p.category} &middot; {p.status === 'connected' ? `Connected ${new Date(p.connectedAt).toLocaleDateString()}` : 'Not connected'}
+                    </div>
+                  </div>
+                  <button
+                    className={p.status === 'connected' ? 'btn-outline btn-sm' : 'btn-primary btn-sm'}
+                    onClick={() => handleTogglePartner(p)}
+                  >
+                    {p.status === 'connected' ? 'Disconnect' : 'Connect'}
+                  </button>
+                </div>
+              ))}
+              {partnerIntegrations.length === 0 && (
+                <div style={{ textAlign: 'center', color: '#65676B', padding: 24 }}>No partner integrations available.</div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="btn-outline" onClick={() => setShowPartners(false)}>Close</button>
             </div>
           </div>
         </div>

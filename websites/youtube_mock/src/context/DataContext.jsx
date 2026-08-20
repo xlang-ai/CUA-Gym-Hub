@@ -174,6 +174,66 @@ export const DataProvider = ({ children }) => {
   };
 
 
+  const toggleCommentDislike = (videoId, commentId, isReply = false, parentCommentId = null) => {
+    setData(prev => {
+      const updatedComments = { ...prev.comments };
+      if (!updatedComments[videoId]) return prev;
+
+      if (!isReply) {
+        updatedComments[videoId] = updatedComments[videoId].map(comment => {
+          if (comment.commentId === commentId) {
+            const isDisliked = (comment.dislikedBy || []).includes(prev.user.userId);
+            return {
+              ...comment,
+              dislikeCount: isDisliked ? Math.max(0, (comment.dislikeCount || 0) - 1) : (comment.dislikeCount || 0) + 1,
+              dislikedBy: isDisliked
+                ? (comment.dislikedBy || []).filter(id => id !== prev.user.userId)
+                : [...(comment.dislikedBy || []), prev.user.userId]
+            };
+          }
+          return comment;
+        });
+      } else {
+        updatedComments[videoId] = updatedComments[videoId].map(comment => {
+          if (comment.commentId === parentCommentId) {
+            return {
+              ...comment,
+              replies: comment.replies.map(reply => {
+                if (reply.commentId === commentId) {
+                  const isDisliked = (reply.dislikedBy || []).includes(prev.user.userId);
+                  return {
+                    ...reply,
+                    dislikeCount: isDisliked ? Math.max(0, (reply.dislikeCount || 0) - 1) : (reply.dislikeCount || 0) + 1,
+                    dislikedBy: isDisliked
+                      ? (reply.dislikedBy || []).filter(id => id !== prev.user.userId)
+                      : [...(reply.dislikedBy || []), prev.user.userId]
+                  };
+                }
+                return reply;
+              })
+            };
+          }
+          return comment;
+        });
+      }
+
+      return { ...prev, comments: updatedComments };
+    });
+  };
+
+  const updateNotificationPreference = (channelId, preference) => {
+    setData(prev => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        notificationPreferences: {
+          ...(prev.user.notificationPreferences || {}),
+          [channelId]: preference
+        }
+      }
+    }));
+  };
+
   const toggleLike = (videoId) => {
     setData(prev => {
       const video = prev.videos.find(v => v.videoId === videoId);
@@ -523,6 +583,8 @@ export const DataProvider = ({ children }) => {
     toggleLike,
     toggleDislike,
     toggleCommentLike,
+    toggleCommentDislike,
+    updateNotificationPreference,
     toggleWatchLater,
     toggleSubscription,
     addComment,

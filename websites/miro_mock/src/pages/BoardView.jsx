@@ -36,6 +36,15 @@ export default function BoardView() {
   // Share dialog
   const [showShareDialog, setShowShareDialog] = useState(false);
 
+  // Presentation mode ("Screen share" local analog): steps through frames, highlighting each.
+  const [presentation, setPresentation] = useState({ active: false, frameIndex: 0 });
+
+  // Board item filter ("Filter" panel): dims non-matching items on the canvas.
+  const [filter, setFilter] = useState({ types: [], tagIds: [] });
+
+  // Cursor chat mode: clicking empty canvas drops a transient chat bubble.
+  const [cursorChatMode, setCursorChatMode] = useState(false);
+
   // Navigate back if board not found
   useEffect(() => {
     if (!board) {
@@ -76,6 +85,85 @@ export default function BoardView() {
     setPanX(prev => prev + dx);
     setPanY(prev => prev + dy);
   }, []);
+
+  // Center the canvas viewport on a given item (used by Search, Sticky notes panel,
+  // frame navigation, and presentation mode). Selects the item so the result is visible.
+  const handleFocusItem = useCallback((item, opts = {}) => {
+    if (!item) return;
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight - 56; // top bar height
+    const targetZoom = opts.zoom ? Math.min(4, Math.max(0.1, opts.zoom)) : zoom;
+    if (opts.zoom) setZoom(targetZoom);
+    setPanX(viewportW / 2 - item.x * targetZoom);
+    setPanY(viewportH / 2 - item.y * targetZoom);
+    if (opts.select !== false) setSelectedItemIds([item.id]);
+  }, [zoom]);
+
+  // Fit all board items into the current viewport.
+  const handleZoomToFit = useCallback(() => {
+    if (items.length === 0) {
+      setZoom(1);
+      setPanX(0);
+      setPanY(0);
+      return;
+    }
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    items.forEach(item => {
+      const l = item.x - (item.width || 0) / 2;
+      const t = item.y - (item.height || 0) / 2;
+      const r = item.x + (item.width || 0) / 2;
+      const b = item.y + (item.height || 0) / 2;
+      if (l < minX) minX = l;
+      if (t < minY) minY = t;
+      if (r > maxX) maxX = r;
+      if (b > maxY) maxY = b;
+    });
+    const padding = 80;
+    const boxW = Math.max(1, maxX - minX);
+    const boxH = Math.max(1, maxY - minY);
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight - 56;
+    const fitZoom = Math.min(4, Math.max(0.1, Math.min(
+      (viewportW - padding * 2) / boxW,
+      (viewportH - padding * 2) / boxH,
+    )));
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    setZoom(fitZoom);
+    setPanX(viewportW / 2 - centerX * fitZoom);
+    setPanY(viewportH / 2 - centerY * fitZoom);
+  }, [items]);
+
+  // Presentation mode ("Screen share" local analog).
+  const frames = items.filter(i => i.type === 'frame');
+  const handleTogglePresentation = useCallback(() => {
+    setPresentation(prev => {
+      if (prev.active) return { active: false, frameIndex: 0 };
+      const boardFrames = items.filter(i => i.type === 'frame');
+      if (boardFrames.length === 0) return prev;
+      return { active: true, frameIndex: 0 };
+    });
+  }, [items]);
+
+  const handlePresentationStep = useCallback((dir) => {
+    setPresentation(prev => {
+      if (!prev.active) return prev;
+      const boardFrames = items.filter(i => i.type === 'frame');
+      if (boardFrames.length === 0) return prev;
+      const nextIndex = (prev.frameIndex + dir + boardFrames.length) % boardFrames.length;
+      return { active: true, frameIndex: nextIndex };
+    });
+  }, [items]);
+
+  // Focus the current presentation frame whenever it changes.
+  useEffect(() => {
+    if (presentation.active) {
+      const boardFrames = items.filter(i => i.type === 'frame');
+      const frame = boardFrames[presentation.frameIndex];
+      if (frame) handleFocusItem(frame, { zoom: 0.85, select: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presentation.active, presentation.frameIndex, boardId]);
 
   const handleToolSelect = (tool) => {
     setActiveTool(tool);
@@ -338,6 +426,8 @@ export default function BoardView() {
         setConnectorStart(null);
         setShowShortcuts(false);
         setShowShareDialog(false);
+        setPresentation({ active: false, frameIndex: 0 });
+        setCursorChatMode(false);
         e.preventDefault();
         return;
       }
@@ -396,6 +486,15 @@ export default function BoardView() {
         userName={state.currentUser.initials}
         onShowShortcuts={() => setShowShortcuts(true)}
         onShowShare={() => setShowShareDialog(true)}
+        items={items}
+        onFocusItem={handleFocusItem}
+        onZoomToFit={handleZoomToFit}
+        presentationActive={presentation.active}
+        onTogglePresentation={handleTogglePresentation}
+        filter={filter}
+        onFilterChange={setFilter}
+        cursorChatMode={cursorChatMode}
+        onToggleCursorChat={() => setCursorChatMode(v => !v)}
       />
       <LeftToolbar
         activeTool={activeTool}
@@ -429,6 +528,9 @@ export default function BoardView() {
         onBringToFront={handleBringToFront}
         onSendToBack={handleSendToBack}
         connectorStart={connectorStart}
+        filter={filter}
+        presentationFrameId={presentation.active ? frames[presentation.frameIndex]?.id : null}
+        cursorChatMode={cursorChatMode}
         onConnectorItemClick={(itemId, snapTo) => {
           if (activeTool === 'connector') {
             if (!connectorStart) {
@@ -513,6 +615,24 @@ export default function BoardView() {
               <button className="modal-btn cancel" onClick={() => setShowShortcuts(false)}>Close</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Presentation mode control bar ("Screen share" local analog) */}
+      {presentation.active && (
+        <div className="presentation-bar">
+          <button className="presentation-bar-btn" onClick={() => handlePresentationStep(-1)} title="Previous frame" disabled={frames.length < 2}>
+            &#8592;
+          </button>
+          <span className="presentation-bar-label">
+            Presenting {frames[presentation.frameIndex]?.title || 'Frame'} ({presentation.frameIndex + 1}/{frames.length})
+          </span>
+          <button className="presentation-bar-btn" onClick={() => handlePresentationStep(1)} title="Next frame" disabled={frames.length < 2}>
+            &#8594;
+          </button>
+          <button className="presentation-bar-btn exit" onClick={() => setPresentation({ active: false, frameIndex: 0 })} title="Exit presentation">
+            Exit
+          </button>
         </div>
       )}
 

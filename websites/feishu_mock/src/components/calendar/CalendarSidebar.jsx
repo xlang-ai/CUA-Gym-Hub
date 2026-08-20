@@ -103,7 +103,11 @@ export default function CalendarSidebar({ selectedDate, onSelectDate, onCreateEv
       <div style={{ flex: 1, overflowY: 'auto', padding: '8px 12px' }}>
         <div style={{ fontSize: 12, color: '#8F959E', fontWeight: 500, marginBottom: 6, marginTop: 4 }}>我的日历</div>
         {state.calendars.filter(c => c.ownerId).map(cal => (
-          <div key={cal.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 4px', cursor: 'pointer', borderRadius: 4 }}>
+          <div
+            key={cal.id}
+            onClick={() => dispatch({ type: 'TOGGLE_CALENDAR_VISIBILITY', payload: cal.id })}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 4px', cursor: 'pointer', borderRadius: 4 }}
+          >
             <input
               type="checkbox"
               checked={cal.isVisible}
@@ -117,7 +121,11 @@ export default function CalendarSidebar({ selectedDate, onSelectDate, onCreateEv
 
         <div style={{ fontSize: 12, color: '#8F959E', fontWeight: 500, marginBottom: 6, marginTop: 12 }}>其他日历</div>
         {state.calendars.filter(c => !c.ownerId).map(cal => (
-          <div key={cal.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 4px', cursor: 'pointer', borderRadius: 4 }}>
+          <div
+            key={cal.id}
+            onClick={() => dispatch({ type: 'TOGGLE_CALENDAR_VISIBILITY', payload: cal.id })}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 4px', cursor: 'pointer', borderRadius: 4 }}
+          >
             <input type="checkbox" checked={cal.isVisible} onChange={() => {}} style={{ accentColor: cal.color }} />
             <span style={{ width: 10, height: 10, borderRadius: '50%', background: cal.color, display: 'inline-block', flexShrink: 0 }} />
             <span style={{ fontSize: 13, color: '#1F2329', flex: 1 }}>{cal.name}</span>

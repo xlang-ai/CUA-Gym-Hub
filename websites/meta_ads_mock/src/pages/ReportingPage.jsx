@@ -14,7 +14,7 @@ function formatNum(n) {
 }
 
 export default function ReportingPage() {
-  const { state, createSavedReport } = useApp();
+  const { state, createSavedReport, recordReportExport } = useApp();
   const { showToast } = useToast();
   const [selectedMetrics, setSelectedMetrics] = useState(['results', 'amountSpent', 'reach', 'impressions']);
   const [selectedReport, setSelectedReport] = useState(null);
@@ -47,6 +47,34 @@ export default function ReportingPage() {
     return formatNum(val);
   }
 
+  function handleExport() {
+    if (campaigns.length === 0) { showToast('No campaign data to export.'); return; }
+    const headers = ['Campaign', ...selectedMetrics.map(m => METRIC_OPTIONS.find(o => o.key === m)?.label || m)];
+    const rows = campaigns.map(c => [c.name, ...selectedMetrics.map(m => c[m] ?? 0)]);
+    const csv = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const filename = `meta_ads_report_${dateRange}_${Date.now()}.csv`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    recordReportExport({
+      id: `export_${Date.now()}`,
+      filename,
+      metrics: selectedMetrics,
+      dateRange,
+      rowCount: campaigns.length,
+      exportedAt: new Date().toISOString()
+    });
+    showToast(`Exported ${campaigns.length} campaign${campaigns.length === 1 ? '' : 's'} to ${filename}.`);
+  }
+
   const maxBars = { results: 0, amountSpent: 0 };
   campaigns.forEach(c => {
     if (selectedMetrics.includes('results')) maxBars.results = Math.max(maxBars.results, c.results || 0);
@@ -62,7 +90,7 @@ export default function ReportingPage() {
             <option value="">Select saved report...</option>
             {state.savedReports.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
           </select>
-          <button className="btn-outline" onClick={() => showToast('Report exported.')}>Export</button>
+          <button className="btn-outline" onClick={handleExport}>Export</button>
           <button className="btn-primary" onClick={() => setShowSaveDialog(true)}>Save Report</button>
         </div>
       </div>

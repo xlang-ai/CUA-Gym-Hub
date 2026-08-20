@@ -166,6 +166,13 @@ function reducer(state, action) {
       return { ...state, conversations: updated };
     }
 
+    case 'TOGGLE_CALENDAR_VISIBILITY': {
+      const updated = state.calendars.map(c =>
+        c.id === action.payload ? { ...c, isVisible: !c.isVisible } : c
+      );
+      return { ...state, calendars: updated };
+    }
+
     case 'MARK_CONVERSATION_READ': {
       const updated = state.conversations.map(c =>
         c.id === action.payload ? { ...c, unreadCount: 0 } : c
