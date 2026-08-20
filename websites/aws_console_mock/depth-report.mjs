@@ -24,8 +24,15 @@ const JSON_OUT = arg('--json', null);
 const CHROME = arg('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');
 
 const app = fs.readFileSync(path.join(ROOT, 'src/App.jsx'), 'utf8');
-const routes = [...app.matchAll(/path="([^"]+)"/g)].map((m) => m[1])
-  .filter((r) => !r.includes(':') && r !== '*');
+// Literal routes plus the ones App.jsx generates from the registry. Reading only path="..."
+// made this crawl blind to every migrated list page the moment it improved — the same blind
+// spot gates S8 and A1 had, one instrument later.
+const { RESOURCES } = await import('./src/lib/resourceRegistry.js');
+const generated = RESOURCES.filter((r) => r.list).map((r) => r.listRoute);
+const routes = [...new Set([
+  ...[...app.matchAll(/path="([^"]+)"/g)].map((m) => m[1]),
+  ...generated,
+])].filter((r) => !r.includes(':') && r !== '*');
 
 const puppeteer = (await import('puppeteer-core')).default;
 const browser = await puppeteer.launch({

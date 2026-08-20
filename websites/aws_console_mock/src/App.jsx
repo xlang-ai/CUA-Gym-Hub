@@ -10,13 +10,7 @@ import EC2Dashboard from './pages/EC2Dashboard';
 import EC2InstanceDetail from './pages/EC2InstanceDetail';
 import EC2InstanceTypes from './pages/EC2InstanceTypes';
 import EC2LaunchTemplates from './pages/EC2LaunchTemplates';
-import EC2AMIs from './pages/EC2AMIs';
-import EC2Volumes from './pages/EC2Volumes';
-import EC2Snapshots from './pages/EC2Snapshots';
 import EC2SecurityGroups from './pages/EC2SecurityGroups';
-import EC2KeyPairs from './pages/EC2KeyPairs';
-import EC2ElasticIPs from './pages/EC2ElasticIPs';
-import EC2LoadBalancers from './pages/EC2LoadBalancers';
 import EC2TargetGroups from './pages/EC2TargetGroups';
 import EC2AutoScaling from './pages/EC2AutoScaling';
 
@@ -65,7 +59,6 @@ import BillingTaxSettings from './pages/BillingTaxSettings';
 // CloudWatch
 import CloudWatchDashboard from './pages/CloudWatchDashboard';
 import CloudWatchAlarms from './pages/CloudWatchAlarms';
-import CloudWatchLogs from './pages/CloudWatchLogs';
 import CloudWatchDashboards from './pages/CloudWatchDashboards';
 
 // VPC
@@ -74,20 +67,17 @@ import VPCList from './pages/VPCList';
 import VPCEncryptionControls from './pages/VPCEncryptionControls';
 import VPCNetworkAcls from './pages/VPCNetworkAcls';
 import ResourceDetailPage from './pages/ResourceDetailPage';
+import ResourceListPage from './pages/ResourceListPage';
 import { RESOURCES } from './lib/resourceRegistry';
 import VPCSubnets from './pages/VPCSubnets';
 import VPCRouteTables from './pages/VPCRouteTables';
-import VPCInternetGateways from './pages/VPCInternetGateways';
-import VPCNATGateways from './pages/VPCNATGateways';
 
 // DynamoDB
 import DynamoDBTables from './pages/DynamoDBTables';
 import DynamoDBTableDetail from './pages/DynamoDBTableDetail';
 
 // Messaging / networking / audit
-import SNSTopics from './pages/SNSTopics';
 import SQSQueues from './pages/SQSQueues';
-import Route53HostedZones from './pages/Route53HostedZones';
 import CloudFrontDistributions from './pages/CloudFrontDistributions';
 import CloudTrailEventHistory from './pages/CloudTrailEventHistory';
 
@@ -159,13 +149,7 @@ function App() {
             <Route path="/ec2/instances/:instanceId" element={<EC2InstanceDetail />} />
             <Route path="/ec2/instance-types" element={<EC2InstanceTypes />} />
             <Route path="/ec2/launch-templates" element={<EC2LaunchTemplates />} />
-            <Route path="/ec2/amis" element={<EC2AMIs />} />
-            <Route path="/ec2/volumes" element={<EC2Volumes />} />
-            <Route path="/ec2/snapshots" element={<EC2Snapshots />} />
             <Route path="/ec2/security-groups" element={<EC2SecurityGroups />} />
-            <Route path="/ec2/key-pairs" element={<EC2KeyPairs />} />
-            <Route path="/ec2/elastic-ips" element={<EC2ElasticIPs />} />
-            <Route path="/ec2/load-balancers" element={<EC2LoadBalancers />} />
             <Route path="/ec2/target-groups" element={<EC2TargetGroups />} />
             <Route path="/ec2/auto-scaling-groups" element={<EC2AutoScaling />} />
 
@@ -214,7 +198,6 @@ function App() {
             {/* CloudWatch */}
             <Route path="/cloudwatch" element={<CloudWatchDashboard />} />
             <Route path="/cloudwatch/alarms" element={<CloudWatchAlarms />} />
-            <Route path="/cloudwatch/logs" element={<CloudWatchLogs />} />
             <Route path="/cloudwatch/dashboards" element={<CloudWatchDashboards />} />
 
             {/* VPC */}
@@ -224,8 +207,6 @@ function App() {
             <Route path="/vpc/network-acls" element={<VPCNetworkAcls />} />
             <Route path="/vpc/subnets" element={<VPCSubnets />} />
             <Route path="/vpc/route-tables" element={<VPCRouteTables />} />
-            <Route path="/vpc/internet-gateways" element={<VPCInternetGateways />} />
-            <Route path="/vpc/nat-gateways" element={<VPCNATGateways />} />
 
             {/* DynamoDB */}
             <Route path="/dynamodb" element={<RedirectWithQuery to="/dynamodb/tables" />} />
@@ -234,11 +215,9 @@ function App() {
 
             {/* SNS / SQS / Route 53 / CloudFront / CloudTrail */}
             <Route path="/sns" element={<RedirectWithQuery to="/sns/topics" />} />
-            <Route path="/sns/topics" element={<SNSTopics />} />
             <Route path="/sqs" element={<RedirectWithQuery to="/sqs/queues" />} />
             <Route path="/sqs/queues" element={<SQSQueues />} />
             <Route path="/route53" element={<RedirectWithQuery to="/route53/hosted-zones" />} />
-            <Route path="/route53/hosted-zones" element={<Route53HostedZones />} />
             <Route path="/cloudfront" element={<RedirectWithQuery to="/cloudfront/distributions" />} />
             <Route path="/cloudfront/distributions" element={<CloudFrontDistributions />} />
             <Route path="/cloudtrail" element={<RedirectWithQuery to="/cloudtrail/events" />} />
@@ -250,6 +229,11 @@ function App() {
                 that led anywhere. */}
             {RESOURCES.map((r) => (
               <Route key={r.id} path={r.detailRoute} element={<ResourceDetailPage resourceId={r.id} />} />
+            ))}
+            {/* List pages migrate to the shared component one at a time; a resource is served
+                here as soon as it carries a `list` block, and its bespoke page is deleted. */}
+            {RESOURCES.filter((r) => r.list).map((r) => (
+              <Route key={`${r.id}-list`} path={r.listRoute} element={<ResourceListPage resourceId={r.id} />} />
             ))}
             <Route path="/local/:service/:item" element={<LegacyLocalRedirect />} />
 

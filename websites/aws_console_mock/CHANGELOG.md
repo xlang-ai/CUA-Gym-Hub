@@ -4,6 +4,42 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.8.0
+
+**List pages become registry-driven.** 11 pages, 1,590 lines of near-identical bespoke code,
+deleted and replaced by one `ResourceListPage` reading the same registry the detail pages use.
+
+This is the answer to a pace problem: hand-wiring pages one at a time does not compound, and the
+drift lived there — pages that never got real pagination, a column chooser, or a rendered `h1`.
+Everything the shared component has, every migrated page now has.
+
+Actions are declarative: `create`, `view-details`, `manage-tags`, `delete`, `unavailable`, plus
+`custom` with state gating. The volume menu is wired from its live capture, including the
+console's own rule that Attach needs `available` and Detach needs `in-use`; items whose feature
+is not modelled render **disabled with the reason**, because the console offers them and an agent
+should see why they are out of reach here.
+
+`npm run walk:lists` iterates the registry rather than naming pages, so the next migration is
+covered the moment its `list` block lands — 44/44 across 11 pages.
+
+Deferred deliberately: 8 pages with inline detail views, and subnets, whose captured 11-item menu
+and dialogs the generic component does not yet express.
+
+### The same blind spot, a third time
+
+Gate S8, gate A1 and `depth-report.mjs` each grepped `App.jsx` for `path="..."`, so each went
+blind to a page the moment it migrated to a generated route — the crawl silently dropped from 68
+routes to 57 while reporting success. All three now share one resolver, and gate **S9** keeps
+them there. An instrument that stops covering improved code is worse than a missing one, because
+its output still looks complete.
+
+Also fixed: the Elastic IP list carried a `Name` column reading a field that does not exist. AWS
+surfaces names for such resources from the **Name tag**, which is what it reads now.
+
+`control_coverage` 64.1% → **78.2%**, `action_coverage` 44.9% → **54.4%**, `flow_depth` 57.8% →
+**64.1%**, `column_depth` 73.1% → **77.8%**. CFI 70.4% → **77.2%** directional, 67.4% → **71.9%**
+sourced. 32/32 gates on dev, preview and hardened.
+
 ## 1.7.0
 
 **The reward signal was broken on the path tasks actually run on, for all 98 sites.**

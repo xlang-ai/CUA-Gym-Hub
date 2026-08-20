@@ -132,6 +132,78 @@ export const RESOURCES = [
         columns: [['Name', 'name'], ['State', 'state'], ['Description', 'description']] },
       tagTab,
     ],
+    // Menu captured from the live console against an in-use volume on 2026-08-18
+    // (reference/capture/extracted/ebs-volume-interactions.2026-08-18.json). Delete and Attach
+    // were disabled there because the volume was attached, and that gating is reproduced.
+    // Items whose feature this mock does not model are shown disabled with the reason rather
+    // than dropped — the console offers them, and an agent should be able to see why they are
+    // out of reach here.
+    list: {
+      title: 'Volumes', singular: 'volume', filterPlaceholder: 'Filter volumes',
+      searchFields: ['id', 'name', 'volumeType', 'state', 'az'],
+      actionsConfidence: 'partially_sourced',
+      columns: [
+        { label: 'Name', field: 'name' },
+        { label: 'Volume ID', field: 'id', mono: true, linkToDetail: true },
+        { label: 'Type', field: 'volumeType' },
+        { label: 'Size', field: 'size', format: (v) => `${v} GiB` },
+        { label: 'IOPS', field: 'iops' },
+        { label: 'Throughput', field: 'throughput' },
+        { label: 'Snapshot', field: 'snapshotId', mono: true },
+        { label: 'Created', field: 'created' },
+        { label: 'Availability Zone', field: 'az' },
+        { label: 'Volume state', field: 'state' },
+        { label: 'Encryption', field: 'encrypted', format: (v) => (v ? 'Encrypted' : 'Not encrypted') },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create volume' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'custom', label: 'Attach volume',
+          disabledWhenSelected: (r) => r.state !== 'available',
+          disabledReason: 'A volume must be in the available state before it can be attached',
+          onSelect: ({ resource, dispatch, addFlash }) => {
+            dispatch({ type: 'RESOURCE_UPDATE', payload: { path: 'volumes', key: 'id', id: resource.id, fields: { state: 'in-use' } } });
+            addFlash('success', `Attached ${resource.id}`);
+          } },
+        { kind: 'custom', label: 'Detach volume',
+          disabledWhenSelected: (r) => r.state !== 'in-use',
+          disabledReason: 'Only an in-use volume can be detached',
+          onSelect: ({ resource, dispatch, addFlash }) => {
+            dispatch({ type: 'RESOURCE_UPDATE', payload: { path: 'volumes', key: 'id', id: resource.id, fields: { state: 'available' } } });
+            addFlash('success', `Detached ${resource.id}`);
+          } },
+        { kind: 'unavailable', label: 'Force detach volume',
+          reason: 'Force detach bypasses the guest filesystem, which this mock does not simulate' },
+        { separator: true },
+        { kind: 'unavailable', label: 'Modify volume',
+          reason: 'Volume modification runs asynchronously in the real service; not modelled' },
+        { kind: 'unavailable', label: 'Create snapshot lifecycle policy',
+          reason: 'Data Lifecycle Manager is a separate service and is not modelled' },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete volume' },
+      ],
+      deleteGuard: {
+        blocked: (r) => r.state === 'in-use',
+        message: (rs) => `Detach ${rs.map((r) => r.id).join(', ')} before deleting it`,
+      },
+      create: {
+        label: 'Create volume',
+        fields: [
+          { name: 'name', label: 'Name', placeholder: 'my-volume', optional: true },
+          { name: 'volumeType', label: 'Volume type', options: () => ['gp3', 'gp2', 'io2', 'st1', 'sc1'].map((v) => ({ value: v, label: v })) },
+          { name: 'size', label: 'Size (GiB)', placeholder: '8' },
+          { name: 'az', label: 'Availability Zone', options: (s) => [...new Set(s.vpc.subnets.map((x) => x.az))].map((v) => ({ value: v, label: v })) },
+        ],
+        build: (f) => ({
+          id: `vol-${Math.random().toString(16).substr(2, 17)}`,
+          name: f.name || 'unnamed-volume', size: Number(f.size) || 8, volumeType: f.volumeType || 'gp3',
+          state: 'available', iops: 3000, throughput: '125 MiB/s', snapshotId: '', az: f.az,
+          encrypted: true, created: new Date().toISOString().slice(0, 19).replace('T', ' '), tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'snapshot',
@@ -154,6 +226,45 @@ export const RESOURCES = [
         columns: [['Storage tier', 'tier'], ['Status', 'status']] },
       tagTab,
     ],
+    // Menu not captured for this resource; the standard list verbs are inferred from the
+    // sibling menus that were captured on 2026-08-18.
+    list: {
+      title: 'Snapshots', singular: 'snapshot', filterPlaceholder: 'Filter snapshots',
+      searchFields: ['id', 'name', 'description', 'volumeId'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Name', field: 'name' },
+        { label: 'Snapshot ID', field: 'id', mono: true, linkToDetail: true },
+        { label: 'Volume size', field: 'volumeSize', format: (v) => `${v} GiB` },
+        { label: 'Description', field: 'description' },
+        { label: 'Snapshot status', field: 'status' },
+        { label: 'Started', field: 'started' },
+        { label: 'Progress', field: 'progress' },
+        { label: 'Volume ID', field: 'volumeId', mono: true, link: (r) => `/ec2/volumes/${r.volumeId}` },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create snapshot' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete snapshot' },
+      ],
+      create: {
+        label: 'Create snapshot',
+        fields: [
+          { name: 'volumeId', label: 'Volume', options: (s) => s.volumes.map((v) => ({ value: v.id, label: `${v.id} (${v.name})` })) },
+          { name: 'description', label: 'Description', placeholder: 'my snapshot', optional: true },
+        ],
+        build: (f, s) => ({
+          id: `snap-${Math.random().toString(16).substr(2, 17)}`,
+          name: f.description || 'unnamed-snapshot', description: f.description || '',
+          volumeId: f.volumeId, volumeSize: s.volumes.find((v) => v.id === f.volumeId)?.size ?? 8,
+          status: 'pending', progress: '0%', started: new Date().toISOString().slice(0, 19).replace('T', ' '),
+          encrypted: true, storageTier: 'standard', tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'iamUser',
@@ -228,6 +339,47 @@ export const RESOURCES = [
         columns: [['Visibility', 'scope'], ['Principal', 'principal']] },
       tagTab,
     ],
+    // Menu not captured for this resource; the standard list verbs are inferred from the
+    // sibling menus that were captured on 2026-08-18.
+    list: {
+      title: 'AMIs', singular: 'AMI', filterPlaceholder: 'Filter amis',
+      searchFields: ['id', 'name', 'owner', 'platform'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Name', field: 'name', linkToDetail: true },
+        { label: 'AMI ID', field: 'id', mono: true },
+        { label: 'Source', field: 'owner' },
+        { label: 'Owner', field: 'owner' },
+        { label: 'Visibility', field: 'public', format: (v) => (v ? 'Public' : 'Private') },
+        { label: 'Status', field: 'state' },
+        { label: 'Creation date', field: 'created' },
+        { label: 'Platform', field: 'platform' },
+        { label: 'Root device type', field: 'rootDeviceType' },
+        { label: 'Virtualization', field: 'virtualization' },
+        { label: 'Architecture', field: 'architecture' },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create AMI' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete AMI' },
+      ],
+      create: {
+        label: 'Create AMI',
+        fields: [
+          { name: 'name', label: 'Name', placeholder: 'my-ami' },
+          { name: 'description', label: 'Description', placeholder: 'built from instance', optional: true },
+        ],
+        build: (f) => ({
+          id: `ami-${Math.random().toString(16).substr(2, 17)}`,
+          name: f.name, description: f.description || '', owner: '123456789012', state: 'pending',
+          architecture: 'x86_64', platform: 'Linux/UNIX', rootDeviceType: 'ebs', virtualization: 'hvm',
+          created: new Date().toISOString().slice(0, 19).replace('T', ' '), public: false, tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'keyPair', listRoute: '/ec2/key-pairs', listLabel: 'Key pairs', detailRoute: '/ec2/key-pairs/:id',
@@ -245,6 +397,46 @@ export const RESOURCES = [
         { label: 'Created', field: 'created' }] },
       tagTab,
     ],
+    list: {
+      title: 'Key pairs', singular: 'key pair',
+      filterPlaceholder: 'Filter key pairs',
+      searchFields: ['name', 'id', 'type'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Name', field: 'name', linkToDetail: true },
+        { label: 'Key pair ID', field: 'id', mono: true },
+        { label: 'Type', field: 'type' },
+        { label: 'Fingerprint', field: 'fingerprint', mono: true },
+        { label: 'Created', field: 'created' },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create key pair' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { kind: 'unavailable', label: 'Import key pair',
+          reason: 'Importing needs a public-key file upload, which this mock does not model' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete key pair' },
+      ],
+      create: {
+        label: 'Create key pair',
+        fields: [
+          { name: 'name', label: 'Name', placeholder: 'my-key-pair' },
+          { name: 'type', label: 'Key pair type', options: () => [
+            { value: 'rsa', label: 'RSA' }, { value: 'ed25519', label: 'ED25519' }] },
+        ],
+        build: (f) => ({
+          name: f.name, id: `key-${Math.random().toString(16).substr(2, 17)}`,
+          type: f.type || 'rsa',
+          // Deterministic from the name so a task that reads a fingerprint stays reproducible.
+          fingerprint: Array.from(f.name).reduce((a, c) => (a * 33 + c.charCodeAt(0)) >>> 0, 5381)
+            .toString(16).padStart(8, '0').match(/../g).join(':'),
+          created: new Date().toISOString().slice(0, 19).replace('T', ' '),
+          tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'elasticIp', listRoute: '/ec2/elastic-ips', listLabel: 'Elastic IP addresses',
@@ -264,6 +456,44 @@ export const RESOURCES = [
         { label: 'Scope', field: 'domain' }] },
       tagTab,
     ],
+    // Menu not captured for this resource; the standard list verbs are inferred from the
+    // sibling menus that were captured on 2026-08-18.
+    list: {
+      title: 'Elastic IP addresses', singular: 'Elastic IP address', filterPlaceholder: 'Filter elastic ip addresses',
+      searchFields: ['allocationId', 'publicIp', 'instanceId'],
+      actionsConfidence: 'inferred',
+      columns: [
+        // Elastic IPs carry no name field; the console's Name column is the Name TAG, which is
+        // how AWS surfaces names for resources that have no name attribute of their own.
+        { label: 'Name', get: (r) => (r.tags || []).find((t) => t.Key === 'Name')?.Value || '–' },
+        { label: 'Allocated IPv4 address', field: 'publicIp', mono: true, linkToDetail: true },
+        { label: 'Type', field: 'domain' },
+        { label: 'Allocation ID', field: 'allocationId', mono: true },
+        { label: 'Associated instance ID', field: 'instanceId', mono: true },
+        { label: 'Private IP address', field: 'privateIp', mono: true },
+        { label: 'Association ID', field: 'associationId', mono: true },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create Elastic IP address' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete Elastic IP address' },
+      ],
+      create: {
+        label: 'Create Elastic IP address',
+        fields: [
+          { name: 'name', label: 'Name', placeholder: 'my-eip', optional: true },
+        ],
+        build: (f) => ({
+          allocationId: `eipalloc-${Math.random().toString(16).substr(2, 17)}`,
+          publicIp: `52.${Math.floor(Math.random() * 200) + 10}.0.1`,
+          associationId: '', instanceId: '', privateIp: '', networkInterfaceId: '',
+          domain: 'vpc', tags: f.name ? [{ Key: 'Name', Value: f.name }] : [],
+        }),
+      },
+    },
   },
   {
     id: 'loadBalancer', listRoute: '/ec2/load-balancers', listLabel: 'Load balancers',
@@ -287,6 +517,46 @@ export const RESOURCES = [
         columns: [['Security group', 'id']], empty: 'No security groups associated.' },
       tagTab,
     ],
+    // Menu not captured for this resource; the standard list verbs are inferred from the
+    // sibling menus that were captured on 2026-08-18.
+    list: {
+      title: 'Load balancers', singular: 'load balancer', filterPlaceholder: 'Filter load balancers',
+      searchFields: ['name', 'dnsName', 'state', 'type'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Name', field: 'name', linkToDetail: true },
+        { label: 'DNS name', field: 'dnsName', mono: true },
+        { label: 'State', field: 'state' },
+        { label: 'VPC ID', field: 'vpcId', mono: true, link: (r) => `/vpc/vpcs/${r.vpcId}` },
+        { label: 'Availability Zones', field: 'az' },
+        { label: 'Type', field: 'type' },
+        { label: 'Date created', field: 'created' },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create load balancer' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete load balancer' },
+      ],
+      create: {
+        label: 'Create load balancer',
+        fields: [
+          { name: 'name', label: 'Load balancer name', placeholder: 'my-alb' },
+          { name: 'type', label: 'Type', options: () => [{ value: 'application', label: 'Application Load Balancer' }, { value: 'network', label: 'Network Load Balancer' }] },
+          { name: 'scheme', label: 'Scheme', options: () => [{ value: 'internet-facing', label: 'Internet-facing' }, { value: 'internal', label: 'Internal' }] },
+        ],
+        build: (f, s) => ({
+          name: f.name, arn: `arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/${f.name}`,
+          type: f.type || 'application', scheme: f.scheme || 'internet-facing', state: 'provisioning',
+          dnsName: `${f.name}-${Math.floor(Math.random() * 900000) + 100000}.us-east-1.elb.amazonaws.com`,
+          vpcId: s.vpc.vpcs[0]?.id || '', az: [...new Set(s.vpc.subnets.map((x) => x.az))].slice(0, 2),
+          securityGroups: [], listeners: [],
+          created: new Date().toISOString().slice(0, 19).replace('T', ' '), tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'targetGroup', listRoute: '/ec2/target-groups', listLabel: 'Target groups',
@@ -380,6 +650,41 @@ export const RESOURCES = [
       { label: 'VPC ID', field: 'vpcId', mono: true, link: (r) => (r.vpcId ? `/vpc/vpcs/${r.vpcId}` : undefined) },
     ],
     tabs: [tagTab],
+    // Menu NOT captured — the 2026-08-18 VPC run mislabelled its igw entry and actually read the
+    // network-ACL menu, so these items are inferred from the sibling VPC-family menus.
+    list: {
+      title: 'Internet gateways', singular: 'internet gateway',
+      filterPlaceholder: 'Filter internet gateways',
+      searchFields: ['id', 'name', 'vpcId', 'state'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Internet gateway ID', field: 'id', mono: true, linkToDetail: true },
+        { label: 'Name', field: 'name' },
+        { label: 'State', field: 'state' },
+        { label: 'VPC ID', field: 'vpcId', mono: true, link: (r) => `/vpc/vpcs/${r.vpcId}` },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create internet gateway' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete internet gateway' },
+      ],
+      deleteGuard: {
+        blocked: (r) => !!r.vpcId,
+        message: (rs) => `Detach ${rs.map((r) => r.id).join(', ')} from its VPC before deleting it`,
+      },
+      create: {
+        label: 'Create internet gateway',
+        fields: [{ name: 'name', label: 'Name', placeholder: 'my-igw', optional: true }],
+        build: (f) => ({
+          id: `igw-${Math.random().toString(16).substr(2, 8)}`,
+          name: f.name || 'unnamed-igw', state: 'detached', vpcId: '',
+          tags: f.name ? [{ Key: 'Name', Value: f.name }] : [],
+        }),
+      },
+    },
   },
   {
     id: 'natGateway', listRoute: '/vpc/nat-gateways', listLabel: 'NAT gateways',
@@ -394,6 +699,43 @@ export const RESOURCES = [
       { label: 'Created', field: 'created' },
     ],
     tabs: [tagTab],
+    list: {
+      title: 'NAT gateways', singular: 'NAT gateway',
+      filterPlaceholder: 'Filter NAT gateways',
+      searchFields: ['id', 'name', 'subnetId', 'state'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'NAT gateway ID', field: 'id', mono: true, linkToDetail: true },
+        { label: 'Name', field: 'name' },
+        { label: 'State', field: 'state' },
+        { label: 'Subnet', field: 'subnetId', mono: true, link: (r) => `/vpc/subnets/${r.subnetId}` },
+        { label: 'Primary public IPv4 address', field: 'publicIp', mono: true },
+        { label: 'Primary private IPv4 address', field: 'privateIp', mono: true },
+        { label: 'Created', field: 'created' },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create NAT gateway' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete NAT gateway' },
+      ],
+      create: {
+        label: 'Create NAT gateway',
+        fields: [
+          { name: 'name', label: 'Name', placeholder: 'my-nat-gateway', optional: true },
+          { name: 'subnetId', label: 'Subnet',
+            options: (state) => state.vpc.subnets.map((sn) => ({ value: sn.id, label: `${sn.id} (${sn.name})` })) },
+        ],
+        build: (f) => ({
+          id: `nat-${Math.random().toString(16).substr(2, 17)}`,
+          name: f.name || 'unnamed-nat', state: 'pending', subnetId: f.subnetId,
+          publicIp: '', privateIp: '', created: new Date().toISOString().slice(0, 19).replace('T', ' '),
+          tags: f.name ? [{ Key: 'Name', Value: f.name }] : [],
+        }),
+      },
+    },
   },
   {
     id: 'networkAcl', listRoute: '/vpc/network-acls', listLabel: 'Network ACLs',
@@ -494,6 +836,39 @@ export const RESOURCES = [
         { label: 'Created', field: 'created' }] },
       tagTab,
     ],
+    // Menu not captured for this resource; the standard list verbs are inferred from the
+    // sibling menus that were captured on 2026-08-18.
+    list: {
+      title: 'Log groups', singular: 'log group', filterPlaceholder: 'Filter log groups',
+      searchFields: ['name'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Log group', field: 'name', mono: true, linkToDetail: true },
+        { label: 'Retention', field: 'retentionDays', format: (v) => (v ? `${v} days` : 'Never expire') },
+        { label: 'Stored bytes', field: 'storedBytes' },
+        { label: 'Log streams', field: 'streams' },
+        { label: 'Created', field: 'created' },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create log group' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete log group' },
+      ],
+      create: {
+        label: 'Create log group',
+        fields: [
+          { name: 'name', label: 'Log group name', placeholder: '/aws/lambda/my-function' },
+          { name: 'retentionDays', label: 'Retention setting', options: () => [1, 3, 7, 14, 30, 60, 90, 365].map((d) => ({ value: String(d), label: `${d} days` })) },
+        ],
+        build: (f) => ({
+          name: f.name, retentionDays: Number(f.retentionDays) || 30, storedBytes: 0, streams: 0,
+          created: new Date().toISOString().slice(0, 19).replace('T', ' '), tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'snsTopic', listRoute: '/sns/topics', listLabel: 'Topics', detailRoute: '/sns/topics/:id',
@@ -511,6 +886,42 @@ export const RESOURCES = [
         empty: 'This topic has no subscriptions.' },
       tagTab,
     ],
+    // Menu not captured for this resource; the standard list verbs are inferred from the
+    // sibling menus that were captured on 2026-08-18.
+    list: {
+      title: 'Topics', singular: 'topic', filterPlaceholder: 'Filter topics',
+      searchFields: ['name', 'arn', 'displayName'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Name', field: 'name', linkToDetail: true },
+        { label: 'ARN', field: 'arn', mono: true },
+        { label: 'Display name', field: 'displayName' },
+        { label: 'Type', field: 'type' },
+        { label: 'Subscriptions', field: 'subscriptions' },
+        { label: 'Created', field: 'created' },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create topic' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete topic' },
+      ],
+      create: {
+        label: 'Create topic',
+        fields: [
+          { name: 'name', label: 'Name', placeholder: 'my-topic' },
+          { name: 'type', label: 'Type', options: () => [{ value: 'Standard', label: 'Standard' }, { value: 'FIFO', label: 'FIFO' }] },
+          { name: 'displayName', label: 'Display name', placeholder: 'My topic', optional: true },
+        ],
+        build: (f) => ({
+          name: f.name, arn: `arn:aws:sns:us-east-1:123456789012:${f.name}`,
+          displayName: f.displayName || '', type: f.type || 'Standard', subscriptions: 0,
+          created: new Date().toISOString().slice(0, 19).replace('T', ' '), tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'sqsQueue', listRoute: '/sqs/queues', listLabel: 'Queues', detailRoute: '/sqs/queues/:id',
@@ -555,6 +966,43 @@ export const RESOURCES = [
         empty: 'This hosted zone has no records.' },
       tagTab,
     ],
+    // Menu not captured for this resource; the standard list verbs are inferred from the
+    // sibling menus that were captured on 2026-08-18.
+    list: {
+      title: 'Hosted zones', singular: 'hosted zone', filterPlaceholder: 'Filter hosted zones',
+      searchFields: ['id', 'name', 'comment'],
+      actionsConfidence: 'inferred',
+      columns: [
+        { label: 'Hosted zone name', field: 'name', linkToDetail: true },
+        { label: 'Type', field: 'type' },
+        { label: 'Created by', field: 'createdBy', format: (v) => v || 'Route 53 console' },
+        { label: 'Record count', field: 'recordCount' },
+        { label: 'Description', field: 'comment' },
+        { label: 'Hosted zone ID', field: 'id', mono: true },
+      ],
+      actions: [
+        { kind: 'create', label: 'Create hosted zone' },
+        { kind: 'view-details', label: 'View details' },
+        { separator: true },
+        { kind: 'manage-tags', label: 'Manage tags' },
+        { separator: true },
+        { kind: 'delete', label: 'Delete hosted zone' },
+      ],
+      create: {
+        label: 'Create hosted zone',
+        fields: [
+          { name: 'name', label: 'Domain name', placeholder: 'example.com' },
+          { name: 'type', label: 'Type', options: () => [{ value: 'Public hosted zone', label: 'Public hosted zone' }, { value: 'Private hosted zone', label: 'Private hosted zone' }] },
+          { name: 'comment', label: 'Description', placeholder: 'optional', optional: true },
+        ],
+        build: (f) => ({
+          id: `Z${Math.random().toString(36).substr(2, 13).toUpperCase()}`,
+          name: f.name.endsWith('.') ? f.name : `${f.name}.`, type: f.type || 'Public hosted zone',
+          recordCount: 2, comment: f.comment || '',
+          created: new Date().toISOString().slice(0, 19).replace('T', ' '), tags: [],
+        }),
+      },
+    },
   },
   {
     id: 'distribution', listRoute: '/cloudfront/distributions', listLabel: 'Distributions',
