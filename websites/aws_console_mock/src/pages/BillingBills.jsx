@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { downloadAndRecord } from '../lib/exportFile';
 import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
 import {Download, ChevronDown, ChevronLeft, ChevronRight} from 'lucide-react';
@@ -45,6 +46,19 @@ export default function BillingBills() {
   // Previously this only flashed "Bill download initiated." — a success message for work
   // that never happened, and unverifiable besides: a browser download leaves nothing in
   // /go state_diff for a reward function to check.
+  // A text invoice rather than a real PDF: the mock can produce genuine file content without a
+  // PDF writer, and a file the agent can actually open beats a toast claiming one was sent.
+  const handleBillPdf = (bill) => {
+    const lines = [
+      `Invoice ${bill.invoiceId || bill.month}`, `Period: ${bill.month}`,
+      `Total: ${state.billing?.currency || 'USD'} ${bill.total ?? bill.amount ?? ''}`, '',
+      ...(state.billing?.byService || []).map((r) => `${r.name}\t${r.amount}`),
+    ].join('\n');
+    downloadAndRecord({ dispatch, addFlash, kind: 'billing-invoice',
+      filename: `invoice-${bill.month}.txt`, content: lines, mime: 'text/plain;charset=utf-8',
+      rows: (state.billing?.byService || []).length });
+  };
+
   const handleDownloadCsv = () => {
     const rows = (state.billing?.byService || []);
     const header = ['Service', 'Amount', 'Currency', 'Percentage'];
@@ -156,7 +170,7 @@ export default function BillingBills() {
                 <td>{b.dueDate ? format(new Date(b.dueDate), 'MMM d, yyyy') : '-'}</td>
                 <td>{b.paidDate ? format(new Date(b.paidDate), 'MMM d, yyyy') : '-'}</td>
                 <td>
-                  <button className="text-aws-blue text-xs hover:underline" onClick={() => addFlash('info', 'Bill PDF download initiated.')}>
+                  <button className="text-aws-blue text-xs hover:underline" onClick={() => handleBillPdf(b)}>
                     <Download size={14} />
                   </button>
                 </td>

@@ -562,9 +562,36 @@ export const getDefaultData = () => ({
   ],
 
   rdsParameterGroups: [
-    { name: "default.mysql8.0", family: "mysql8.0", description: "Default parameter group for MySQL 8.0", type: "DB Parameter Group" },
-    { name: "default.postgres15", family: "postgres15", description: "Default parameter group for PostgreSQL 15", type: "DB Parameter Group" },
-    { name: "custom-mysql-performance", family: "mysql8.0", description: "Custom MySQL params optimized for performance", type: "DB Parameter Group" },
+    { parameters: [
+      { name: 'character_set_server', value: 'utf8mb4', type: 'string', applyType: 'static', modifiable: true },
+      { name: 'max_connections', value: '150', type: 'integer', applyType: 'dynamic', modifiable: true },
+      { name: 'innodb_buffer_pool_size', value: '{DBInstanceClassMemory*3/4}', type: 'integer', applyType: 'static', modifiable: true },
+      { name: 'log_bin_trust_function_creators', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
+      { name: 'slow_query_log', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
+      { name: 'long_query_time', value: '10', type: 'float', applyType: 'dynamic', modifiable: true },
+      { name: 'innodb_file_per_table', value: '1', type: 'boolean', applyType: 'static', modifiable: false },
+      { name: 'innodb_flush_log_at_trx_commit', value: '1', type: 'integer', applyType: 'dynamic', modifiable: true },
+    ], name: "default.mysql8.0", family: "mysql8.0", description: "Default parameter group for MySQL 8.0", type: "DB Parameter Group" },
+    { parameters: [
+      { name: 'character_set_server', value: 'utf8mb4', type: 'string', applyType: 'static', modifiable: true },
+      { name: 'max_connections', value: '150', type: 'integer', applyType: 'dynamic', modifiable: true },
+      { name: 'innodb_buffer_pool_size', value: '{DBInstanceClassMemory*3/4}', type: 'integer', applyType: 'static', modifiable: true },
+      { name: 'log_bin_trust_function_creators', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
+      { name: 'slow_query_log', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
+      { name: 'long_query_time', value: '10', type: 'float', applyType: 'dynamic', modifiable: true },
+      { name: 'innodb_file_per_table', value: '1', type: 'boolean', applyType: 'static', modifiable: false },
+      { name: 'innodb_flush_log_at_trx_commit', value: '1', type: 'integer', applyType: 'dynamic', modifiable: true },
+    ], name: "default.postgres15", family: "postgres15", description: "Default parameter group for PostgreSQL 15", type: "DB Parameter Group" },
+    { parameters: [
+      { name: 'character_set_server', value: 'utf8mb4', type: 'string', applyType: 'static', modifiable: true },
+      { name: 'max_connections', value: '150', type: 'integer', applyType: 'dynamic', modifiable: true },
+      { name: 'innodb_buffer_pool_size', value: '{DBInstanceClassMemory*3/4}', type: 'integer', applyType: 'static', modifiable: true },
+      { name: 'log_bin_trust_function_creators', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
+      { name: 'slow_query_log', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
+      { name: 'long_query_time', value: '10', type: 'float', applyType: 'dynamic', modifiable: true },
+      { name: 'innodb_file_per_table', value: '1', type: 'boolean', applyType: 'static', modifiable: false },
+      { name: 'innodb_flush_log_at_trx_commit', value: '1', type: 'integer', applyType: 'dynamic', modifiable: true },
+    ], name: "custom-mysql-performance", family: "mysql8.0", description: "Custom MySQL params optimized for performance", type: "DB Parameter Group" },
   ],
 
   rdsQueryHistory: [
@@ -861,6 +888,8 @@ export const getDefaultData = () => ({
       { name: "Monthly-Total", type: "Cost", limit: 300, period: "MONTHLY", actual: 245.67, forecast: 285.00, alertThresholds: [80, 100], alerts: [{ threshold: 80, actual: 81.89, triggered: true }] },
       { name: "EC2-Budget", type: "Cost", limit: 200, period: "MONTHLY", actual: 142.30, forecast: 165.00, alertThresholds: [90], alerts: [] },
     ],
+    contacts: [],
+    anomalyMonitors: [],
     paymentMethods: [
       { type: "Credit Card", last4: "4242", brand: "Visa", expiry: "12/2025", isDefault: true },
     ],

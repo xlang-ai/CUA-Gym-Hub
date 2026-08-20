@@ -779,6 +779,25 @@ function reducer(prev, action) {
     //
     // Resource-specific cases (DELETE_VPC and friends) are kept and still preferred where
     // deletion has to cascade — this does not cascade, it only removes the row.
+    case 'ADD_BILLING_CONTACT': {
+      newState.billing = { ...prev.billing, contacts: [...(prev.billing.contacts || []), action.payload] };
+      break;
+    }
+    case 'CREATE_ANOMALY_MONITOR': {
+      newState.billing = { ...prev.billing, anomalyMonitors: [...(prev.billing.anomalyMonitors || []), action.payload] };
+      break;
+    }
+    case 'UPDATE_RDS_PARAMETER': {
+      // The page used to flash "Parameter updated" and throw the value away — the parameters
+      // were a hardcoded array in the component, so the table re-rendered with the old value
+      // while the message claimed otherwise.
+      const { groupName, parameter, value } = action.payload;
+      newState.rdsParameterGroups = prev.rdsParameterGroups.map((g) => (g.name !== groupName ? g : {
+        ...g,
+        parameters: (g.parameters || []).map((p) => (p.name === parameter ? { ...p, value } : p)),
+      }));
+      break;
+    }
     case 'RECORD_EXPORT': {
       // A download that only fires a toast cannot be verified: the reward function reads
       // /go state_diff, and a browser download leaves no trace there. Recording the export

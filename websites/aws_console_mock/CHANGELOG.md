@@ -4,6 +4,51 @@ All notable changes to this mock. Versions follow SemVer at the app level:
 PATCH = bugfix/visual/compat fix, MINOR = additive features, MAJOR = a change that
 cannot be made backward compatible for previously authored tasks.
 
+## 1.9.0
+
+A fleet-level fidelity program, and nine defects in this app that only the fleet screen could see.
+
+### `fleet/` — measuring the guide that already existed
+
+`SANDBOX_COMPLETENESS_GUIDE.md` states what a finished mock looks like, precisely enough to act
+on, and its acceptance criteria had **never been measured** — they were checked by reading,
+per app, by whoever was working on it. `fleet/audit-static.mjs` mechanises the guide's own step 3
+across all 98 sites in seconds, with each detector mapped to the criterion it serves.
+
+Baseline: **32 of 98 sites carry at least one finding**; 116 findings over 500k lines.
+`fleet/BASELINE.md` is generated, not written, so its numbers cannot drift from the run.
+`fleet/README.md` records the three-layer design and, importantly, the screen's calibration.
+
+### The two instruments disagreed, and both were wrong
+
+The screen reported 7 `toast_only_handler` hits here while the runtime probe reported **0 inert
+controls**. Both faults were real:
+
+- All 7 source findings were genuine — two announced downloads that never happened, two said
+  "simulated in mock mode", one claimed a dashboard reset that reset nothing.
+- **The runtime probe was rewarding the defect it exists to catch.** It counted any DOM text
+  change as a response, so a handler whose whole body is `addFlash('success', …)` scored as
+  working. It now ignores flash-only changes and consults `/go`, so a real state write with no
+  visible change still counts.
+
+Chasing that disagreement turned up two more, invisible to both instruments at the time:
+
+- The RDS parameter editor flashed **"Parameter updated to X" and discarded the value** — the
+  parameters were a hardcoded array in the component, so the table re-rendered unchanged while
+  the message claimed otherwise. They are state now, and the edit persists.
+- That page also held a **frozen copy of a store object** in component state, so even after the
+  fix the view rendered stale values. It derives from live state now.
+
+All nine are fixed with real local behavior, per the guide: Copy ARN copies, bill download writes
+a real file and records the export, dashboard reset restores hidden widgets and says so honestly
+when there is nothing to restore, and the two "simulated in mock mode" billing actions are now
+dialogs that write `billing.contacts` and `billing.anomalyMonitors`.
+
+The `toast_without_write` detector was added from the RDS finding — a screen that learns from
+what it missed.
+
+32/32 gates on dev, preview and hardened; walkthroughs 9/9, 17/17, 7/7, 7/7, 7/7, 44/44, 26.
+
 ## 1.8.0
 
 **List pages become registry-driven.** 11 pages, 1,590 lines of near-identical bespoke code,

@@ -1,0 +1,1119 @@
+{
+  "generated_by": "fleet/audit-static.mjs",
+  "sites": [
+    {
+      "site": "miro_mock",
+      "files": 15,
+      "lines": 4735,
+      "findings": [
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 12,
+          "files": 1,
+          "examples": [
+            "onClick={() => {}}",
+            "onClick={() => {}}"
+          ]
+        },
+        {
+          "id": "coming_soon",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "\"Search on board (coming soon)\""
+          ]
+        }
+      ],
+      "score": 39
+    },
+    {
+      "site": "hubspot_marketing_mock",
+      "files": 20,
+      "lines": 6998,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 8,
+          "files": 7,
+          "examples": [
+            "<EmptyState",
+            "<EmptyState",
+            "<EmptyState"
+          ]
+        }
+      ],
+      "score": 24
+    },
+    {
+      "site": "meta_ads_mock",
+      "files": 20,
+      "lines": 5472,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 8,
+          "files": 2,
+          "examples": [
+            "onClick={() => showToast('Test events tool opened.')}",
+            "onClick={() => showToast('Partner integrations opened.')}",
+            "onClick={() => showToast('Report exported.')}"
+          ]
+        }
+      ],
+      "score": 24
+    },
+    {
+      "site": "Zendesk_mock",
+      "files": 24,
+      "lines": 4113,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 7,
+          "files": 4,
+          "examples": [
+            "<EmptyState",
+            "<EmptyState",
+            "<EmptyState"
+          ]
+        }
+      ],
+      "score": 21
+    },
+    {
+      "site": "youtube_mock",
+      "files": 25,
+      "lines": 5985,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 7,
+          "files": 4,
+          "examples": [
+            "onClick={() => showToast('Voice search is not available')}",
+            "onClick={() => showToast('Notifications updated')}",
+            "onClick={() => showToast('Subscribed')}"
+          ]
+        }
+      ],
+      "score": 21
+    },
+    {
+      "site": "openreview_mock",
+      "files": 14,
+      "lines": 3300,
+      "findings": [
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 17,
+          "files": 2,
+          "examples": [
+            "<a href=\"#\" className=\"donate-link\" style={{ color: '#3e6775' }}>",
+            "<a href=\"#\" style={{ fontSize: 15 }}>",
+            "<a href=\"#\" onClick={e =>"
+          ]
+        }
+      ],
+      "score": 17
+    },
+    {
+      "site": "dingtalk_mock",
+      "files": 26,
+      "lines": 5780,
+      "findings": [
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 5,
+          "files": 5,
+          "examples": [
+            "onChange={() => {}}",
+            "onChange={() => {}}",
+            "onChange={() => {}}"
+          ]
+        }
+      ],
+      "score": 15
+    },
+    {
+      "site": "Canvas-LMS_mock",
+      "files": 36,
+      "lines": 6531,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 2,
+          "files": 1,
+          "examples": [
+            "<Placeholder",
+            "<Placeholder"
+          ]
+        },
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => {}}"
+          ]
+        }
+      ],
+      "score": 9
+    },
+    {
+      "site": "workday_mock",
+      "files": 20,
+      "lines": 6718,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 3,
+          "files": 2,
+          "examples": [
+            "<EmptyState",
+            "<EmptyState",
+            "<EmptyState"
+          ]
+        }
+      ],
+      "score": 9
+    },
+    {
+      "site": "bamboohr_mock",
+      "files": 18,
+      "lines": 6758,
+      "findings": [
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 8,
+          "files": 2,
+          "examples": [
+            "<a href=\"#\" title=\"LinkedIn\" style={{ color: '#ccc', display: 'flex' }",
+            "<a href=\"#\" title=\"Twitter/X\" style={{ color: '#ccc', display: 'flex' ",
+            "<a href=\"#\" style={{ fontSize: 12, color: '#73C41D', display: 'block',"
+          ]
+        }
+      ],
+      "score": 8
+    },
+    {
+      "site": "feishu_mock",
+      "files": 29,
+      "lines": 7728,
+      "findings": [
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 2,
+          "files": 1,
+          "examples": [
+            "onChange={() => {}}",
+            "onChange={() => {}}"
+          ]
+        }
+      ],
+      "score": 6
+    },
+    {
+      "site": "google_sheets_mock",
+      "files": 19,
+      "lines": 5869,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 2,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('All changes saved locally')}",
+            "onClick={() => showToast(`${name} opened in sandbox mode`)}"
+          ]
+        }
+      ],
+      "score": 6
+    },
+    {
+      "site": "klaviyo_mock",
+      "files": 22,
+      "lines": 3343,
+      "findings": [
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 6,
+          "files": 2,
+          "examples": [
+            "<a href=\"#\" onClick={e =>",
+            "<a href=\"#\" onClick={e =>",
+            "<a href=\"#\" style=\"display:inline-block;background:#000;color:#fff;pad"
+          ]
+        }
+      ],
+      "score": 6
+    },
+    {
+      "site": "ServiceNow_mock",
+      "files": 25,
+      "lines": 4137,
+      "findings": [
+        {
+          "id": "alert_dialog",
+          "severity": "medium",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 4,
+          "files": 4,
+          "examples": [
+            "alert(",
+            "alert(",
+            "alert("
+          ]
+        }
+      ],
+      "score": 4
+    },
+    {
+      "site": "amplitude_mock",
+      "files": 25,
+      "lines": 5722,
+      "findings": [
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 4,
+          "files": 4,
+          "examples": [
+            "<a href=\"#\" onClick={e =>",
+            "<a href=\"#\" onClick={e =>",
+            "<a href=\"#\" onClick={e =>"
+          ]
+        }
+      ],
+      "score": 4
+    },
+    {
+      "site": "gitlab_mock",
+      "files": 57,
+      "lines": 7058,
+      "findings": [
+        {
+          "id": "coming_soon",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "'Fixed the sidebar and form layout. PR coming soon.'"
+          ]
+        },
+        {
+          "id": "todo_marker",
+          "severity": "low",
+          "guide": "Inventory fake affordances",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "TODO\\n- [ ] Update token refresh logic\\n- [ ] Add tests\\n- [ ] U"
+          ]
+        }
+      ],
+      "score": 3.25
+    },
+    {
+      "site": "google_docs_mock",
+      "files": 23,
+      "lines": 5204,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Spell check completed: no issues found')}"
+          ]
+        },
+        {
+          "id": "todo_marker",
+          "severity": "low",
+          "guide": "Inventory fake affordances",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "XXX</p><h2>Team</h2><p>Project Lead: [Name]</p><p>Team Members:"
+          ]
+        }
+      ],
+      "score": 3.25
+    },
+    {
+      "site": "adp_mock",
+      "files": 31,
+      "lines": 5415,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Report exported as CSV', 'success')}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "amazon_seller_mock",
+      "files": 31,
+      "lines": 4555,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Packing slips printed', 'info')}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "aws_console_mock",
+      "files": 81,
+      "lines": 17768,
+      "findings": [
+        {
+          "id": "toast_without_write",
+          "severity": "high",
+          "guide": "Mutations persist and appear in /go state/diff",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "handleResetLayout() announces success without writing"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "azure_mock",
+      "files": 38,
+      "lines": 5039,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "<Placeholder"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "cloudflare_mock",
+      "files": 30,
+      "lines": 6560,
+      "findings": [
+        {
+          "id": "coming_soon",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "'This feature is available on paid plans or coming soon.'"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "expedia_mock",
+      "files": 26,
+      "lines": 8399,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Share link copied!')}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "gmail_mock",
+      "files": 13,
+      "lines": 4512,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Xmail Help Center — not available in mock')}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "pinterest_mock",
+      "files": 19,
+      "lines": 5186,
+      "findings": [
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onPinDeleted={() => {}}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "postman_mock",
+      "files": 16,
+      "lines": 3561,
+      "findings": [
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onChange={() => {}}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "salesforce_mock",
+      "files": 36,
+      "lines": 8766,
+      "findings": [
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onChangeStatus={() => {}}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "woocommerce_mock",
+      "files": 26,
+      "lines": 5579,
+      "findings": [
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => { }}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "xiaohongshu_mock",
+      "files": 20,
+      "lines": 4472,
+      "findings": [
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('功能暂未开放')}"
+          ]
+        }
+      ],
+      "score": 3
+    },
+    {
+      "site": "github_mock",
+      "files": 34,
+      "lines": 8269,
+      "findings": [
+        {
+          "id": "permanently_disabled",
+          "severity": "medium",
+          "guide": "Menus do not contain gray disabled items except state-dependent controls",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "disabled={true}"
+          ]
+        },
+        {
+          "id": "todo_marker",
+          "severity": "low",
+          "guide": "Inventory fake affordances",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "TODO\\n\\n- [ ] Learn TypeScript\\n- [x] Set up CI/CD\\n- [ ] Write "
+          ]
+        }
+      ],
+      "score": 1.25
+    },
+    {
+      "site": "mailchimp_mock",
+      "files": 26,
+      "lines": 5436,
+      "findings": [
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "<a href=\"#\" style={{ color: '#007C89' }}>"
+          ]
+        }
+      ],
+      "score": 1
+    },
+    {
+      "site": "mixpanel_mock",
+      "files": 28,
+      "lines": 5134,
+      "findings": [
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "<a href=\"#\" onClick={e =>"
+          ]
+        }
+      ],
+      "score": 1
+    },
+    {
+      "site": "12306_mock",
+      "files": 24,
+      "lines": 4320,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "Expensify_mock",
+      "files": 19,
+      "lines": 3153,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "PACS-viewer_mock",
+      "files": 12,
+      "lines": 3141,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "SAP_mock",
+      "files": 25,
+      "lines": 4250,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "TradingView_mock",
+      "files": 26,
+      "lines": 5304,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "airtable_mock",
+      "files": 16,
+      "lines": 2559,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "aliyun_mock",
+      "files": 34,
+      "lines": 4359,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "amazon_mock",
+      "files": 18,
+      "lines": 4812,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "asana_mock",
+      "files": 21,
+      "lines": 5688,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "booking_com_mock",
+      "files": 20,
+      "lines": 4767,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "canva_mock",
+      "files": 11,
+      "lines": 1459,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "canvas_mock",
+      "files": 12,
+      "lines": 1726,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "circleci_mock",
+      "files": 23,
+      "lines": 3866,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "clio_mock",
+      "files": 29,
+      "lines": 6535,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "coinbase_mock",
+      "files": 33,
+      "lines": 4381,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "confluence_mock",
+      "files": 13,
+      "lines": 1709,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "contractbook_mock",
+      "files": 20,
+      "lines": 4739,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "datadog_mock",
+      "files": 32,
+      "lines": 4599,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "discord_mock",
+      "files": 14,
+      "lines": 7430,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "docusign_mock",
+      "files": 17,
+      "lines": 5939,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "ebay_mock",
+      "files": 12,
+      "lines": 3110,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "epic-health_mock",
+      "files": 31,
+      "lines": 5906,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "facebook_mock",
+      "files": 27,
+      "lines": 7594,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "google_ads_mock",
+      "files": 25,
+      "lines": 4894,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "google_analytics_mock",
+      "files": 33,
+      "lines": 2931,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "google_calendar_mock",
+      "files": 15,
+      "lines": 3263,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "google_drive_mock",
+      "files": 31,
+      "lines": 4986,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "google_flights_mock",
+      "files": 19,
+      "lines": 4300,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "greenhouse_mock",
+      "files": 27,
+      "lines": 5853,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "gusto_mock",
+      "files": 31,
+      "lines": 6223,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "hotjar_mock",
+      "files": 20,
+      "lines": 4592,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "hubspot_mock",
+      "files": 15,
+      "lines": 5060,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "instacart_mock",
+      "files": 27,
+      "lines": 3829,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "instagram_mock",
+      "files": 20,
+      "lines": 5145,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "jira_mock",
+      "files": 20,
+      "lines": 4855,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "lattice_mock",
+      "files": 25,
+      "lines": 5270,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "linear_mock",
+      "files": 28,
+      "lines": 4984,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "linkedin_mock",
+      "files": 15,
+      "lines": 4208,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "looker_studio_mock",
+      "files": 23,
+      "lines": 4980,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "lucidchart_mock",
+      "files": 8,
+      "lines": 3231,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "microsoft_teams_mock",
+      "files": 21,
+      "lines": 3885,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "monday_mock",
+      "files": 34,
+      "lines": 4690,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "notion_mock",
+      "files": 21,
+      "lines": 6845,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "outlook_web_mock",
+      "files": 17,
+      "lines": 3042,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "paypal_mock",
+      "files": 15,
+      "lines": 2989,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "quickbooks_mock",
+      "files": 19,
+      "lines": 6016,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "reddit_mock",
+      "files": 20,
+      "lines": 4909,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "robinhood_mock",
+      "files": 17,
+      "lines": 2847,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "sentry_mock",
+      "files": 23,
+      "lines": 4661,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "shopify_admin_mock",
+      "files": 27,
+      "lines": 6752,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "slack_mock",
+      "files": 29,
+      "lines": 6705,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "stripe_dashboard_mock",
+      "files": 25,
+      "lines": 4542,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "tableau_mock",
+      "files": 20,
+      "lines": 2700,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "taobao_seller_mock",
+      "files": 23,
+      "lines": 6762,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "trello_mock",
+      "files": 11,
+      "lines": 5048,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "tripadvisor_mock",
+      "files": 26,
+      "lines": 4776,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "twitter_mock",
+      "files": 20,
+      "lines": 4315,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "uber_eats_mock",
+      "files": 30,
+      "lines": 5660,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "vercel_mock",
+      "files": 25,
+      "lines": 4257,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "wandb_mock",
+      "files": 24,
+      "lines": 5667,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "wechat_mock",
+      "files": 22,
+      "lines": 5576,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "weibo_mock",
+      "files": 23,
+      "lines": 5081,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "westlaw_mock",
+      "files": 14,
+      "lines": 2342,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "zhihu_mock",
+      "files": 26,
+      "lines": 8907,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "zillow_mock",
+      "files": 15,
+      "lines": 4592,
+      "findings": [],
+      "score": 0
+    },
+    {
+      "site": "zoom_web_mock",
+      "files": 14,
+      "lines": 3110,
+      "findings": [],
+      "score": 0
+    }
+  ]
+}

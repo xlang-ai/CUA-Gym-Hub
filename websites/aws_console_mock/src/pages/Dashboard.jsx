@@ -30,6 +30,19 @@ export default function Dashboard() {
   const [widgetMenuOpen, setWidgetMenuOpen] = useState(null);
   const [showWidgetLibrary, setShowWidgetLibrary] = useState(false);
   const [hiddenWidgets, setHiddenWidgets] = useState([]);
+
+  // Restores every hidden widget, and reports the truth when there was nothing to restore.
+  // Announcing a reset that changed nothing is the fake-feedback pattern the completeness guide
+  // rules out, and it also teaches an agent that the click did something.
+  const handleResetLayout = () => {
+    if (hiddenWidgets.length === 0) {
+      addFlash('info', 'The dashboard is already showing the default layout');
+      return;
+    }
+    const n = hiddenWidgets.length;
+    setHiddenWidgets([]);
+    addFlash('success', `Restored ${n} widget${n === 1 ? '' : 's'} to the default layout`);
+  };
   const unreadNotifs = state.notifications.filter(n => !n.read).length;
   const lastMonth = state.billing.lastMonth;
   const currentMonth = state.billing.currentMonth;
@@ -53,7 +66,7 @@ export default function Dashboard() {
           Console Home <span className="text-aws-blue text-sm font-normal ml-2 cursor-pointer hover:underline">Info</span>
         </h1>
         <div className="flex items-center gap-2">
-          <button className="aws-btn aws-btn-secondary text-xs" onClick={() => addFlash('success', 'Dashboard layout reset to default')}>Reset to default layout</button>
+          <button className="aws-btn aws-btn-secondary text-xs" onClick={handleResetLayout}>Reset to default layout</button>
           <button className="aws-btn aws-btn-call-to-action text-xs" onClick={() => setShowWidgetLibrary(true)}>+ Add widgets</button>
         </div>
       </div>

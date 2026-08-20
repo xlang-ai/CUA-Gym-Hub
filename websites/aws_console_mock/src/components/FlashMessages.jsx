@@ -52,7 +52,7 @@ export default function FlashMessages() {
       {flashes.map(f => {
         const Icon = ICONS[f.type] || Info;
         return (
-          <div key={f.id} className={`flex items-center gap-3 px-4 py-3 animate-fade-in ${STYLES[f.type] || STYLES.info}`} style={{ borderRadius: 16, borderLeft: `4px solid ${ACCENTS[f.type] || ACCENTS.info}` }}>
+          <div key={f.id} role="status" data-testid="flash" className={`flex items-center gap-3 px-4 py-3 animate-fade-in ${STYLES[f.type] || STYLES.info}`} style={{ borderRadius: 16, borderLeft: `4px solid ${ACCENTS[f.type] || ACCENTS.info}` }}>
             <Icon size={18} className={ICON_COLORS[f.type] || ICON_COLORS.info} />
             <span className="flex-1 text-sm font-medium">{f.message}</span>
             <button

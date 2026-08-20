@@ -1,11 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../store/StoreContext';
 import { Link } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ExternalLink, X, AlertCircle } from 'lucide-react';
 
 export default function BillingDashboard() {
-  const { state, addFlash } = useStore();
+  const { state, dispatch, addFlash } = useStore();
+  const [dialog, setDialog] = useState(null);
+  const [form, setForm] = useState({ name: '', email: '', title: '', threshold: '100' });
+
+  // Both of these were "simulated in mock mode" toasts. The completeness guide asks for a local
+  // analog rather than fake feedback, and a recorded contact or monitor is something a task can
+  // actually check afterwards.
+  const submitDialog = (e) => {
+    e.preventDefault();
+    if (dialog === 'contact') {
+      dispatch({ type: 'ADD_BILLING_CONTACT', payload: {
+        name: form.name, email: form.email, title: form.title || 'Billing', type: 'Alternate' } });
+      addFlash('success', `Added ${form.email} as an alternate billing contact`);
+    } else {
+      dispatch({ type: 'CREATE_ANOMALY_MONITOR', payload: {
+        id: `monitor-${Math.random().toString(16).substr(2, 10)}`,
+        name: form.name, type: 'XWS services', threshold: Number(form.threshold) || 100,
+        status: 'Active' } });
+      addFlash('success', `Created anomaly monitor ${form.name}`);
+    }
+    setForm({ name: '', email: '', title: '', threshold: '100' });
+    setDialog(null);
+  };
   const { billing } = state;
   const costChange = billing.currentMonth - billing.lastMonth;
   const costPct = billing.lastMonth > 0 ? ((costChange / billing.lastMonth) * 100).toFixed(1) : 0;
@@ -164,14 +186,14 @@ export default function BillingDashboard() {
                 title="Add alternate billing contact"
                 desc="Add an additional billing contact."
                 action="Update billing contact"
-                onAction={() => addFlash('info', 'Billing contact update is simulated in mock mode')}
+                onAction={() => setDialog('contact')}
               />
               <RecommendedAction
                 icon="🔍"
                 title="Create an anomaly monitor"
                 desc="Create a Cost Anomaly monitor to automatically detect cost anomalies."
                 action="Create a monitor"
-                onAction={() => addFlash('info', 'Anomaly monitor creation is simulated in mock mode')}
+                onAction={() => setDialog('monitor')}
               />
               <RecommendedAction
                 icon="💰"
@@ -232,6 +254,53 @@ export default function BillingDashboard() {
           </tbody>
         </table>
       </div>
+
+      {dialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white shadow-xl w-full max-w-lg border border-aws-border">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-aws-status-info-bg/30">
+              <h3 className="font-bold">{dialog === 'contact' ? 'Add alternate billing contact' : 'Create anomaly monitor'}</h3>
+              <button onClick={() => setDialog(null)} aria-label="Close"><X size={18} /></button>
+            </div>
+            <form onSubmit={submitDialog} className="p-4 space-y-4 text-sm">
+              <div>
+                <label className="block font-bold mb-1" htmlFor="bd-name">
+                  {dialog === 'contact' ? 'Full name' : 'Monitor name'}
+                </label>
+                <input id="bd-name" className="aws-input" value={form.name} required
+                  onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              </div>
+              {dialog === 'contact' ? (
+                <>
+                  <div>
+                    <label className="block font-bold mb-1" htmlFor="bd-email">Email address</label>
+                    <input id="bd-email" type="email" className="aws-input" value={form.email} required
+                      onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="block font-bold mb-1" htmlFor="bd-title">Title <span className="font-normal text-aws-text-secondary">- optional</span></label>
+                    <input id="bd-title" className="aws-input" value={form.title}
+                      onChange={(e) => setForm({ ...form, title: e.target.value })} />
+                  </div>
+                </>
+              ) : (
+                <div>
+                  <label className="block font-bold mb-1" htmlFor="bd-threshold">Alert threshold (USD)</label>
+                  <input id="bd-threshold" type="number" min="1" className="aws-input" value={form.threshold} required
+                    onChange={(e) => setForm({ ...form, threshold: e.target.value })} />
+                  <p className="text-aws-text-secondary text-xs mt-1">Raise an alert when detected spend anomalies exceed this amount.</p>
+                </div>
+              )}
+              <div className="flex justify-end gap-2 pt-2">
+                <button type="button" className="aws-btn aws-btn-secondary" onClick={() => setDialog(null)}>Cancel</button>
+                <button type="submit" className="aws-btn aws-btn-primary">
+                  {dialog === 'contact' ? 'Add contact' : 'Create monitor'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

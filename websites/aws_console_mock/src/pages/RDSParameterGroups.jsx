@@ -8,7 +8,10 @@ export default function RDSParameterGroups() {
   const { state, dispatch, addFlash } = useStore();
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState([]);
-  const [detailGroup, setDetailGroup] = useState(null);
+  // Holds the NAME, not a copy of the group. Storing the object froze it: after a parameter
+  // was edited the reducer updated the store while this component kept rendering its stale
+  // snapshot, so the save looked like it had done nothing and the success message was a lie.
+  const [detailGroupName, setDetailGroupName] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupFamily, setNewGroupFamily] = useState('mysql8.0');
@@ -40,29 +43,25 @@ export default function RDSParameterGroups() {
     setNewGroupDesc('');
   };
 
+  const detailGroup = detailGroupName
+    ? (state.rdsParameterGroups || []).find((g) => g.name === detailGroupName)
+    : null;
+
   const handleSaveParam = () => {
     if (!editingParam) return;
+    dispatch({ type: 'UPDATE_RDS_PARAMETER', payload: {
+      groupName: detailGroup.name, parameter: editingParam.name, value: editParamValue } });
     addFlash('success', `Parameter "${editingParam.name}" updated to "${editParamValue}"`);
     setEditingParam(null);
     setEditParamValue('');
   };
 
-  const mockParams = [
-    { name: 'character_set_server', value: 'utf8mb4', type: 'string', applyType: 'static', modifiable: true },
-    { name: 'max_connections', value: '150', type: 'integer', applyType: 'dynamic', modifiable: true },
-    { name: 'innodb_buffer_pool_size', value: '{DBInstanceClassMemory*3/4}', type: 'integer', applyType: 'static', modifiable: true },
-    { name: 'log_bin_trust_function_creators', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
-    { name: 'slow_query_log', value: '0', type: 'boolean', applyType: 'dynamic', modifiable: true },
-    { name: 'long_query_time', value: '10', type: 'float', applyType: 'dynamic', modifiable: true },
-    { name: 'innodb_file_per_table', value: '1', type: 'boolean', applyType: 'static', modifiable: false },
-    { name: 'innodb_flush_log_at_trx_commit', value: '1', type: 'integer', applyType: 'dynamic', modifiable: true },
-  ];
 
   if (detailGroup) {
     return (
       <div className="space-y-0">
         <div className="flex items-center gap-2 mb-4">
-          <button className="text-aws-blue hover:underline text-sm" onClick={() => setDetailGroup(null)}>Parameter groups</button>
+          <button className="text-aws-blue hover:underline text-sm" onClick={() => setDetailGroupName(null)}>Parameter groups</button>
           <span className="text-aws-text-secondary">/</span>
           <h1 className="text-2xl font-bold">{detailGroup.name}</h1>
         </div>
@@ -79,12 +78,14 @@ export default function RDSParameterGroups() {
           </div>
           <div className="px-4 py-2 border-b border-aws-border-secondary flex items-center justify-between">
             <h3 className="font-bold text-sm">Parameters</h3>
-            <button className="aws-btn aws-btn-secondary text-xs" onClick={() => addFlash('info', 'Select a parameter row to edit its value')}>Edit parameters</button>
+            <button className="aws-btn aws-btn-secondary text-xs" disabled={!editingParam}
+              title={editingParam ? 'Save the parameter being edited' : 'Choose Edit on a parameter row first'}
+              onClick={handleSaveParam}>Edit parameters</button>
           </div>
           <table className="aws-table">
             <thead><tr><th>Parameter name</th><th>Value</th><th>Type</th><th>Apply type</th><th>Modifiable</th><th className="w-20"></th></tr></thead>
             <tbody>
-              {mockParams.map(p => (
+              {(detailGroup.parameters || []).map(p => (
                 <tr key={p.name}>
                   <td className="font-mono text-sm text-aws-blue">{p.name}</td>
                   <td className="font-mono text-sm">
@@ -112,7 +113,7 @@ export default function RDSParameterGroups() {
             </tbody>
           </table>
           <div className="px-4 py-2 border-t border-aws-border-secondary text-xs text-aws-text-secondary">
-            Showing 1-{mockParams.length} of {mockParams.length} parameters
+            Showing 1-{(detailGroup.parameters || []).length} of {(detailGroup.parameters || []).length} parameters
           </div>
         </div>
       </div>
@@ -148,7 +149,7 @@ export default function RDSParameterGroups() {
           {filtered.length === 0 ? (
             <tr><td colSpan={5} className="text-center py-8 text-aws-text-secondary">No parameter groups found</td></tr>
           ) : paged.rows.map(g => (
-            <tr key={g.name} className={`cursor-pointer ${selected.includes(g.name) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailGroup(g)}>
+            <tr key={g.name} className={`cursor-pointer ${selected.includes(g.name) ? 'bg-aws-status-info-bg/50' : ''}`} onClick={() => setDetailGroupName(g.name)}>
               <td onClick={e => e.stopPropagation()}>
                 <input type="checkbox" checked={selected.includes(g.name)} onChange={() => toggleSelect(g.name)} />
               </td>

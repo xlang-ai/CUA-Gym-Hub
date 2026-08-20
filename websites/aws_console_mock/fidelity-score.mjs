@@ -141,7 +141,20 @@ async function measurePage() {
  * page and reported rather than hidden, so a truncated probe never reads as full coverage.
  */
 const PROBE_CAP = 14;
-async function probeInteractions(page) {
+async function probeInteractions(page, base, sid) {
+  // Server state is part of the answer. An export that writes a record and shows a message has
+  // done real work even though the visible page is unchanged — and that record is exactly what a
+  // reward function reads. Judging on the DOM alone called four working exports inert.
+  const stateFingerprint = async () => {
+    if (!sid) return '';
+    try {
+      const r = await fetch(`${base}/go?sid=${sid}`);
+      if (!r.ok) return '';
+      const j = await r.json();
+      return JSON.stringify(j.current_state || {}).length + ':' + JSON.stringify(j.state_diff || {}).length;
+    } catch { return ''; }
+  };
+
   const openMenu = (i) => page.evaluate((idx) => {
     const t = document.querySelectorAll('[aria-haspopup="menu"]')[idx];
     if (!t) return false;
@@ -155,12 +168,24 @@ async function probeInteractions(page) {
     }
     document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   });
-  const snapshot = () => page.evaluate(() => ({
-    len: document.body.innerText.length,
-    fields: document.querySelectorAll('input, select, textarea').length,
-    dialogs: document.querySelectorAll('[role=dialog], .aws-modal, .fixed.inset-0').length,
-    href: location.hash + location.pathname,
-  }));
+  // Text length EXCLUDING flash messages, and the flash count kept separately.
+  //
+  // The first version counted any text change as a response, so a handler whose whole body is
+  // `addFlash('success', ...)` scored as working — and that handler is the defect itself, a
+  // success message for work never done. The fleet source screen found seven of them in this app
+  // while this probe reported none inert. An instrument that rewards the thing it exists to
+  // catch is worse than no instrument.
+  const snapshot = () => page.evaluate(() => {
+    const flashes = [...document.querySelectorAll('[data-testid=flash]')];
+    const flashLen = flashes.reduce((a, f) => a + (f.innerText || '').length, 0);
+    return {
+      len: document.body.innerText.length - flashLen,
+      flashes: flashes.length,
+      fields: document.querySelectorAll('input, select, textarea').length,
+      dialogs: document.querySelectorAll('[role=dialog], .aws-modal, .fixed.inset-0').length,
+      href: location.hash + location.pathname,
+    };
+  });
 
   const triggerCount = await page.$$eval('[aria-haspopup="menu"]', (e) => e.length);
   const enabledLabels = [];
@@ -192,11 +217,13 @@ async function probeInteractions(page) {
   const capped = enabledLabels.length > PROBE_CAP;
   const probe = enabledLabels.slice(0, PROBE_CAP);
   const inert = [];
+  const inertToastOnly = [];
   let effective = 0;
   for (const { trigger, label } of probe) {
     // Baseline BEFORE the menu opens. Taken after opening, the menu's own text inflates the
     // baseline and every click then looks like a shrink.
     const before = await snapshot();
+    const beforeState = await stateFingerprint();
     if (trigger >= 0) { await openMenu(trigger); await new Promise((r) => setTimeout(r, 120)); }
     const clicked = await page.evaluate(({ l, inMenu }) => {
       const pool = inMenu
@@ -214,15 +241,21 @@ async function probeInteractions(page) {
     // or a substantially different page. Requiring the text to GROW was wrong — every
     // "Create ..." button swaps the table for a form, which makes the page shorter, and the
     // probe reported six working buttons as inert.
-    const responded = after.dialogs > before.dialogs
+    // A new flash alone is NOT a response — that handler is the defect this probe exists to
+    // catch. But a change to server state IS one, even with the page unchanged.
+    const afterState = await stateFingerprint();
+    const domMoved = after.dialogs > before.dialogs
       || after.href !== before.href
       || after.fields !== before.fields
       || Math.abs(after.len - before.len) > 40;
+    const stateMoved = beforeState !== '' && afterState !== beforeState;
+    const responded = domMoved || stateMoved;
+    if (!responded && after.flashes > before.flashes) inertToastOnly.push(label);
     if (responded) effective++; else inert.push(label);
     await closeAll();
     await new Promise((r) => setTimeout(r, 120));
   }
-  return { enabled: enabledLabels.length, probed: probe.length, effective, inert, capped };
+  return { enabled: enabledLabels.length, probed: probe.length, effective, inert, inertToastOnly, capped };
 }
 
 /** Does a row lead to a second layer, and does that layer have tabs? */
@@ -270,7 +303,7 @@ try {
     // Runtime probes. These click, so they run after the static read of the page.
     let interaction = { enabled: 0, probed: 0, effective: 0, inert: [], capped: false };
     let flow = { linked: false, detailTabs: 0 };
-    try { interaction = await probeInteractions(page); } catch (e) { interaction.error = e.message; }
+    try { interaction = await probeInteractions(page, BASE, `fidelity-${route.replace(/\W+/g, '-')}`); } catch (e) { interaction.error = e.message; }
     try { flow = await measureFlow(page, BASE, route); } catch (e) { flow.error = e.message; }
 
     const cols = coverage(spec.columns_default, measured.columns);
@@ -451,7 +484,10 @@ for (const r of worst) {
 }
 // The actionable output: items the console offers, that this mock renders as enabled, and
 // that do nothing when clicked. These are what "no blank endpoints" actually means.
-const inert = scored.flatMap((r) => (r.interaction?.inert || []).map((l) => `${r.route} -> ${l}`));
+const inert = scored.flatMap((r) => (r.interaction?.inert || []).map((l) => {
+  const toastOnly = (r.interaction.inertToastOnly || []).includes(l);
+  return `${r.route} -> ${l}${toastOnly ? '   [showed a toast and changed nothing]' : ''}`;
+}));
 if (inert.length) {
   console.log(`  inert actions (${inert.length}) — enabled, clicked, nothing happened`);
   for (const line of inert.slice(0, 20)) console.log(`    ${line}`);

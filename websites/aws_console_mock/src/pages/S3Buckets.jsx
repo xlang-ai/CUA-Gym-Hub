@@ -30,6 +30,18 @@ export default function S3Buckets() {
   const totalPages = Math.max(1, Math.ceil(buckets.length / PAGE_SIZE));
   const pagedBuckets = buckets.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+  // Copies for real, and reports what actually happened. Announcing a copy that never occurred
+  // is the fake-feedback pattern the completeness guide rules out.
+  const handleCopyArn = async () => {
+    const arns = selectedBuckets.map((n) => `arn:aws:s3:::${n}`).join('\n');
+    try {
+      await navigator.clipboard.writeText(arns);
+      addFlash('success', `Copied ${selectedBuckets.length} ARN${selectedBuckets.length === 1 ? '' : 's'} to the clipboard`);
+    } catch (e) {
+      addFlash('error', 'The browser blocked clipboard access');
+    }
+  };
+
   const handleCreate = (e) => {
     e.preventDefault();
     if (!newName.trim()) return;
@@ -104,7 +116,7 @@ export default function S3Buckets() {
           <div className="flex items-center gap-2">
             {selectedBuckets.length > 0 && (
               <>
-                <button className="aws-btn aws-btn-secondary text-xs" onClick={() => addFlash('info', 'ARN copied to clipboard')}>
+                <button className="aws-btn aws-btn-secondary text-xs" onClick={handleCopyArn}>
                   <Copy size={12} className="mr-1" /> Copy ARN
                 </button>
                 <button className="aws-btn aws-btn-secondary text-xs" onClick={handleEmpty}>Empty</button>

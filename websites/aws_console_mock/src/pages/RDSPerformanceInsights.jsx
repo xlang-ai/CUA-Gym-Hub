@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { downloadAndRecord, toCsv } from '../lib/exportFile';
 import LastUpdated from '../components/LastUpdated';
 import { useStore } from '../store/StoreContext';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -98,7 +99,7 @@ function buildTopSql(db) {
 const WAIT_STATE_COLOR_CLASSES = ['text-aws-blue', 'text-aws-success', 'text-aws-warning', 'text-aws-text-secondary'];
 
 export default function RDSPerformanceInsights() {
-  const { state, addFlash } = useStore();
+  const { state, dispatch, addFlash } = useStore();
   const databases = state.rds || [];
   const [dbInstanceId, setDbInstanceId] = useState(databases[0]?.id || '');
   const db = databases.find(d => d.id === dbInstanceId) || databases[0];
@@ -114,6 +115,14 @@ export default function RDSPerformanceInsights() {
     );
   }
 
+  const handleExport = () => {
+    const rows = (state.rdsQueryHistory || []).map((q) => [q.dbInstanceId, q.database, q.status, q.ranAt, (q.sql || '').slice(0, 120)]);
+    downloadAndRecord({
+      dispatch, addFlash, kind: 'performance-insights-csv', filename: 'performance-insights.csv',
+      content: toCsv(['DB instance', 'Database', 'Status', 'Ran at', 'SQL'], rows), rows: rows.length,
+    });
+  };
+
   return (
     <div>
       <div className="aws-page-header">
@@ -123,7 +132,7 @@ export default function RDSPerformanceInsights() {
         </div>
         <div className="flex items-center gap-2">
           <LastUpdated />
-          <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={() => addFlash('info', 'CSV export started. Check your downloads shortly.')}>
+          <button className="aws-btn aws-btn-secondary text-xs flex items-center gap-1" onClick={handleExport}>
             <Download size={14} /> Download CSV
           </button>
         </div>
