@@ -31,6 +31,26 @@
       "score": 39
     },
     {
+      "site": "hubspot_marketing_mock",
+      "files": 20,
+      "lines": 6998,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 8,
+          "files": 7,
+          "examples": [
+            "<EmptyState",
+            "<EmptyState",
+            "<EmptyState"
+          ]
+        }
+      ],
+      "score": 24
+    },
+    {
       "site": "meta_ads_mock",
       "files": 20,
       "lines": 5472,
@@ -49,6 +69,26 @@
         }
       ],
       "score": 24
+    },
+    {
+      "site": "Zendesk_mock",
+      "files": 24,
+      "lines": 4113,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 7,
+          "files": 4,
+          "examples": [
+            "<EmptyState",
+            "<EmptyState",
+            "<EmptyState"
+          ]
+        }
+      ],
+      "score": 21
     },
     {
       "site": "youtube_mock",
@@ -134,6 +174,26 @@
           "files": 1,
           "examples": [
             "onClick={() => {}}"
+          ]
+        }
+      ],
+      "score": 9
+    },
+    {
+      "site": "workday_mock",
+      "files": 20,
+      "lines": 6718,
+      "findings": [
+        {
+          "id": "placeholder_component",
+          "severity": "high",
+          "guide": "No gray placeholder graveyards",
+          "count": 3,
+          "files": 2,
+          "examples": [
+            "<EmptyState",
+            "<EmptyState",
+            "<EmptyState"
           ]
         }
       ],
@@ -629,13 +689,6 @@
       "score": 0
     },
     {
-      "site": "Zendesk_mock",
-      "files": 24,
-      "lines": 4113,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "airtable_mock",
       "files": 16,
       "lines": 2559,
@@ -814,13 +867,6 @@
       "site": "hotjar_mock",
       "files": 20,
       "lines": 4592,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "hubspot_marketing_mock",
-      "files": 20,
-      "lines": 6998,
       "findings": [],
       "score": 0
     },
@@ -1045,13 +1091,6 @@
       "site": "westlaw_mock",
       "files": 14,
       "lines": 2342,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "workday_mock",
-      "files": 20,
-      "lines": 6718,
       "findings": [],
       "score": 0
     },

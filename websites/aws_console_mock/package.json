@@ -19,7 +19,8 @@
     "walk:prefs": "node walkthroughs/ec2-preferences.mjs",
     "defaults": "node scripts/emit-defaults.mjs",
     "gates:hardened": "CUA_GYM_HARDENED=1 CUA_GYM_ADMIN_TOKEN=$CUA_GYM_ADMIN_TOKEN node quality.contract.mjs --base ${BASE:-http://127.0.0.1:5399}",
-    "walk:lists": "node walkthroughs/list-pages.mjs"
+    "walk:lists": "node walkthroughs/list-pages.mjs",
+    "fleet:audit": "node ../../fleet/audit-static.mjs"
   },
   "dependencies": {
     "@fontsource/open-sans": "^5.3.0",

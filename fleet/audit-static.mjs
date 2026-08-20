@@ -119,7 +119,11 @@ const DETECTORS = [
     id: 'placeholder_component',
     guide: 'No gray placeholder graveyards',
     severity: 'high',
-    test: (s) => [...s.matchAll(/<(Placeholder|ComingSoon|NotImplemented|EmptyState)\b/g)].map((m) => m[0]),
+    // `EmptyState` was in this list and produced an 8/8 false-positive rate on
+    // hubspot_marketing_mock: every hit was a legitimate `{items.length === 0 ? <EmptyState/> :
+    // <Table/>}`. An empty state is good UI, not a fake affordance. Removed — a detector with a
+    // known false-positive mode sends people to rewrite correct code.
+    test: (s) => [...s.matchAll(/<(Placeholder|ComingSoon|NotImplemented|NotAvailable|UnderConstruction)\b/g)].map((m) => m[0]),
   },
   {
     id: 'alert_dialog',

@@ -1,0 +1,468 @@
+{
+  "product": "Slack",
+  "captured": "2026-08-20",
+  "method": "Official Slack help center and documentation (slack.com/help, api.slack.com). All surfaces and tabs sourced from official documentation; some specific button labels and menu structures inferred from API docs and help articles.",
+  "entry_screen": {
+    "title": "Home view with consolidated tab navigation",
+    "primary_nav": [
+      "Home",
+      "DMs",
+      "Activity",
+      "Files",
+      "More (Later, Tools, Agentforce, Sales)"
+    ],
+    "sidebar_sections": [
+      "Directories (People, Channels, External Connections)",
+      "Conversations (channels and DMs list)",
+      "Apps"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "home",
+      "title": "Home",
+      "route_shape": "/client/:workspace/home",
+      "tabs": [
+        "All"
+      ],
+      "primary_actions": [
+        "Compose new message (+ icon)",
+        "Manage sidebar"
+      ],
+      "controls": [
+        "bulk_select",
+        "filter",
+        "preferences"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "channel_view",
+      "title": "Channel",
+      "route_shape": "/client/:workspace/:channel",
+      "default_tabs": [
+        "Messages"
+      ],
+      "tabs_auto_appear": [
+        "Pins (appears when messages are pinned)",
+        "Files (appears when files are shared)",
+        "Workflows (appears when workflows are created)"
+      ],
+      "tabs_user_managed": [
+        "Canvases",
+        "Lists",
+        "Workflows",
+        "Messages",
+        "Links",
+        "Files (organized in folders)"
+      ],
+      "tabs_max_count": 15,
+      "primary_actions": [
+        "Message input",
+        "Attachment/file upload",
+        "Format message",
+        "Send message"
+      ],
+      "actions_menu": [
+        "Add emoji reaction",
+        "Reply in thread",
+        "Edit message",
+        "Delete message",
+        "Save message",
+        "Pin to channel",
+        "Copy message link",
+        "Mark as unread"
+      ],
+      "channel_header_elements": [
+        "Channel name (clickable for topic/description)",
+        "Channel topic/description (up to 250 chars with emoji)",
+        "Tab navigation",
+        "Member list button",
+        "Details button",
+        "Info icon"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "default_tabs": "sourced",
+        "tabs_auto_appear": "sourced",
+        "tabs_user_managed": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "partially_sourced",
+        "channel_header_elements": "inferred"
+      }
+    },
+    {
+      "id": "direct_message",
+      "title": "Direct Message",
+      "route_shape": "/client/:workspace/dm/:user_or_group_id",
+      "default_tabs": [
+        "Messages"
+      ],
+      "tabs_auto_appear": [
+        "Pins (appears when messages are pinned)"
+      ],
+      "tabs_user_managed": [
+        "Canvases",
+        "Lists",
+        "Messages"
+      ],
+      "primary_actions": [
+        "Message input",
+        "Attachment/file upload",
+        "Start huddle",
+        "Send message"
+      ],
+      "actions_menu": [
+        "Add emoji reaction",
+        "Reply in thread",
+        "Edit message",
+        "Delete message",
+        "Save message",
+        "Pin to conversation",
+        "Copy message link",
+        "Mark as unread"
+      ],
+      "group_dm_features": [
+        "Can name group DM",
+        "Add up to 9 people to multi-person DM (MPDM)",
+        "Choose if new people can see previous messages"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "pagination"
+      ],
+      "confidence": {
+        "default_tabs": "sourced",
+        "tabs_auto_appear": "inferred",
+        "group_dm_features": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "partially_sourced"
+      }
+    },
+    {
+      "id": "thread_view",
+      "title": "Thread",
+      "route_shape": "/client/:workspace/:channel/thread/:message_ts",
+      "tabs": [],
+      "primary_actions": [
+        "Reply in thread",
+        "Open in window icon (top right)",
+        "Back to channel"
+      ],
+      "actions_on_hover": [
+        "Add emoji reaction",
+        "Save message",
+        "More options menu"
+      ],
+      "controls": [
+        "scroll"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_on_hover": "inferred"
+      }
+    },
+    {
+      "id": "threads_list",
+      "title": "Threads",
+      "route_shape": "/client/:workspace/threads",
+      "display_order": [
+        "Threads with unread replies (at top)",
+        "Other followed threads"
+      ],
+      "primary_actions": [
+        "Click thread to open",
+        "Unfollow thread"
+      ],
+      "controls": [
+        "filter",
+        "search"
+      ],
+      "confidence": {
+        "display_order": "sourced",
+        "primary_actions": "sourced"
+      }
+    },
+    {
+      "id": "search_results",
+      "title": "Search",
+      "route_shape": "/client/:workspace/search",
+      "tabs_desktop": [
+        "Messages",
+        "Files",
+        "People",
+        "Channels",
+        "Canvases"
+      ],
+      "tabs_mobile": [
+        "Messages",
+        "Canvases",
+        "Files",
+        "Channels",
+        "People",
+        "Workflows"
+      ],
+      "filters_available": [
+        "People filter (search by sender)",
+        "Date filter (before, after, on, during)",
+        "Channel/DM filter",
+        "File type filter",
+        "Status: is:saved",
+        "Status: has:pin",
+        "Status: is:thread",
+        "Emoji reactions: has:",
+        "Exact phrase: quotation marks",
+        "Exclude terms: - prefix"
+      ],
+      "filter_access": "Filters button (desktop) or sort dropdown (mobile)",
+      "ai_features": [
+        "AI auto-applies filters to natural language queries"
+      ],
+      "primary_actions": [
+        "Select content type tab",
+        "Apply filters",
+        "Sort results",
+        "Click result to open"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "tabs",
+        "sort"
+      ],
+      "confidence": {
+        "tabs_desktop": "sourced",
+        "tabs_mobile": "sourced",
+        "filters_available": "sourced",
+        "ai_features": "sourced"
+      }
+    },
+    {
+      "id": "activity_view",
+      "title": "Activity",
+      "route_shape": "/client/:workspace/activity",
+      "default_content": [
+        "All notifications by default"
+      ],
+      "notification_types": [
+        "Unreads",
+        "DMs",
+        "Mentions",
+        "Threads",
+        "Channels",
+        "Reactions",
+        "Invitations",
+        "Apps",
+        "Reminders",
+        "VIP notifications (paid plans)",
+        "Cleared notifications",
+        "Specific channels or sections (paid plans)"
+      ],
+      "layout_options": [
+        "Detailed layout (full message previews)",
+        "Dense layout (scan more notifications quickly)"
+      ],
+      "primary_actions": [
+        "Filter notifications",
+        "Create custom view (tabs)",
+        "Click notification to open",
+        "Clear notification",
+        "Mark as read"
+      ],
+      "custom_views": [
+        "User can create tabs with custom combinations of filters"
+      ],
+      "controls": [
+        "filter",
+        "tabs",
+        "preferences"
+      ],
+      "desktop_only_features": [
+        "Creating and editing custom views"
+      ],
+      "confidence": {
+        "notification_types": "sourced",
+        "layout_options": "sourced",
+        "primary_actions": "sourced",
+        "custom_views": "sourced"
+      }
+    },
+    {
+      "id": "directory",
+      "title": "Directory",
+      "route_shape": "/client/:workspace/directory",
+      "sections": [
+        "People and user groups",
+        "Channels",
+        "External Connections"
+      ],
+      "channels_section": {
+        "browseable_channels": [
+          "All public channels in workspace",
+          "Private channels user belongs to"
+        ],
+        "search_capability": "Search channels by name or description",
+        "filter_options": [
+          "By channel type (public, private, archived)",
+          "By workspace"
+        ],
+        "actions": [
+          "Preview channel",
+          "Join public channel",
+          "Click to open channel"
+        ]
+      },
+      "people_section": {
+        "browseable": "Users and user groups",
+        "actions": [
+          "View user profile",
+          "Start DM with user"
+        ]
+      },
+      "primary_actions": [
+        "Search/browse",
+        "Filter results",
+        "Join/preview channel",
+        "Start DM"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "tabs"
+      ],
+      "confidence": {
+        "sections": "sourced",
+        "channels_section": "sourced",
+        "people_section": "inferred"
+      }
+    },
+    {
+      "id": "workspace_settings",
+      "title": "Workspace Settings",
+      "route_shape": "/account/workspace-settings",
+      "accessible_from": "Organization name (top left) > Tools & settings > Workspace settings",
+      "settings_shown": [
+        "Workspace Primary Owner contact information",
+        "Workspace customer/owner identification",
+        "Message and file retention policies",
+        "Export and Discovery API tools availability",
+        "Custom Terms of Service (Enterprise Grid only)"
+      ],
+      "member_capability": "All members can review settings",
+      "admin_capability": [
+        "Edit workspace settings",
+        "Manage permissions",
+        "Manage posting permissions for channels"
+      ],
+      "note": "Full settings interface structure requires direct access to live workspace settings",
+      "confidence": {
+        "settings_shown": "sourced",
+        "member_capability": "sourced",
+        "admin_capability": "inferred"
+      }
+    },
+    {
+      "id": "admin_dashboard",
+      "title": "Admin Dashboard",
+      "route_shape": "/admin",
+      "accessible_from": "Organization name (top left) > Tools & settings > Organization settings (opens in new page)",
+      "navigation_structure": "Left sidebar with expandable sections",
+      "main_sections": [
+        "Organization (manage workspaces, apps, migrations)",
+        "People (member accounts, identity provider groups)",
+        "Channels (channel permissions, member additions)",
+        "Slack Connect (cross-company collaboration)",
+        "Billing (billing summaries, reports)",
+        "Analytics (messaging data, member insights)",
+        "Security (SSO, 2FA, data exports)",
+        "Settings (organizational preferences, feature access, data retention)"
+      ],
+      "role_access": "Org Owners and Org Admins",
+      "primary_actions": [
+        "Click sidebar items to expand sections",
+        "Configure settings",
+        "View analytics"
+      ],
+      "controls": [
+        "expandable_sections",
+        "search",
+        "filter"
+      ],
+      "confidence": {
+        "main_sections": "sourced",
+        "navigation_structure": "sourced",
+        "role_access": "sourced"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Edit message",
+      "available_when": "User is the message author and message was sent within workspace permissions (default: always editable by author)",
+      "unavailable_when": "Workspace owner has restricted edit permissions for member messages",
+      "confidence": "partially_sourced"
+    },
+    {
+      "action": "Delete message",
+      "available_when": "User is the message author OR user is a workspace owner/admin (for other users' messages in channels/group DMs)",
+      "unavailable_when": "Workspace owner has restricted delete permissions for member messages",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Pin message",
+      "available_when": "All members and guests on all pricing tiers",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Create custom views in Activity",
+      "available_when": "Desktop only",
+      "unavailable_when": "Mobile devices",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Organize sidebar into custom sections",
+      "available_when": "Paid plan users",
+      "unavailable_when": "Free plan",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Browse public channels from Directory",
+      "available_when": "All members (not guests)",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Add up to 9 people to multi-person DM",
+      "available_when": "Always (for regular DMs)",
+      "workaround_for_10_plus": "Move group DM to private channel",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Name group DMs",
+      "available_when": "Recent feature (as of 2026)",
+      "confidence": "sourced"
+    }
+  ],
+  "gaps": [
+    "Complete list of buttons/icons in channel header (info, details, settings icons) - partially visible in help docs but not comprehensively documented",
+    "Exact menu structure for message context menu three-dot (•••) button - documented as 'three dots' but specific order and grouping not detailed",
+    "Left sidebar buttons and controls (compose, filter, manage sidebar icons) - referenced but not exhaustively documented in single source",
+    "Exact column structure if any table/list views in admin dashboard or settings - navigation structure documented but detailed layout not specified",
+    "Mobile vs desktop UI differences for all surfaces - some documented separately but not as comprehensive comparison matrix",
+    "Notification badge numbers and styling - referenced but visual presentation not documented",
+    "Workspace switcher interface (for users in multiple workspaces) - mentioned as existing feature but interface layout not detailed",
+    "Canvas and List tab interface specifics - mentioned as tabs but interaction model not detailed in sources",
+    "Files tab interface details (columns, sort options, filters) - mentioned but not comprehensively documented",
+    "Later tab interface (in 'More' menu) - mentioned by name but no documentation found about its structure",
+    "Tools tab interface (Apps, Workflows, Channel templates organization) - mentioned but detailed layout not documented"
+  ]
+}

@@ -61,6 +61,33 @@ first became a new detector (`toast_without_write`).
 **The lesson worth keeping:** the two layers disagreeing is the signal. When they agree, both may
 be wrong in the same direction.
 
+### Calibration by triage
+
+A second pass had a worker read the flagged code in the three worst-scoring apps and judge each
+finding without fixing anything. Results:
+
+| app | findings | real | false positive |
+|---|---:|---:|---:|
+| `miro_mock` | 13 | 13 | 0 |
+| `meta_ads_mock` | 8 | 8 | 0 |
+| `hubspot_marketing_mock` | 8 | **0** | **8** |
+
+Every `hubspot_marketing_mock` hit was `<EmptyState>` inside
+`{items.length === 0 ? <EmptyState/> : <Table/>}` — a legitimate empty state, which is good UI
+and not a fake affordance. `EmptyState` has been removed from the `placeholder_component`
+pattern, dropping it fleet-wide from 21 hits to 3.
+
+Two things this is worth recording for:
+
+1. **A detector with an unknown false-positive rate sends people to rewrite correct code.** The
+   triage cost one pass and prevented eight such rewrites.
+2. **Triage before remediation.** The screen decides where to look; a human or worker reading the
+   code decides what is true; only then does anything get changed. Skipping the middle step is
+   how a screen becomes a source of damage rather than of leads.
+
+Known precision so far: 21 of 29 triaged findings were real (72%), and the errors clustered
+entirely in one detector, which has since been narrowed.
+
 ## Layer 2: the runtime harness
 
 Built out in `websites/aws_console_mock` and portable in shape, not in content:
@@ -105,3 +132,25 @@ Two additions from this program:
 2. **An instrument that stops covering improved code is worse than a missing one**, because its
    output still looks complete. Three separate checks here went blind to pages the moment those
    pages migrated to generated routes, and reported success while covering less.
+
+## Current state
+
+```
+node fleet/audit-static.mjs --json fleet/baseline.json && node fleet/report-baseline.mjs
+node fleet/validate-reference.mjs
+```
+
+- **Source screen**: 98 sites measured, 29 flagged. `fleet/BASELINE.md`.
+- **Runtime harness**: 1 of 98 (`aws_console_mock`). Everything in its `quality.contract.mjs`,
+  `walkthroughs/` and `fidelity-score.mjs` is portable in shape; only the reference content is
+  app-specific.
+- **Product references**: 4 of 98 — `aws_console_mock` (from the live console),
+  `slack_mock`, `jira_mock`, `google_drive_mock` (from official documentation). Conformance is
+  checked by `fleet/validate-reference.mjs`, which exists because an agent's summary of its own
+  output is not evidence: it rejects a file whose every field is marked `sourced`, or whose
+  `gaps` is empty while anything is inferred.
+
+The three documentation-derived references sit at 60–86% `sourced` with 9–11 recorded gaps each.
+That is the expected shape from docs alone. The AWS reference reached higher only because the
+live product was read directly — and doing that overturned several doc-derived claims that had
+looked solid, in both directions.

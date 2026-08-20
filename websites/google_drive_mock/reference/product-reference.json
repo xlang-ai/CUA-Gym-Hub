@@ -1,0 +1,390 @@
+{
+  "product": "Google Drive (web)",
+  "captured": "2026-08-20",
+  "method": "Google Support documentation (support.google.com/drive). Sources: 'How to use Google Drive' (2424384), 'View & reorder your files and folders' (2375177), 'Delete files in Google Drive' (2375102), 'Organize your files in Google Drive' (2375091), 'Check activity & file versions' (2409045), 'Upload files & folders to Google Drive' (2424368), 'Use buttons in your Drive toolbar' (13318592), 'Search for files in Google Drive' (2375114).",
+  "entry_screen": {
+    "title": "My Drive",
+    "description": "Opens to the My Drive view showing files and folders the user has created or added. Displays a list of recently-accessed and frequently-used files.",
+    "primary_nav": [
+      "Home",
+      "My Drive",
+      "Shared with me",
+      "Recent",
+      "Starred",
+      "Trash"
+    ],
+    "secondary_nav": [
+      "Storage (quota indicator)"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "my_drive_view",
+      "title": "My Drive",
+      "description": "Main view showing files and folders owned by or added to the user's Drive",
+      "route_shape": "/drive/my-drive",
+      "columns_default": [
+        "Name",
+        "Modified",
+        "Owner",
+        "File size"
+      ],
+      "columns_optional": [
+        "Description",
+        "Type"
+      ],
+      "tabs": [],
+      "view_modes": [
+        "List view",
+        "Grid view"
+      ],
+      "sort_options": [
+        "Name",
+        "Modified",
+        "Owner",
+        "File size"
+      ],
+      "sort_direction": [
+        "Ascending",
+        "Descending"
+      ],
+      "primary_actions": [
+        "New (dropdown: New folder, File upload, Folder upload, Create Google Doc, Create Google Sheet, Create Google Slide, Create Google Form)"
+      ],
+      "toolbar_buttons": [
+        "Share",
+        "Download",
+        "Rename",
+        "Star",
+        "Move",
+        "Delete",
+        "More actions"
+      ],
+      "actions_menu": [
+        "Make a copy",
+        "Remove",
+        "File information (opens Details panel)"
+      ],
+      "organize_submenu": [
+        "Move",
+        "Add to starred",
+        "Add shortcut",
+        "Select the color (for folders)"
+      ],
+      "controls": [
+        "Search (with advanced operators)",
+        "Filter chips (by Type, People, Modified, more sorting options)",
+        "Clear filters",
+        "View toggle (List/Grid)",
+        "Folder placement toggle (Folders on top / Files and folders intermingled)"
+      ],
+      "search_filters": {
+        "basic_chips": [
+          "Type (documents, spreadsheets, presentations, PDFs, images, videos, etc.)",
+          "People (owner, creator, shared with)",
+          "Modified (date range)"
+        ],
+        "advanced_operators": [
+          "Exact phrase: \"phrase\"",
+          "Exclusion: -term",
+          "Owner: owner:email@domain.com",
+          "Sharing: to:me, from:email, sharedwith:me",
+          "Date: before:YYYY-MM-DD, after:YYYY-MM-DD",
+          "Title: title:text",
+          "Status: is:starred, is:trashed"
+        ]
+      },
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "primary_actions": "sourced",
+        "toolbar_buttons": "sourced",
+        "organize_submenu": "sourced",
+        "controls": "sourced",
+        "search_filters": "sourced",
+        "view_modes": "sourced",
+        "sort_options": "partially_sourced"
+      }
+    },
+    {
+      "id": "shared_with_me_view",
+      "title": "Shared with me",
+      "description": "View of files and folders that others have shared with the user",
+      "route_shape": "/drive/sharedwithme",
+      "columns_default": [
+        "Name",
+        "Modified",
+        "Owner",
+        "File size"
+      ],
+      "view_modes": [
+        "List view",
+        "Grid view"
+      ],
+      "sort_options": [
+        "Name",
+        "Modified",
+        "Owner",
+        "File size"
+      ],
+      "toolbar_buttons": [
+        "Share",
+        "Download",
+        "Rename",
+        "Star",
+        "Move",
+        "More actions"
+      ],
+      "actions_menu": [
+        "Remove (user does not own file)",
+        "File information"
+      ],
+      "controls": [
+        "Search with filters",
+        "View toggle (List/Grid)",
+        "Folder placement toggle"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "toolbar_buttons": "partially_sourced",
+        "actions_menu": "sourced"
+      }
+    },
+    {
+      "id": "recent_view",
+      "title": "Recent",
+      "description": "List of files recently accessed by the user",
+      "route_shape": "/drive/recent",
+      "columns_default": [
+        "Name",
+        "Modified",
+        "File size"
+      ],
+      "view_modes": [
+        "List view",
+        "Grid view"
+      ],
+      "controls": [
+        "Search with filters",
+        "View toggle"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "view_modes": "inferred"
+      }
+    },
+    {
+      "id": "starred_view",
+      "title": "Starred",
+      "description": "View of files and folders the user has starred for quick access",
+      "route_shape": "/drive/starred",
+      "columns_default": [
+        "Name",
+        "Modified",
+        "Owner",
+        "File size"
+      ],
+      "view_modes": [
+        "List view",
+        "Grid view"
+      ],
+      "controls": [
+        "Search with filters",
+        "View toggle",
+        "Folder placement toggle"
+      ],
+      "confidence": {
+        "columns_default": "inferred"
+      }
+    },
+    {
+      "id": "trash_view",
+      "title": "Trash",
+      "description": "View of files and folders in the user's trash. Files are permanently deleted after 30 days.",
+      "route_shape": "/drive/trash",
+      "columns_default": [
+        "Name",
+        "Modified",
+        "File size"
+      ],
+      "view_modes": [
+        "List view",
+        "Grid view"
+      ],
+      "toolbar_buttons": [
+        "Restore",
+        "Delete forever",
+        "Empty trash"
+      ],
+      "actions_menu": [
+        "Delete forever"
+      ],
+      "controls": [
+        "Search with filters",
+        "View toggle"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "toolbar_buttons": "partially_sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "details_panel",
+      "title": "File Details & Activity Panel",
+      "description": "Right-side panel showing file information, activity history, sharing permissions, and version history. Accessed via Info button or right-click menu.",
+      "tabs": [
+        "Details",
+        "Activity"
+      ],
+      "details_tab_content": [
+        "Created date",
+        "File description",
+        "Owner information",
+        "File size"
+      ],
+      "activity_tab_content": [
+        "Edit or comment activity",
+        "Rename activity",
+        "Move or remove activity",
+        "Upload activity",
+        "Share or unshare activity",
+        "Timestamps for each activity"
+      ],
+      "primary_actions": [
+        "Manage access (opens sharing dialog)"
+      ],
+      "controls": [
+        "Info button (top right of view)"
+      ],
+      "access_methods": [
+        "Click Info button in top right",
+        "Right-click file → File information → Details"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "details_tab_content": "sourced",
+        "activity_tab_content": "sourced",
+        "access_methods": "sourced"
+      }
+    },
+    {
+      "id": "file_upload_interface",
+      "title": "File/Folder Upload",
+      "description": "Interface for uploading files and folders to Google Drive",
+      "primary_actions": [
+        "File upload (via New button)",
+        "Folder upload (via New button)",
+        "Drag and drop (supported in Chrome and Firefox)"
+      ],
+      "upload_methods": [
+        "New → File upload",
+        "New → Folder upload",
+        "Drag files into Drive folder",
+        "Drag folder into Drive folder"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "upload_methods": "sourced"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Delete or 'Move to Trash'",
+      "available_when": "user is the owner of the file",
+      "unavailable_when": "user does not own the file (only 'Remove' is available)",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Remove file",
+      "available_when": "file is owned by someone else and has been shared with the user",
+      "result": "removes file from user's Drive but others retain access",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Empty trash",
+      "available_when": "user has files in trash",
+      "result": "permanently deletes all files in trash at once",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Delete forever (individual file)",
+      "available_when": "file is in trash",
+      "result": "immediately and permanently deletes the file",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Automatic deletion from trash",
+      "timing": "30 days after file is moved to trash",
+      "result": "file is permanently deleted",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Star/Unstar",
+      "available_when": "any file or folder",
+      "result": "adds or removes file from Starred view",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Rename",
+      "available_when": "user owns the file or has edit permissions",
+      "confidence": "inferred"
+    }
+  ],
+  "user_interface_elements": {
+    "left_sidebar": {
+      "sections": [
+        "Home",
+        "My Drive",
+        "Shared with me",
+        "Recent",
+        "Starred",
+        "Trash",
+        "Storage (showing quota)"
+      ],
+      "confidence": "sourced"
+    },
+    "top_toolbar": {
+      "left_section": [
+        "New button (dropdown menu)",
+        "Search bar"
+      ],
+      "center_section": [
+        "Filter chips",
+        "Sort control"
+      ],
+      "right_section": [
+        "View toggle (List/Grid)",
+        "Settings",
+        "Info button",
+        "Profile menu"
+      ],
+      "confidence": "partially_sourced"
+    },
+    "new_button_menu": {
+      "items": [
+        "New folder",
+        "File upload",
+        "Folder upload",
+        "Google Docs (create new)",
+        "Google Sheets (create new)",
+        "Google Slides (create new)",
+        "Google Forms (create new)"
+      ],
+      "confidence": "sourced"
+    }
+  },
+  "gaps": [
+    "Exact column names in grid view are not documented; assumed to be similar to list view (Name, Modified, Owner, File size) but this needs verification.",
+    "Whether 'Description' and 'Type' columns are customizable or toggleable in list view is inferred but not explicitly sourced.",
+    "The exact position and labeling of the View toggle button (List/Grid icon) not explicitly documented; sourced through community discussions.",
+    "Details panel may have additional tabs (like 'Versions' or 'Sharing') beyond Details and Activity; documentation does not fully enumerate all tabs.",
+    "Context menu may have additional options beyond those documented (Share, Download, Rename, Move, Delete, More actions); full list not explicitly sourced.",
+    "Whether a 'Description' field or custom metadata can be edited in the Details panel is partially inferred.",
+    "The exact layout and presence of 'Preview' or 'Thumbnail' modes in grid view are not explicitly documented.",
+    "Settings panel contents (what can be customized) are not fully documented in the sourced material.",
+    "Keyboard shortcuts and other advanced features (bulk selection behavior, multi-file actions) are partially sourced but not comprehensively verified."
+  ]
+}

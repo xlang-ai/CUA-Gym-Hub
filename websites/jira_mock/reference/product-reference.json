@@ -1,0 +1,549 @@
+{
+  "product": "Jira Cloud",
+  "captured": "2026-08-20",
+  "method": "Researched from official Atlassian support documentation (support.atlassian.com, atlassian.com/software/jira) covering navigation, UI surfaces, issue views, board customization, and project administration.",
+  "entry_screen": {
+    "title": "For you - personalized hub showing recent spaces, assigned work, starred items, recent boards/filters/dashboards",
+    "primary_nav": [
+      "For you",
+      "Recent",
+      "Starred",
+      "Spaces",
+      "Dashboards",
+      "Assets",
+      "Goals",
+      "More"
+    ],
+    "top_bar_components": [
+      "Brand/product switcher",
+      "Search (press / to open)",
+      "Create (new work item)",
+      "Notifications",
+      "AI Chat",
+      "Settings",
+      "Account menu"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "board_view",
+      "title": "Board",
+      "route_shape": "/software/c/projects/:projectKey/boards/:boardId",
+      "description": "Kanban or Scrum board view for managing work items across statuses",
+      "columns_default": [
+        "To Do",
+        "In Progress",
+        "In Review",
+        "Done"
+      ],
+      "columns_optional": [
+        "Custom status columns based on workflow configuration"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create issue",
+        "View settings",
+        "Enter full screen",
+        "Exit full screen",
+        "Configure board"
+      ],
+      "actions_menu": [
+        "Configure board",
+        "Board settings (Columns, Swimlanes, Card layout)",
+        "Quick filters toggle",
+        "Work suggestions toggle",
+        "Field visibility toggle"
+      ],
+      "controls": [
+        "filter",
+        "pagination",
+        "preferences",
+        "view_settings",
+        "swimlanes",
+        "full_screen",
+        "card_layout_config"
+      ],
+      "board_settings_tabs": [
+        "Columns",
+        "Swimlanes",
+        "Card layout",
+        "Automation (if available)"
+      ],
+      "view_settings_options": [
+        "Work item display (sidebar vs centered dialog)",
+        "Quick filters display",
+        "Work suggestions",
+        "Field visibility (work type, key, epic, linked items, priority, assignee, card cover, due date, labels)",
+        "Swimlanes expand/collapse",
+        "Card layout customization"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "sourced",
+        "controls": "sourced",
+        "board_settings_tabs": "inferred",
+        "view_settings_options": "sourced"
+      }
+    },
+    {
+      "id": "backlog_view",
+      "title": "Backlog",
+      "route_shape": "/software/c/projects/:projectKey/backlog",
+      "description": "Backlog view for prioritizing upcoming work (Scrum or Kanban)",
+      "columns_default": [
+        "Backlog",
+        "Sprint (active sprint)"
+      ],
+      "columns_optional": [
+        "Multiple sprint columns if multiple sprints exist"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create issue",
+        "Create sprint",
+        "Start sprint",
+        "View settings",
+        "Enter full screen",
+        "Exit full screen"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Backlog settings (Panels, Quick filters, Density, Field selection, Swimlanes, Card layout)",
+        "Panels toggle (Version, Epic)"
+      ],
+      "controls": [
+        "filter",
+        "pagination",
+        "preferences",
+        "view_settings",
+        "swimlanes",
+        "full_screen",
+        "sprint_actions",
+        "drag_drop_reorder"
+      ],
+      "panels_available": [
+        "Version panel (toggle with V shortcut)",
+        "Epic panel (toggle with E shortcut)"
+      ],
+      "view_settings_options": [
+        "Quick filters display",
+        "Density (default or compact)",
+        "Field selection (work type, key, version, epic, status, priority, assignee, due date)",
+        "Swimlanes expand/collapse",
+        "Card layout customization"
+      ],
+      "confidence": {
+        "columns_default": "sourced",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "sourced",
+        "controls": "sourced",
+        "panels_available": "sourced",
+        "view_settings_options": "sourced"
+      }
+    },
+    {
+      "id": "list_view",
+      "title": "List",
+      "route_shape": "/issues/?jql=...",
+      "description": "Table/list view of work items with configurable columns, filterable and searchable",
+      "columns_default": [
+        "Key",
+        "Summary",
+        "Status",
+        "Assignee",
+        "Priority"
+      ],
+      "columns_optional": [
+        "Any field available in Jira (up to 500 configurable)"
+      ],
+      "tabs": [
+        "My Defaults (personal column configuration)",
+        "Filter (if viewing a saved filter - overrides defaults)",
+        "System (admin-only, applies to all users)"
+      ],
+      "primary_actions": [
+        "Search/Filter",
+        "Create issue",
+        "Configure columns",
+        "Change view",
+        "Save as filter"
+      ],
+      "actions_menu": [
+        "Configure columns",
+        "Export results",
+        "Share results",
+        "Save as filter"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "bulk_select",
+        "pagination",
+        "column_configuration",
+        "sorting",
+        "export"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "sourced",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "issue_view",
+      "title": "Work Item / Issue Detail View",
+      "route_shape": "/software/c/projects/:projectKey/issues/:issueKey",
+      "description": "Detailed view of a single work item with all fields, comments, attachments, links, and actions",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Activity/Comments",
+        "History",
+        "Subtasks (if present)",
+        "Links (if present)"
+      ],
+      "primary_actions": [
+        "Status transition (Status menu dropdown)",
+        "Add Content (with nested options: Attach, Link Issue, Comment, etc.)",
+        "More actions (•••)"
+      ],
+      "actions_menu": [
+        "Find your field",
+        "Share",
+        "Export",
+        "More actions submenu with workflow-specific transitions and issue actions",
+        "Apps-related actions"
+      ],
+      "standard_fields": [
+        "Summary (always displayed and editable)",
+        "Description",
+        "Status",
+        "Priority",
+        "Assignee",
+        "Reporter",
+        "Created",
+        "Updated",
+        "Components",
+        "Labels",
+        "Fix versions",
+        "Affected versions",
+        "Parent issue",
+        "Issue links",
+        "Subtasks",
+        "Attachments",
+        "Comments"
+      ],
+      "workflow_actions": [
+        "Status transitions (from Status dropdown)",
+        "Issue actions (looped transitions that keep status same)"
+      ],
+      "controls": [
+        "transition",
+        "comments",
+        "attachments",
+        "links",
+        "bulk_operations",
+        "field_customization"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "sourced",
+        "standard_fields": "sourced",
+        "workflow_actions": "sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "timeline_view",
+      "title": "Timeline",
+      "route_shape": "/software/c/projects/:projectKey/timeline",
+      "description": "Gantt chart view for visualizing and scheduling work items (available in business spaces only)",
+      "columns_default": [
+        "Work item key",
+        "Work item summary",
+        "Status",
+        "Timeline bar showing start/due dates"
+      ],
+      "columns_optional": [
+        "Assignee",
+        "Priority",
+        "Any custom field can be added as inline-editable column"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Schedule work item (set start/due dates)",
+        "Drag to reorder",
+        "Drag bar to adjust dates",
+        "Link items (create dependencies)",
+        "Filter",
+        "Search",
+        "Today button (jump to current date)"
+      ],
+      "actions_menu": [
+        "Time scale adjustment (weeks, months, quarters)"
+      ],
+      "time_scale_options": [
+        "Week",
+        "Month",
+        "Quarter"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "date_picker",
+        "time_scale",
+        "inline_edit",
+        "dependencies",
+        "drag_drop"
+      ],
+      "features": [
+        "Scheduling bars with start and due dates",
+        "Color-coded by status",
+        "Dependency linking between items",
+        "Blocking view to see which items may be blocked",
+        "Automatic roll-up of parent item dates based on children",
+        "Today marker (orange line)"
+      ],
+      "confidence": {
+        "columns_default": "sourced",
+        "columns_optional": "sourced",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "sourced",
+        "time_scale_options": "sourced",
+        "controls": "sourced",
+        "features": "sourced"
+      }
+    },
+    {
+      "id": "dashboard_view",
+      "title": "Dashboard",
+      "route_shape": "/software/c/dashboards/:dashboardId",
+      "description": "Custom dashboard displaying gadgets, filters, and work metrics",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Edit dashboard",
+        "Rename",
+        "Share",
+        "More actions (•••)"
+      ],
+      "actions_menu": [
+        "Edit",
+        "Rename",
+        "Share/Change sharing",
+        "Move to Trash",
+        "Restore (by admins within 60 days)"
+      ],
+      "controls": [
+        "gadgets",
+        "layout",
+        "sharing",
+        "customization"
+      ],
+      "layout_options": [
+        "Two columns (default)",
+        "Three columns"
+      ],
+      "features": [
+        "Gadgets that pull through specific information via filters and data points",
+        "Add, rearrange, remove, configure gadgets",
+        "Customizable layout",
+        "Shareable with viewer and editor permissions"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "sourced",
+        "controls": "sourced",
+        "layout_options": "inferred",
+        "features": "sourced"
+      }
+    },
+    {
+      "id": "project_navigation",
+      "title": "Project Navigation Tabs",
+      "route_shape": "/software/c/projects/:projectKey",
+      "description": "Horizontal tabs for switching between project views",
+      "default_tabs": [
+        "List (cannot be removed)",
+        "Board",
+        "Backlog (if enabled)",
+        "Timeline (if business space)",
+        "Reports (if available)",
+        "Apps (cannot be removed)"
+      ],
+      "optional_tabs": [
+        "Any custom tabs added via apps"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Reorder tabs (drag or move left/right)",
+        "Rename tabs",
+        "Remove tabs (except List and Apps)",
+        "Add tabs back (via + icon)",
+        "Set default tab"
+      ],
+      "actions_menu": [
+        "Tab management menu (reorder, rename, remove, set default)"
+      ],
+      "controls": [
+        "tab_customization",
+        "tab_reordering"
+      ],
+      "constraints": [
+        "List tab cannot be removed",
+        "Apps tab cannot be removed",
+        "Cannot remove the tab set as default",
+        "All customizations are workspace-wide"
+      ],
+      "confidence": {
+        "default_tabs": "sourced",
+        "optional_tabs": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "sourced",
+        "controls": "sourced",
+        "constraints": "sourced"
+      }
+    },
+    {
+      "id": "project_settings",
+      "title": "Project Settings",
+      "route_shape": "/software/c/projects/:projectKey/settings",
+      "description": "Administration and configuration pages for project settings (requires project admin or Administer Jira permission)",
+      "configuration_sections": [
+        "Space Details (name, description, avatar, URL, lead)",
+        "Boards (board configuration and management)",
+        "Work Item Layout (how work items are displayed)",
+        "Categories (for grouping related spaces)",
+        "Versions (release management)",
+        "Release Notes (custom release communication)",
+        "Schemes (notification, permission, workflow schemes - viewable by admins)"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Edit space details",
+        "Configure board",
+        "Manage versions",
+        "View/edit schemes"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "configuration",
+        "permissions",
+        "schemes"
+      ],
+      "sidebar_navigation": [
+        "Details",
+        "Boards",
+        "Work Item Layout",
+        "Categories",
+        "Versions",
+        "Release Notes",
+        "Notification scheme",
+        "Permission scheme",
+        "Workflow scheme"
+      ],
+      "confidence": {
+        "configuration_sections": "sourced",
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "sourced",
+        "controls": "sourced",
+        "sidebar_navigation": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "View Timeline",
+      "available_when": "Space type is business space",
+      "unavailable_when": "Space type is software space (team-managed or company-managed)",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Enable Backlog",
+      "available_when": "User is space admin or has Administer Jira permission",
+      "unavailable_when": "User is a contributor without admin permissions",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Access Project Settings",
+      "available_when": "User is project admin or has Administer Jira global permission",
+      "unavailable_when": "User is contributor without admin permissions",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Edit Dashboard",
+      "available_when": "User is the dashboard owner or has edit permission",
+      "unavailable_when": "User only has view permission",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Restore Deleted Dashboard",
+      "available_when": "User is Jira admin and within 60 days of deletion",
+      "unavailable_when": "User is not admin or 60 days has passed",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Transition Issue to Status",
+      "available_when": "User has permission for the transition and the transition is configured in the workflow",
+      "unavailable_when": "User lacks permission or transition is not available for the current status",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Configure Board Columns",
+      "available_when": "User is space admin",
+      "unavailable_when": "User is contributor",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Use Reports Tab",
+      "available_when": "Reports feature is enabled for the space (typically in business spaces)",
+      "unavailable_when": "Reports feature is not enabled",
+      "confidence": "inferred"
+    }
+  ],
+  "global_features": {
+    "search": {
+      "trigger": "Click search in top bar or press /",
+      "functionality": "Find work items, spaces, boards, queues, filters, and people with auto-suggest",
+      "keyboard_shortcut": "/ (forward slash)",
+      "confidence": "sourced"
+    },
+    "create": {
+      "trigger": "Click Create in top bar",
+      "functionality": "Create new work item across spaces",
+      "confidence": "sourced"
+    },
+    "notifications": {
+      "location": "Top bar notifications icon",
+      "confidence": "sourced"
+    },
+    "settings": {
+      "location": "Top bar settings icon",
+      "confidence": "sourced"
+    }
+  },
+  "gaps": [
+    "Could not establish the exact default column names for board views - different board configurations (Scrum vs Kanban, company-managed vs team-managed) likely have different default column sets. Documented common example columns but these are inferred.",
+    "Could not establish the complete list of gadgets/widgets available for dashboards - documentation mentions they exist but does not enumerate them.",
+    "Could not establish whether the Reports tab is always available or conditional - whether it requires a specific license or feature flag is unclear from documentation.",
+    "Could not establish the precise structure and field definitions of the custom field limit - documentation mentions 500 column limit in list view but details on field type restrictions are unclear.",
+    "Could not establish the exact format and capabilities of the inline editing in Timeline view - which field types are inline-editable is not specified.",
+    "Could not establish whether 'Quick Filters' are a built-in feature or require configuration - the documentation references them as available but does not clarify their creation process.",
+    "Could not establish the full list of 'Quick add' buttons that appear in the Add Content menu - documentation indicates they were reorganized in July 2024 but the current complete list is not sourced.",
+    "Could not establish complete list of issue actions (looped transitions) - workflow-specific and varies by configuration, so a generic list could not be sourced.",
+    "Could not establish detailed project settings sidebar structure beyond listed sections - additional tabs from apps and integrations are possible but not enumerated."
+  ]
+}
