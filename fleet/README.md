@@ -86,8 +86,36 @@ Two things this is worth recording for:
    code decides what is true; only then does anything get changed. Skipping the middle step is
    how a screen becomes a source of damage rather than of leads.
 
-Known precision so far: 21 of 29 triaged findings were real (72%), and the errors clustered
-entirely in one detector, which has since been narrowed.
+A third triage pass, on `dingtalk_mock`, found **5 of 5 `empty_handler` hits to be correct
+code**: `onChange={() => {}}` on a checkbox whose enclosing row carries the real `onClick`.
+React requires an `onChange` alongside a `checked` prop, and wiring a real one there
+double-toggles — the row handler and the change handler both fire and cancel. `onChange` is now
+excluded from that detector.
+
+Running precision: **26 of 42 triaged findings real (62%)**, with every error so far traceable to
+a detector matching a legitimate React idiom rather than to a judgement call. Two detectors have
+been narrowed as a result, and the fleet total fell from 116 findings to 59 — the drop is almost
+entirely false positives leaving, not defects being fixed.
+
+## Working agreement
+
+Unchanged from the completeness guide: one worker per app folder, no edits to shared files
+without coordination, schema changes additive only, build and browser-verify before committing.
+
+Three additions from this program:
+
+1. **Build success is not evidence.** Every defect class that reached a release here — a
+   temporal dead zone, a missing import, a control wired to a dialog that was never rendered,
+   a menu item dispatching an action no reducer handled — compiled cleanly. Only clicking found
+   them.
+2. **An instrument that stops covering improved code is worse than a missing one**, because its
+   output still looks complete. Three separate checks here went blind to pages the moment those
+   pages migrated to generated routes, and reported success while covering less.
+3. **Never `git add -A` while workers are running.** Commit explicit paths. A sweep at the repo
+   root took six workers' in-flight, unverified edits into a commit whose message described
+   something else entirely — including one worker that had died mid-edit. The tree built, but the
+   record was wrong, which is its own kind of damage: a commit message that misdescribes its
+   contents cannot be trusted later by anyone, including whoever wrote it.
 
 ## Layer 2: the runtime harness
 
@@ -144,20 +172,6 @@ figure. That is the point of the mark, and it has repeatedly caught doc-derived 
 wrong in both directions — AWS's own docs implied 11 default columns on the EC2 instance list
 where the console shows 17, and listed three of those 17 as optional.
 
-## Working agreement
-
-Unchanged from the completeness guide: one worker per app folder, no edits to shared files
-without coordination, schema changes additive only, build and browser-verify before committing.
-
-Two additions from this program:
-
-1. **Build success is not evidence.** Every defect class that reached a release here — a
-   temporal dead zone, a missing import, a control wired to a dialog that was never rendered,
-   a menu item dispatching an action no reducer handled — compiled cleanly. Only clicking found
-   them.
-2. **An instrument that stops covering improved code is worse than a missing one**, because its
-   output still looks complete. Three separate checks here went blind to pages the moment those
-   pages migrated to generated routes, and reported success while covering less.
 
 ## Current state
 

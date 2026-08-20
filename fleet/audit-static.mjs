@@ -65,7 +65,15 @@ const DETECTORS = [
     guide: 'No obvious clickable placeholder remains',
     severity: 'high',
     // onClick={() => {}} and friends: the control is live and does nothing at all.
-    test: (s) => [...s.matchAll(/on[A-Z]\w+=\{\s*\(\s*\)\s*=>\s*\{\s*\}\s*\}/g)].map((m) => m[0]),
+    //
+    // `onChange={() => {}}` on a checkbox is EXCLUDED. Triage of dingtalk_mock found 5 of 5 such
+    // hits to be correct code: the checkbox sits inside a row whose onClick performs the toggle,
+    // and React requires an onChange alongside a `checked` prop. Wiring a real onChange there
+    // would double-toggle — the click fires the row handler and the change handler both, and
+    // they cancel. Flagging it sends someone to break working code.
+    test: (s) => [...s.matchAll(/on([A-Z]\w+)=\{\s*\(\s*\)\s*=>\s*\{\s*\}\s*\}/g)]
+      .filter((m) => m[1] !== 'Change')
+      .map((m) => m[0]),
   },
   {
     id: 'href_hash_only',
