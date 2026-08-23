@@ -1,0 +1,586 @@
+{
+  "node": "18.20.2",
+  "results": [
+    {
+      "site": "12306_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "Canvas-LMS_mock",
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 1,
+      "noInAppLinks": true,
+      "probed": 8
+    },
+    {
+      "site": "Expensify_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "PACS-viewer_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "SAP_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "ServiceNow_mock",
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 2,
+      "inert": 4,
+      "noInAppLinks": true,
+      "probed": 7
+    },
+    {
+      "site": "TradingView_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "Zendesk_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "adp_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "airtable_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "aliyun_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "amazon_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "amazon_seller_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "amplitude_mock",
+      "status": "audited",
+      "routes": 2,
+      "crashed": 0,
+      "untitled": 2,
+      "deadEnds": 0,
+      "unmarkedTabs": 2,
+      "inert": 4,
+      "noInAppLinks": false,
+      "probed": 15
+    },
+    {
+      "site": "asana_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "aws_console_mock",
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 2,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 41
+    },
+    {
+      "site": "azure_mock",
+      "status": "toolchain",
+      "why": "Error: CustomEvent is not defined"
+    },
+    {
+      "site": "bamboohr_mock",
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 6,
+      "deadEnds": 1,
+      "unmarkedTabs": 2,
+      "inert": 8,
+      "noInAppLinks": false,
+      "probed": 43
+    },
+    {
+      "site": "booking_com_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "canva_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "canvas_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "circleci_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "clio_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "cloudflare_mock",
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 4
+    },
+    {
+      "site": "coinbase_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "confluence_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "contractbook_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "datadog_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "dingtalk_mock",
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 7
+    },
+    {
+      "site": "discord_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "docusign_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "ebay_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "epic-health_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "expedia_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "facebook_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "feishu_mock",
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 1,
+      "noInAppLinks": true,
+      "probed": 7
+    },
+    {
+      "site": "github_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "gitlab_mock",
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 8,
+      "inert": 2,
+      "noInAppLinks": false,
+      "probed": 15
+    },
+    {
+      "site": "gmail_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "google_ads_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "google_analytics_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "google_calendar_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "google_docs_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "google_drive_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "google_flights_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "google_sheets_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "greenhouse_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "gusto_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "hotjar_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "hubspot_marketing_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "hubspot_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "instacart_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "instagram_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "jira_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "klaviyo_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "lattice_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "linear_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "linkedin_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "looker_studio_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "lucidchart_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "mailchimp_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "meta_ads_mock",
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 8,
+      "deadEnds": 8,
+      "unmarkedTabs": 9,
+      "inert": 3,
+      "noInAppLinks": false,
+      "probed": 61
+    },
+    {
+      "site": "microsoft_teams_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "miro_mock",
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 2,
+      "noInAppLinks": true,
+      "probed": 8
+    },
+    {
+      "site": "mixpanel_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "monday_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "notion_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "openreview_mock",
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 6,
+      "deadEnds": 1,
+      "unmarkedTabs": 1,
+      "inert": 6,
+      "noInAppLinks": false,
+      "probed": 18
+    },
+    {
+      "site": "outlook_web_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "paypal_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "pinterest_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "postman_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "quickbooks_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "reddit_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "robinhood_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "salesforce_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "sentry_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "shopify_admin_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "slack_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "stripe_dashboard_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "tableau_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "taobao_seller_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "trello_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "tripadvisor_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "twitter_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "uber_eats_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "vercel_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "wandb_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "wechat_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "weibo_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "westlaw_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "woocommerce_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "workday_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "xiaohongshu_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "youtube_mock",
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 6,
+      "deadEnds": 0,
+      "unmarkedTabs": 22,
+      "inert": 4,
+      "noInAppLinks": false,
+      "probed": 33
+    },
+    {
+      "site": "zhihu_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "zillow_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    },
+    {
+      "site": "zoom_web_mock",
+      "status": "skipped",
+      "why": "no node_modules"
+    }
+  ]
+}
