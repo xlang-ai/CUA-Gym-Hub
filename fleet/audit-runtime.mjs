@@ -33,7 +33,27 @@ const BASE = arg('--base', 'http://127.0.0.1:5173').replace(/\/$/, '');
 const JSON_OUT = arg('--json', null);
 const MAX_ROUTES = Number(arg('--max-routes', 40));
 const PROBE_CAP = Number(arg('--probe-cap', 10));
-const CHROME = arg('--chrome', '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');
+/**
+ * Chrome, wherever it lives. Hardcoding the macOS path made this tool useless on the Linux host
+ * that has the disk and time to build all 98 sites — which is exactly where layer 2 needs to run.
+ */
+const CHROME = arg('--chrome', process.env.CHROME_PATH || (() => {
+  const candidates = [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
+    '/snap/bin/chromium',
+  ];
+  const found = candidates.find((c) => fs.existsSync(c));
+  if (!found) {
+    console.error('No Chrome or Chromium found. Set CHROME_PATH or pass --chrome.');
+    console.error('Looked in:\n  ' + candidates.join('\n  '));
+    process.exit(2);
+  }
+  return found;
+})());
 
 // puppeteer-core lives in whichever site installed it, not at the hub root. Resolving it from
 // there keeps this tool zero-install: adding a second copy for the tooling would be one more

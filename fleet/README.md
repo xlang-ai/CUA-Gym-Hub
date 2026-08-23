@@ -236,9 +236,11 @@ node fleet/validate-reference.mjs
 
 - **Source screen**: 98 sites measured, 29 flagged. `fleet/BASELINE.md`.
 - **Runtime audit**: available to any app that can be served, no authoring required.
-  **13 of 98 measured** so far (`fleet/RUNTIME.md`); the other 85 have no `node_modules`, and
-  installing ~90 Vite apps is the whole reason this layer has been thin. `--install` covers them
-  when the disk and time are available.
+  **13 of 98 measured** so far (`fleet/RUNTIME.md`). The other 85 have no `node_modules`, and
+  installing ~90 Vite apps is the whole reason this layer has been thin — not that the checks
+  are app-specific. `fleet/sweep-all.sh` does the whole run on a build host: Node 20.19+ (eleven
+  sites pin Vite 7/8 and fail outright below it), Chrome or Chromium, and roughly 40 GB it
+  reclaims afterwards.
 - **Per-app harness**: 1 of 98 (`aws_console_mock`). Its gates, walkthroughs and fidelity index
   are portable in shape; only the reference content is app-specific.
 - **Product references**: 6 of 98 — `aws_console_mock` (from the live console), and
