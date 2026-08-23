@@ -1,0 +1,634 @@
+{
+  "product": "Confluence Cloud",
+  "captured": "2026-08-23",
+  "method": "WebFetch from support.atlassian.com and Confluence Cloud documentation; WebSearch for UI details and 2026 updates. Sources: Atlassian Support articles on navigation, page editing, space settings, permissions, and formatting.",
+  "entry_screen": {
+    "title": "Confluence Cloud home/dashboard",
+    "primary_nav": [
+      "Search",
+      "Create",
+      "Chat/Rovo",
+      "Notifications",
+      "Help",
+      "Profile/Account settings"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "confluence_home",
+      "title": "Confluence Cloud Home/Dashboard",
+      "route_shape": "/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "For you",
+        "Recent",
+        "Starred",
+        "Shared",
+        "Spaces",
+        "Apps"
+      ],
+      "primary_actions": [
+        "Search content",
+        "Create new page/live doc/database/whiteboard/slides/video",
+        "Access chat (Rovo)",
+        "View notifications",
+        "Access help"
+      ],
+      "actions_menu": [
+        "Pin space (appear in sidebar)",
+        "Star space",
+        "Leave space",
+        "Manage space"
+      ],
+      "controls": [
+        "Sidebar toggle",
+        "Filter by timeframe",
+        "Sort options",
+        "Search",
+        "Tab navigation",
+        "Recently viewed expandable sections (Today, Work history, Owned items)",
+        "Customize sidebar visibility"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "space_overview",
+      "title": "Space Overview/Home Page",
+      "route_shape": "/spaces/:spaceKey/overview",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Overview (default)",
+        "Pages",
+        "Blog",
+        "Templates"
+      ],
+      "primary_actions": [
+        "Create new page",
+        "Create blog post",
+        "Create whiteboard",
+        "View space details",
+        "Access space settings",
+        "Edit space overview"
+      ],
+      "actions_menu": [
+        "Space settings",
+        "Change home page",
+        "Manage space",
+        "Space permissions",
+        "Export space",
+        "Archive space"
+      ],
+      "controls": [
+        "Sidebar navigation",
+        "Page tree",
+        "Search within space",
+        "Customize sidebar",
+        "Tab navigation",
+        "Manage space (context menu)",
+        "Recently updated section"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "page_view",
+      "title": "Page View (viewing a page)",
+      "route_shape": "/spaces/:spaceKey/pages/:pageId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Page content",
+        "Comments/Discussion",
+        "History",
+        "Details"
+      ],
+      "primary_actions": [
+        "Edit page",
+        "Add comment",
+        "Like/react to page",
+        "Share page",
+        "Watch page",
+        "View history",
+        "View details"
+      ],
+      "actions_menu": [
+        "Edit page",
+        "Delete page",
+        "Move page",
+        "Copy page",
+        "View page info",
+        "Share via link",
+        "Export page",
+        "Permissions",
+        "Templates from this page"
+      ],
+      "controls": [
+        "Edit button",
+        "Comment section",
+        "Like button",
+        "Share button",
+        "Page navigation (previous/next page in tree)",
+        "Table of contents (if headings exist)",
+        "Watch/follow toggle",
+        "Sidebar toggle",
+        "Breadcrumb navigation",
+        "Action menu (•••)",
+        "Reactions/emoji picker"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "page_editor",
+      "title": "Page Editor (creating/editing page)",
+      "route_shape": "/spaces/:spaceKey/pages/:pageId/edit",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Type content",
+        "Apply formatting (bold, italic, lists, etc.)",
+        "Add heading",
+        "Add link",
+        "Add table",
+        "Add image",
+        "Add video",
+        "Add attachment",
+        "Insert macro",
+        "Add layout",
+        "Save page",
+        "Publish page",
+        "Cancel editing"
+      ],
+      "actions_menu": [
+        "View page source",
+        "View changes",
+        "Discard changes",
+        "Save as draft",
+        "View history",
+        "Undo/Redo"
+      ],
+      "controls": [
+        "Editor toolbar (top)",
+        "Formatting toolbar (bold, italic, underline, strikethrough)",
+        "Heading selector",
+        "List buttons (bullets, numbers, checkbox)",
+        "Text alignment",
+        "Text color",
+        "Highlight color",
+        "Link button",
+        "Table button",
+        "Image button",
+        "Video button",
+        "Attachment button",
+        "Macro button (+ icon with dropdown)",
+        "Layout button",
+        "Undo/Redo buttons",
+        "Pin/unpin toolbar",
+        "Side-by-side editor and preview (optional)",
+        "Page title input field",
+        "Publish button",
+        "Save button"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "page_tree_sidebar",
+      "title": "Page Tree / Sidebar Navigation",
+      "route_shape": "sidebar_on_any_page",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Overview",
+        "Blog",
+        "Sidebar (customizable)"
+      ],
+      "primary_actions": [
+        "Navigate to page",
+        "Expand/collapse page tree",
+        "Drag page to reorder",
+        "View page details",
+        "Create new page",
+        "Customize sidebar",
+        "Search in sidebar"
+      ],
+      "actions_menu": [
+        "Move page",
+        "Delete page",
+        "Copy page",
+        "View page",
+        "Edit page",
+        "Rename page"
+      ],
+      "controls": [
+        "Sidebar toggle (keyboard shortcut [)",
+        "Sidebar drag/resize handle",
+        "Page tree hierarchy (parent/child indentation)",
+        "Expand/collapse arrows on parent pages",
+        "Search within page tree",
+        "Customize sidebar checkbox menu",
+        "Reorder items via drag-and-drop",
+        "Recently viewed section",
+        "Favorites section",
+        "Space details section",
+        "Apps section"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "search_surface",
+      "title": "Search (finding pages and content)",
+      "route_shape": "/search",
+      "columns_default": [
+        "page_title",
+        "space_name",
+        "author",
+        "last_modified_date",
+        "content_preview"
+      ],
+      "columns_optional": [
+        "number_of_comments",
+        "number_of_views"
+      ],
+      "tabs": [
+        "Pages",
+        "People",
+        "Spaces",
+        "Filters"
+      ],
+      "primary_actions": [
+        "Search by keyword",
+        "Filter by space",
+        "Filter by date range",
+        "Filter by author",
+        "View search result",
+        "Sort results"
+      ],
+      "actions_menu": [
+        "Save search",
+        "Edit search filters",
+        "Clear filters",
+        "Share search results"
+      ],
+      "controls": [
+        "Search input field",
+        "Advanced search/filters panel",
+        "Filter by space dropdown",
+        "Filter by author dropdown",
+        "Filter by date range (before/after)",
+        "Filter by content type (pages, blog, attachments)",
+        "Sort dropdown (relevance, date, author)",
+        "Results per page selector",
+        "Pagination",
+        "Search suggestions/autocomplete",
+        "Filters applied display"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "columns_optional": "inferred",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "space_settings",
+      "title": "Space Settings / Administration",
+      "route_shape": "/spaces/:spaceKey/settings",
+      "columns_default": [
+        "permission_type",
+        "users_or_groups",
+        "access_level"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "Space details",
+        "Permissions",
+        "Members",
+        "Settings",
+        "Templates",
+        "Apps",
+        "Automation"
+      ],
+      "primary_actions": [
+        "Change space name",
+        "Change space description",
+        "Set home page",
+        "Assign space admins",
+        "Manage permissions",
+        "Add/remove members",
+        "Configure space settings",
+        "Manage templates",
+        "Export space",
+        "Archive space"
+      ],
+      "actions_menu": [
+        "Delete space",
+        "Leave space",
+        "Export space as PDF",
+        "Reset to defaults",
+        "Remove user",
+        "Change permission level"
+      ],
+      "controls": [
+        "Tabs for different settings areas",
+        "Space details form (name, description, home page selector)",
+        "Permission assignment table",
+        "User/group selector for permissions",
+        "Permission level dropdown (Admin, Editor, Contributor, Commenter, Restricted, Viewer)",
+        "Add members input",
+        "Remove member button",
+        "Search users/groups",
+        "Bulk actions",
+        "Template management list",
+        "Apps management section",
+        "More details expander"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "tabs": "inferred",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "space_permissions",
+      "title": "Space Permissions Management",
+      "route_shape": "/spaces/:spaceKey/settings/permissions",
+      "columns_default": [
+        "user_or_group_name",
+        "permission_level",
+        "access_type"
+      ],
+      "columns_optional": [
+        "assigned_date",
+        "modified_by"
+      ],
+      "tabs": [
+        "Space permissions",
+        "Page restrictions"
+      ],
+      "primary_actions": [
+        "Assign user permission",
+        "Assign group permission",
+        "Change permission level",
+        "Remove user access",
+        "Set page restrictions",
+        "Grant anonymous access"
+      ],
+      "actions_menu": [
+        "Remove access",
+        "Change to viewer",
+        "Change to commenter",
+        "Change to contributor",
+        "Change to editor",
+        "Change to admin",
+        "Send invite"
+      ],
+      "controls": [
+        "User/group selector dropdown",
+        "Permission level selector (Admin, Editor, Contributor, Commenter, Restricted, Viewer, Anonymous)",
+        "Add permission button",
+        "Permissions table",
+        "Remove button per permission",
+        "Bulk permission changes",
+        "Search users/groups",
+        "Page restriction section (for page-level settings)",
+        "Inherited permissions indicator"
+      ],
+      "confidence": {
+        "columns_default": "sourced",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "templates_surface",
+      "title": "Templates (page templates and blueprints)",
+      "route_shape": "/templates",
+      "columns_default": [
+        "template_name",
+        "template_description",
+        "space_name",
+        "created_by",
+        "created_date"
+      ],
+      "columns_optional": [
+        "usage_count",
+        "last_used_date"
+      ],
+      "tabs": [
+        "My templates",
+        "Space templates",
+        "Starred",
+        "Recent"
+      ],
+      "primary_actions": [
+        "Create page from template",
+        "Create new template",
+        "Save current page as template",
+        "Edit template",
+        "Delete template",
+        "Star template",
+        "Share template",
+        "View template details"
+      ],
+      "actions_menu": [
+        "Edit template",
+        "Delete template",
+        "Make public/private",
+        "Duplicate template",
+        "View usage",
+        "Share template"
+      ],
+      "controls": [
+        "Template list/grid view toggle",
+        "Filter by space",
+        "Filter by author",
+        "Search templates",
+        "Sort by name, date, or usage",
+        "Template preview panel",
+        "Create page button",
+        "Star/favorite toggle",
+        "More actions menu (•••)",
+        "Template tags/categories"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "tabs": "inferred",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "macro_insertion",
+      "title": "Macro/Extension Insertion",
+      "route_shape": "popup_in_editor",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Suggested",
+        "All macros",
+        "Installed"
+      ],
+      "primary_actions": [
+        "Search for macro",
+        "Insert macro",
+        "View macro details",
+        "Configure macro parameters",
+        "Preview macro"
+      ],
+      "actions_menu": [
+        "View documentation",
+        "Configure macro",
+        "Remove macro"
+      ],
+      "controls": [
+        "Macro search input",
+        "Macro category list",
+        "Macro tile/list items",
+        "Macro details panel",
+        "Parameter configuration inputs",
+        "Preview pane",
+        "Insert button",
+        "Cancel button",
+        "Keyboard shortcut hint (type /)"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "live_document_editor",
+      "title": "Live Document Editor (Confluence Live docs)",
+      "route_shape": "/live-docs/:docId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Document",
+        "Discussion",
+        "Details"
+      ],
+      "primary_actions": [
+        "Edit document",
+        "Add content block",
+        "Invite collaborators",
+        "See live edits",
+        "Comment",
+        "Share document",
+        "View version history"
+      ],
+      "actions_menu": [
+        "Convert to page",
+        "Duplicate document",
+        "Delete document",
+        "Share settings",
+        "Export document"
+      ],
+      "controls": [
+        "Editor toolbar (similar to page editor)",
+        "Collaborators indicator",
+        "Comment thread area",
+        "Share button",
+        "Activity/version history panel",
+        "Cursor positions of other editors",
+        "Real-time update indicators"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Access space settings",
+      "available_when": "user is space admin",
+      "unavailable_when": "user is editor, contributor, commenter, or viewer",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Delete page",
+      "available_when": "user is space admin or page creator with editor permissions",
+      "unavailable_when": "user has commenter or viewer access",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Assign space permissions",
+      "available_when": "user is space admin",
+      "unavailable_when": "user is not space admin",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Edit space overview template",
+      "available_when": "user is global confluence admin",
+      "unavailable_when": "user is space admin or regular user",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Customize space sidebar items",
+      "available_when": "space admin enables per-space customization",
+      "unavailable_when": "space admin has disabled customization or uses global sidebar config",
+      "confidence": "partially_sourced"
+    },
+    {
+      "action": "Set page restrictions",
+      "available_when": "user has editor access and page restrictions are enabled",
+      "unavailable_when": "page restrictions are disabled or user lacks permissions",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Edit legacy page",
+      "available_when": "legacy editor is enabled (before January 2026 phaseout)",
+      "unavailable_when": "after January 2026 - legacy editor deprecated",
+      "confidence": "sourced"
+    }
+  ],
+  "gaps": [
+    "Exact list of available macros and their specific parameters - documentation mentions many but doesn't exhaustively list all available as of August 2026",
+    "Precise permission level definitions and what each level can do - sources describe general hierarchy but some nuances between Editor, Contributor, and Commenter roles unclear",
+    "Mobile/responsive layout changes - documentation focuses on desktop experience",
+    "Database content type surfaces and detailed interface - Confluence Cloud databases are mentioned but detailed UI surfaces not covered",
+    "Specific keyboard shortcuts beyond [ for sidebar toggle - not thoroughly documented",
+    "Live document (live docs) detailed UI surface - new feature with limited documentation",
+    "Exact styling and color treatment of UI elements (hover states, focus states)",
+    "Specific error handling UI and validation messages",
+    "Automation/workflow builder if present in Cloud version - mentioned in search results but not detailed",
+    "Third-party app integration surfaces and how they appear in navigation"
+  ]
+}

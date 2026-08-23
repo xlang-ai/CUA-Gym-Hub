@@ -1,0 +1,601 @@
+{
+  "product": "Airtable",
+  "captured": "2026-08-23",
+  "method": "WebFetch from support.airtable.com and Airtable help center; WebSearch for UI details and recent 2026 updates. Sources: Airtable Help Center articles on views, home screen, base permissions, automations, and field types.",
+  "entry_screen": {
+    "title": "Airtable home screen (workspace/dashboard)",
+    "primary_nav": [
+      "Home",
+      "Starred/Favorites",
+      "Shared",
+      "Workspaces",
+      "Create",
+      "Search",
+      "Help",
+      "Notifications",
+      "Account/Profile"
+    ],
+    "confidence": "partially_sourced"
+  },
+  "surfaces": [
+    {
+      "id": "workspace_home",
+      "title": "Workspace Home Screen",
+      "route_shape": "/home",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "For you",
+        "Recent",
+        "Starred",
+        "Shared",
+        "Workspaces",
+        "Apps"
+      ],
+      "primary_actions": [
+        "Create new app/base",
+        "Pin app (up to 3 per workspace)",
+        "Star/favorite app",
+        "Search"
+      ],
+      "actions_menu": [
+        "Rename",
+        "Move",
+        "Duplicate",
+        "Delete",
+        "Access base",
+        "Open in new tab"
+      ],
+      "controls": [
+        "List view",
+        "Grid view",
+        "Filter by timeframe",
+        "Sort alphabetically",
+        "Sort by date shared",
+        "Search bar",
+        "Sidebar toggle"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "base_view",
+      "title": "Base (opened base with tables)",
+      "route_shape": "/base/:baseId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Data",
+        "Automations",
+        "Interfaces"
+      ],
+      "primary_actions": [
+        "Create new table",
+        "Add field",
+        "Toggle views sidebar",
+        "Create new view"
+      ],
+      "actions_menu": [
+        "Rename base",
+        "Duplicate base",
+        "Export base",
+        "Base sharing/permissions",
+        "Archive base"
+      ],
+      "controls": [
+        "View toggle (views sidebar open/close)",
+        "View sections (My personal views, More personal views, My favorites, Custom sections)",
+        "Search for views",
+        "Create section",
+        "View height selector (Short, Medium, Tall, Extra Tall)",
+        "Row height switcher"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "grid_view",
+      "title": "Grid View (table data grid)",
+      "route_shape": "/base/:baseId/:tableId/:viewId",
+      "columns_default": [
+        "record_id",
+        "fields_in_table_order"
+      ],
+      "columns_optional": [
+        "any_field_via_column_visibility_control"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Add new record",
+        "Edit cell",
+        "Create field",
+        "Add filter",
+        "Add sort",
+        "Hide/show columns",
+        "Expand record"
+      ],
+      "actions_menu": [
+        "Delete record",
+        "Duplicate record",
+        "Edit record details",
+        "Copy record link",
+        "Open in expanded view"
+      ],
+      "controls": [
+        "Filter",
+        "Sort",
+        "Search",
+        "Bulk select",
+        "Column visibility toggle",
+        "Column reordering",
+        "Pagination/load all records",
+        "Record grouping",
+        "Record coloring",
+        "Height selector"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "form_view",
+      "title": "Form View (customizable web form)",
+      "route_shape": "/base/:baseId/:tableId/:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Add new record via form submission",
+        "Edit field settings",
+        "Configure form layout",
+        "Preview form",
+        "Enable/disable form fields",
+        "Set required fields"
+      ],
+      "actions_menu": [
+        "Delete form view",
+        "Duplicate form view",
+        "Export form link",
+        "Rename form view"
+      ],
+      "controls": [
+        "Field visibility toggle",
+        "Required field markers",
+        "Form preview mode",
+        "Customize form title",
+        "Customize form description",
+        "Field drag-to-reorder",
+        "Accessibility controls"
+      ],
+      "confidence": {
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "calendar_view",
+      "title": "Calendar View (event timeline visualization)",
+      "route_shape": "/base/:baseId/:tableId/:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Create record on date",
+        "Drag event to new date",
+        "Switch timescale (Day, 3 day, Week, 2 week, Month)",
+        "Go to today",
+        "Go to date picker",
+        "Toggle sidebar",
+        "Toggle compact/expanded view",
+        "Toggle weekends",
+        "Color records",
+        "Filter records",
+        "Sort records"
+      ],
+      "actions_menu": [
+        "Delete record",
+        "Edit record details",
+        "Reschedule event",
+        "Change event color"
+      ],
+      "controls": [
+        "Date navigation (forward/backward buttons)",
+        "Date picker",
+        "Timescale selector",
+        "Compact/Expanded toggle",
+        "Weekend toggle",
+        "Sidebar toggle (show/hide record list)",
+        "Filter",
+        "Sort",
+        "Search",
+        "Record coloring by field",
+        "Date field selector"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "kanban_view",
+      "title": "Kanban View (card-based board)",
+      "route_shape": "/base/:baseId/:tableId/:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Create record in stack",
+        "Drag card between stacks",
+        "Click to open record",
+        "Group by single-select or collaborator field",
+        "Filter records",
+        "Sort records"
+      ],
+      "actions_menu": [
+        "Delete record",
+        "Edit record",
+        "Copy record link",
+        "Change stack"
+      ],
+      "controls": [
+        "Group field selector",
+        "Filter",
+        "Sort",
+        "Search",
+        "Stack collapse/expand",
+        "Add new stack (add new option)"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "gallery_view",
+      "title": "Gallery View (card gallery display)",
+      "route_shape": "/base/:baseId/:tableId/:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Create new record",
+        "Click card to view details",
+        "Edit record from card",
+        "Customize card fields",
+        "Add image to card",
+        "Filter records",
+        "Sort records"
+      ],
+      "actions_menu": [
+        "Delete record",
+        "Edit record details",
+        "Copy record"
+      ],
+      "controls": [
+        "Filter",
+        "Sort",
+        "Search",
+        "Card size adjustment",
+        "Field selection for display",
+        "Group by field",
+        "Customize card title field"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "timeline_view",
+      "title": "Timeline View (horizontal timeline)",
+      "route_shape": "/base/:baseId/:tableId/:viewId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Drag event on timeline",
+        "Create record at date",
+        "Drag range edges (paid plans)",
+        "Group records into swimlanes",
+        "Filter records",
+        "Sort records"
+      ],
+      "actions_menu": [
+        "Delete record",
+        "Edit record details",
+        "Change date range"
+      ],
+      "controls": [
+        "Date range selector",
+        "Timeline zoom controls",
+        "Swimlane grouping",
+        "Filter",
+        "Sort",
+        "Search",
+        "Color by field",
+        "Date field selector (plot up to 20 fields)",
+        "View scroll (horizontal)"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "record_expanded_view",
+      "title": "Expanded Record View (detailed record modal/sidesheet)",
+      "route_shape": "/base/:baseId/:tableId/:viewId/:recordId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "All activity",
+        "Comments",
+        "Revision history"
+      ],
+      "primary_actions": [
+        "Edit field value",
+        "Add comment",
+        "View revision history",
+        "Close expanded view",
+        "Navigate to next/previous record"
+      ],
+      "actions_menu": [
+        "Delete record",
+        "Duplicate record",
+        "Copy record link",
+        "Expand to fullscreen"
+      ],
+      "controls": [
+        "Field input controls (varies by field type)",
+        "Comment section",
+        "Activity feed",
+        "Record navigation arrows",
+        "Sidesheet resize handle",
+        "Tab selector (All activity/Comments/Revision history)"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "field_configuration",
+      "title": "Field Configuration Dialog (field settings)",
+      "route_shape": "/base/:baseId/:tableId/field/:fieldId/settings",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Edit field name",
+        "Select field type",
+        "Set default value",
+        "Toggle required",
+        "Configure field-specific options",
+        "Delete field",
+        "Convert field type"
+      ],
+      "actions_menu": [
+        "Delete field",
+        "Duplicate field",
+        "Hide field",
+        "Restore field"
+      ],
+      "controls": [
+        "Field name input",
+        "Field type selector (20+ types)",
+        "Field-specific configuration panel",
+        "Default value input",
+        "Required toggle",
+        "Description input",
+        "Preview panel"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "sharing_permissions",
+      "title": "Base Sharing & Permissions",
+      "route_shape": "/base/:baseId/settings/sharing",
+      "columns_default": [
+        "collaborator_name",
+        "permission_level",
+        "joined_date"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "Collaborators",
+        "Shared views",
+        "Shared interfaces"
+      ],
+      "primary_actions": [
+        "Invite collaborator",
+        "Change permission level",
+        "Remove collaborator",
+        "Generate invite link",
+        "Create shared view link",
+        "Share interface",
+        "Copy link"
+      ],
+      "actions_menu": [
+        "Remove access",
+        "Change to read-only",
+        "Change to editor",
+        "Change to commenter",
+        "Delete shared link",
+        "Copy link to clipboard"
+      ],
+      "controls": [
+        "Collaborator list",
+        "Permission level selector (Owner, Creator, Editor, Commenter, Read-only)",
+        "Invite input field",
+        "Link generation",
+        "Link visibility toggle",
+        "Search collaborators",
+        "Remove button per collaborator",
+        "Batch actions"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "tabs": "inferred",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "automations_builder",
+      "title": "Automations Surface (automation builder and list)",
+      "route_shape": "/base/:baseId/automations",
+      "columns_default": [
+        "automation_name",
+        "trigger",
+        "action_count",
+        "enabled_status",
+        "created_date"
+      ],
+      "columns_optional": [],
+      "tabs": [
+        "All automations",
+        "Enabled",
+        "Disabled"
+      ],
+      "primary_actions": [
+        "Create new automation",
+        "Edit automation",
+        "Enable/disable automation",
+        "Delete automation",
+        "Duplicate automation",
+        "Run automation manually",
+        "View automation history"
+      ],
+      "actions_menu": [
+        "Delete",
+        "Duplicate",
+        "Disable",
+        "Enable",
+        "View run history",
+        "Edit"
+      ],
+      "controls": [
+        "Create new automation button",
+        "Automation list table",
+        "Filter by status (enabled/disabled)",
+        "Sort by name/date",
+        "Search automations",
+        "Bulk enable/disable",
+        "View usage stats"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "partially_sourced"
+      }
+    },
+    {
+      "id": "automation_editor",
+      "title": "Automation Editor (create/edit automation)",
+      "route_shape": "/base/:baseId/automations/:automationId/edit",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Select trigger type",
+        "Configure trigger conditions",
+        "Add action",
+        "Configure action parameters",
+        "Test automation",
+        "Save automation",
+        "Enable/disable automation"
+      ],
+      "actions_menu": [
+        "Delete action",
+        "Duplicate action",
+        "Rearrange actions",
+        "Remove trigger"
+      ],
+      "controls": [
+        "Trigger selector dropdown",
+        "Trigger type selector (record created/modified, form submission, scheduled, webhook, button click, etc.)",
+        "Condition builder",
+        "Add action button",
+        "Action type selector",
+        "Action parameter inputs (varies by action type)",
+        "Up to 25 actions per automation",
+        "Test button",
+        "Save button",
+        "Preview panel"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Edit base permissions",
+      "available_when": "user is base owner or creator",
+      "unavailable_when": "user is editor, commenter, or read-only",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Create/edit automations",
+      "available_when": "user has Team, Business, or Enterprise Scale plan",
+      "unavailable_when": "user on Free or Pro plan",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Use advanced calendar features (date ranges, 20+ date fields)",
+      "available_when": "user on paid plan",
+      "unavailable_when": "user on free plan",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Configure shared view permissions",
+      "available_when": "user has collaborator, editor, or owner access to base",
+      "unavailable_when": "user has read-only or commenter access",
+      "confidence": "partially_sourced"
+    },
+    {
+      "action": "Delete view",
+      "available_when": "user is creator of view or has editor access to base",
+      "unavailable_when": "user is personal view viewer only",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Exact column header arrangement in collaborators table for sharing surface - sourced column names but not order",
+    "Detailed button labels and positioning in automations UI (e.g., exact text for 'Run test' vs 'Test' buttons) - inferred from general patterns",
+    "Precise modal/dialog sizing and layout proportions across surfaces - not available from documentation",
+    "Exact keyboard shortcuts for each action - limited documentation available",
+    "Full list of field type configuration options - documentation covers general approach but not exhaustive field-specific controls",
+    "Specific styling/color treatment of UI elements (hover states, selected states, etc.)",
+    "Mobile/responsive behavior for all surfaces - documentation focuses on desktop",
+    "Advanced Interface Designer surface details - not thoroughly documented in help center"
+  ]
+}

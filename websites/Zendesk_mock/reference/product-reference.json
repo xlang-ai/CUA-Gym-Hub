@@ -1,0 +1,292 @@
+{
+  "product": "Zendesk Support (Agent Workspace)",
+  "captured": "2026-08-23",
+  "method": "WebSearch and WebFetch from support.zendesk.com documentation covering Agent Workspace, ticket views, agent dashboard, customer profiles, knowledge base, Explore reporting, and Admin Center.",
+  "entry_screen": {
+    "title": "Agent Dashboard",
+    "primary_nav": [
+      "Home",
+      "Views",
+      "Tickets",
+      "Admin Center",
+      "Explore",
+      "Knowledge"
+    ],
+    "confidence": "partially_sourced"
+  },
+  "surfaces": [
+    {
+      "id": "agent_dashboard",
+      "title": "Agent Dashboard / Home",
+      "route_shape": "/agent/dashboard",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Create ticket",
+        "Set status",
+        "Access views"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "status_menu",
+        "quick_search"
+      ],
+      "confidence": {
+        "primary_actions": "partially_sourced"
+      }
+    },
+    {
+      "id": "views_list",
+      "title": "Views / Ticket List",
+      "route_shape": "/agent/views",
+      "columns_default": [
+        "Ticket",
+        "Subject",
+        "Requester",
+        "Status",
+        "Updated"
+      ],
+      "columns_optional": [
+        "Priority",
+        "Assignee",
+        "Organization",
+        "Type",
+        "Created"
+      ],
+      "tabs": [
+        "All",
+        "Unsolved",
+        "Unassigned",
+        "Recently updated"
+      ],
+      "primary_actions": [
+        "Create ticket",
+        "Bulk actions"
+      ],
+      "actions_menu": [
+        "Sort",
+        "Filter",
+        "Save view",
+        "Create personal view"
+      ],
+      "controls": [
+        "filter",
+        "sort",
+        "bulk_select",
+        "pagination",
+        "search",
+        "status_icon",
+        "hover_preview"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "columns_optional": "inferred",
+        "tabs": "partially_sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "ticket_detail",
+      "title": "Ticket (Agent Workspace)",
+      "route_shape": "/agent/tickets/:id",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Conversation",
+        "Customer details",
+        "Organization",
+        "Related tickets"
+      ],
+      "primary_actions": [
+        "Reply",
+        "Internal note",
+        "Add attachment",
+        "Send",
+        "Change status",
+        "Assign"
+      ],
+      "actions_menu": [
+        "Mark as spam",
+        "Delete",
+        "Merge",
+        "Print",
+        "Share",
+        "Link articles"
+      ],
+      "controls": [
+        "comment_type_toggle",
+        "status_selector",
+        "assignee_selector",
+        "priority_selector",
+        "macro_menu",
+        "canned_responses",
+        "cc_field"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "customer_profile",
+      "title": "Customer Profile",
+      "route_shape": "/agent/customers/:id",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Customer details",
+        "Tickets",
+        "Activity",
+        "Organizations",
+        "Related"
+      ],
+      "primary_actions": [
+        "Edit profile",
+        "Create ticket",
+        "Merge",
+        "Delete"
+      ],
+      "actions_menu": [
+        "Add tag",
+        "Export",
+        "View in help center"
+      ],
+      "controls": [
+        "edit",
+        "search",
+        "filter"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "knowledge_base",
+      "title": "Knowledge Base / Help Center",
+      "route_shape": "/hc/en-us",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Categories",
+        "Articles",
+        "Community"
+      ],
+      "primary_actions": [
+        "Search articles",
+        "Browse categories",
+        "Submit topic",
+        "Link article in ticket"
+      ],
+      "actions_menu": [
+        "Create article",
+        "Edit article",
+        "Archive",
+        "Promote",
+        "Manage permissions"
+      ],
+      "controls": [
+        "search",
+        "category_filter",
+        "sort_by_views",
+        "sort_by_recent"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "partially_sourced"
+      }
+    },
+    {
+      "id": "explore_reporting",
+      "title": "Explore / Analytics & Reporting",
+      "route_shape": "/explore/dashboards",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Dashboards",
+        "Reports",
+        "Custom reports",
+        "Agent performance"
+      ],
+      "primary_actions": [
+        "Create report",
+        "Create dashboard",
+        "View dashboard",
+        "Export"
+      ],
+      "actions_menu": [
+        "Edit",
+        "Share",
+        "Delete",
+        "Duplicate",
+        "Schedule delivery"
+      ],
+      "controls": [
+        "date_range_filter",
+        "metric_selector",
+        "attribute_selector",
+        "drill_down"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "admin_center",
+      "title": "Admin Center",
+      "route_shape": "/admin/account-and-billing",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Save settings",
+        "Add user",
+        "Create organization"
+      ],
+      "actions_menu": [],
+      "controls": [],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Reply to ticket",
+      "available_when": "ticket is open and user has reply permission",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Resolve ticket",
+      "available_when": "ticket is not already solved",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Link help article in ticket",
+      "available_when": "knowledge base is available for the account",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Merge customer profiles",
+      "available_when": "user has customer merge permission",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Agent Workspace is the modern interface; legacy standard agent interface also exists but is being phased out. Reference captures Agent Workspace specifically.",
+    "Exact default columns in Views list could not be verified from documentation; assumed common fields based on partial sourcing.",
+    "Customer profile tabs and sections vary by configuration and add-ons (Sunshine objects, etc.); core tabs documented but custom sections may exist.",
+    "Admin Center has 7 main sections (Account, People, Channels, AI, Workspaces, Objects and rules, Apps and integrations) but specific settings within each section not enumerated.",
+    "Knowledge base structure varies by organization; categories, sections, and permissions are configurable and not uniformly defined.",
+    "Explore dashboards and report structure highly customizable; prebuilt vs. custom dashboards behavior not fully captured.",
+    "Ticket detail tabs and available actions depend on features enabled (Copilot, voice, messaging channels, etc.) and user permissions; captured core surfaces only."
+  ]
+}

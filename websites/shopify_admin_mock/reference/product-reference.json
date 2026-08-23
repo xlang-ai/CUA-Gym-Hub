@@ -1,0 +1,393 @@
+{
+  "product": "Shopify Admin",
+  "captured": "2026-08-23",
+  "method": "WebSearch and WebFetch from help.shopify.com documentation covering admin overview, home page, orders management, products, customers, discounts, online store, analytics, and settings sections.",
+  "entry_screen": {
+    "title": "Home",
+    "primary_nav": [
+      "Home",
+      "Orders",
+      "Products",
+      "Customers",
+      "Analytics",
+      "Discounts",
+      "Marketing",
+      "Online Store",
+      "Settings"
+    ],
+    "confidence": "partially_sourced"
+  },
+  "surfaces": [
+    {
+      "id": "home",
+      "title": "Home",
+      "route_shape": "/admin/home",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "View report",
+        "Customize metrics",
+        "Dismiss card"
+      ],
+      "actions_menu": [],
+      "controls": [],
+      "confidence": {
+        "primary_actions": "partially_sourced"
+      }
+    },
+    {
+      "id": "orders_list",
+      "title": "Orders",
+      "route_shape": "/admin/orders",
+      "columns_default": [
+        "Order"
+      ],
+      "columns_optional": [
+        "Status",
+        "Financial status",
+        "Date",
+        "Customer",
+        "Total",
+        "Fulfillment status"
+      ],
+      "tabs": [
+        "All",
+        "Unfulfilled",
+        "Unpaid",
+        "Open",
+        "Archived",
+        "Local Delivery"
+      ],
+      "primary_actions": [
+        "Create order",
+        "Export"
+      ],
+      "actions_menu": [
+        "Print",
+        "Bulk update",
+        "Archive"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "sort",
+        "pagination",
+        "search",
+        "views",
+        "column_preferences"
+      ],
+      "confidence": {
+        "columns_default": "sourced",
+        "columns_optional": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "order_detail",
+      "title": "Order Detail",
+      "route_shape": "/admin/orders/:id",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Timeline",
+        "Customer",
+        "Notes"
+      ],
+      "primary_actions": [
+        "Capture payment",
+        "Fulfill order",
+        "Create refund",
+        "Add note",
+        "Send email",
+        "Contact customer"
+      ],
+      "actions_menu": [
+        "Archive",
+        "Edit order",
+        "Cancel order",
+        "Print invoice",
+        "View customer page"
+      ],
+      "controls": [
+        "edit",
+        "archive",
+        "print"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "products_list",
+      "title": "Products",
+      "route_shape": "/admin/products",
+      "columns_default": [
+        "Title",
+        "Status",
+        "Inventory"
+      ],
+      "columns_optional": [
+        "Type",
+        "Vendor",
+        "Price",
+        "Variant count"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Add product",
+        "Export"
+      ],
+      "actions_menu": [
+        "Bulk edit",
+        "Archive",
+        "Delete"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "sort",
+        "pagination",
+        "search",
+        "views",
+        "column_preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "product_detail",
+      "title": "Product Detail",
+      "route_shape": "/admin/products/:id",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Details",
+        "Variants",
+        "Images",
+        "Pricing",
+        "Inventory",
+        "Shipping",
+        "Organization"
+      ],
+      "primary_actions": [
+        "Save",
+        "Publish",
+        "Preview"
+      ],
+      "actions_menu": [
+        "Archive",
+        "Delete product",
+        "Duplicate",
+        "View online store"
+      ],
+      "controls": [
+        "edit",
+        "save",
+        "preview"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "customers",
+      "title": "Customers",
+      "route_shape": "/admin/customers",
+      "columns_default": [
+        "Name",
+        "Email",
+        "Total spent",
+        "Orders count"
+      ],
+      "columns_optional": [
+        "Location",
+        "Signup date",
+        "Tags",
+        "Phone",
+        "Last order date"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Add customer",
+        "Export",
+        "Import"
+      ],
+      "actions_menu": [
+        "Tag",
+        "Delete",
+        "Merge"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "sort",
+        "pagination",
+        "search",
+        "views"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "analytics",
+      "title": "Analytics",
+      "route_shape": "/admin/analytics",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Overview",
+        "Reports",
+        "Google Analytics"
+      ],
+      "primary_actions": [
+        "View report"
+      ],
+      "actions_menu": [],
+      "controls": [
+        "date_range_filter",
+        "export"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "discounts",
+      "title": "Discounts",
+      "route_shape": "/admin/discounts",
+      "columns_default": [
+        "Code/Title",
+        "Type",
+        "Status",
+        "Usage count"
+      ],
+      "columns_optional": [
+        "Discount type",
+        "Value",
+        "Start date",
+        "End date",
+        "Created date"
+      ],
+      "tabs": [],
+      "primary_actions": [
+        "Create discount",
+        "Export"
+      ],
+      "actions_menu": [
+        "Deactivate",
+        "Edit",
+        "Duplicate",
+        "Delete"
+      ],
+      "controls": [
+        "filter",
+        "bulk_select",
+        "sort",
+        "pagination",
+        "search",
+        "views"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "online_store",
+      "title": "Online Store",
+      "route_shape": "/admin/online-store",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Pages",
+        "Blogs",
+        "Menus",
+        "Themes",
+        "Navigation"
+      ],
+      "primary_actions": [
+        "Add page",
+        "Add blog",
+        "Customize theme",
+        "Manage navigation"
+      ],
+      "actions_menu": [],
+      "controls": [],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "route_shape": "/admin/settings",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "General",
+        "Billing",
+        "Plan",
+        "Users",
+        "Organization",
+        "Shipping",
+        "Checkout",
+        "Notifications"
+      ],
+      "primary_actions": [
+        "Save settings",
+        "Add user",
+        "Change plan"
+      ],
+      "actions_menu": [],
+      "controls": [],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Create order",
+      "available_when": "on the Orders page",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Capture payment",
+      "available_when": "on an order detail where payment status is pending",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Fulfill order",
+      "available_when": "on an order detail with fulfillable items",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Default columns on Products list and Customers list could not be established from documentation; Shopify allows extensive column customization and documentation states defaults exist but does not enumerate them.",
+    "Exact tab structure for Analytics and Online Store sections inferred from general knowledge; specific tab names and arrangement not documented in sources.",
+    "Settings page structure partially sourced; full list of sub-settings may be more extensive than documented.",
+    "Primary action buttons in list views (Export, Import) and specific menu item order could not be verified from sources.",
+    "Product detail tabs (Details, Variants, Images, etc.) for non-variant vs. variant products may differ but specific variations not documented.",
+    "Shopify admin offers extensive customization via apps and sales channels which would add additional menu items; default/core surfaces captured but add-on surfaces not enumerated."
+  ]
+}
