@@ -1122,6 +1122,8 @@ export default function EmployeeProfile({ myInfo = false }) {
   const [requestModal, setRequestModal] = useState(null); // 'compensation'|'job'|'promotion'
   const [showTerminateModal, setShowTerminateModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [editingSocial, setEditingSocial] = useState(null); // 'linkedin' | 'twitter' | 'facebook' | null
+  const [socialDraft, setSocialDraft] = useState('');
 
   const sid = searchParams.get('sid');
   const navTo = (path) => sid ? `${path}?sid=${sid}` : path;
@@ -1384,21 +1386,56 @@ export default function EmployeeProfile({ myInfo = false }) {
               </div>
             </div>
           )}
-          {/* Always show social media icons (grayed if empty) */}
+          {/* Always show social media icons (grayed if empty); clicking one lets you set the link */}
           {!(employee.socialMediaLinks?.linkedin || employee.socialMediaLinks?.twitter || employee.socialMediaLinks?.facebook) && (
             <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 14, marginTop: 14 }}>
               <div style={{ fontSize: 11, color: '#999', marginBottom: 8, fontWeight: 600 }}>Social Media</div>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <a href="#" title="LinkedIn" style={{ color: '#ccc', display: 'flex' }} onClick={e => e.preventDefault()}>
-                  <Linkedin size={16} />
-                </a>
-                <a href="#" title="Twitter/X" style={{ color: '#ccc', display: 'flex' }} onClick={e => e.preventDefault()}>
-                  <Twitter size={16} />
-                </a>
-                <a href="#" title="Facebook" style={{ color: '#ccc', display: 'flex' }} onClick={e => e.preventDefault()}>
-                  <Facebook size={16} />
-                </a>
-              </div>
+              {editingSocial ? (
+                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <input
+                    autoFocus
+                    className="form-input"
+                    style={{ fontSize: 12, padding: '4px 6px', flex: 1 }}
+                    placeholder={`${editingSocial === 'linkedin' ? 'LinkedIn' : editingSocial === 'twitter' ? 'Twitter/X' : 'Facebook'} profile URL`}
+                    value={socialDraft}
+                    onChange={e => setSocialDraft(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && socialDraft.trim()) {
+                        onUpdate({ socialMediaLinks: { ...(employee.socialMediaLinks || {}), [editingSocial]: socialDraft.trim() } });
+                        setEditingSocial(null); setSocialDraft('');
+                      } else if (e.key === 'Escape') {
+                        setEditingSocial(null); setSocialDraft('');
+                      }
+                    }}
+                  />
+                  <button
+                    title="Save"
+                    style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#73C41D' }}
+                    onClick={() => {
+                      if (!socialDraft.trim()) return;
+                      onUpdate({ socialMediaLinks: { ...(employee.socialMediaLinks || {}), [editingSocial]: socialDraft.trim() } });
+                      setEditingSocial(null); setSocialDraft('');
+                    }}
+                  ><Check size={14} /></button>
+                  <button
+                    title="Cancel"
+                    style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#E65100' }}
+                    onClick={() => { setEditingSocial(null); setSocialDraft(''); }}
+                  ><X size={14} /></button>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <a href="#" title="Add LinkedIn link" style={{ color: '#ccc', display: 'flex' }} onClick={e => { e.preventDefault(); setEditingSocial('linkedin'); setSocialDraft(''); }}>
+                    <Linkedin size={16} />
+                  </a>
+                  <a href="#" title="Add Twitter/X link" style={{ color: '#ccc', display: 'flex' }} onClick={e => { e.preventDefault(); setEditingSocial('twitter'); setSocialDraft(''); }}>
+                    <Twitter size={16} />
+                  </a>
+                  <a href="#" title="Add Facebook link" style={{ color: '#ccc', display: 'flex' }} onClick={e => { e.preventDefault(); setEditingSocial('facebook'); setSocialDraft(''); }}>
+                    <Facebook size={16} />
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </div>

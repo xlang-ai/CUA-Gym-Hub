@@ -28,8 +28,10 @@ const Header = ({ onMenuClick, theme, onThemeToggle }) => {
   const [searchFocused, setSearchFocused] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [voiceListening, setVoiceListening] = useState(false);
   const notifRef = useRef(null);
   const userMenuRef = useRef(null);
+  const voiceTimeoutRef = useRef(null);
 
   const trimmedSearch = searchQuery.trim().toLowerCase();
   const searchSuggestions = trimmedSearch
@@ -60,6 +62,10 @@ const Header = ({ onMenuClick, theme, onThemeToggle }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    return () => clearTimeout(voiceTimeoutRef.current);
+  }, []);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -67,6 +73,19 @@ const Header = ({ onMenuClick, theme, onThemeToggle }) => {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSearchFocused(false);
     }
+  };
+
+  const handleVoiceSearch = () => {
+    if (voiceListening) return;
+    setVoiceListening(true);
+    voiceTimeoutRef.current = setTimeout(() => {
+      const topVideo = [...data.videos].sort((a, b) => b.viewCount - a.viewCount)[0];
+      const query = topVideo ? topVideo.title : 'trending videos';
+      setSearchQuery(query);
+      addToSearchHistory(query);
+      setVoiceListening(false);
+      navigate(`/search?q=${encodeURIComponent(query)}`);
+    }, 1200);
   };
 
   const unreadCount = data.notifications.filter(n => !n.isRead).length;
@@ -177,14 +196,24 @@ const Header = ({ onMenuClick, theme, onThemeToggle }) => {
             </div>
           )}
         </form>
-        <button
-          className="voice-button"
-          aria-label="Voice search"
-          title="Search with your voice"
-          onClick={() => showToast('Voice search is not available')}
-        >
-          <Mic size={20} />
-        </button>
+        <div className="voice-button-wrapper">
+          <button
+            className={`voice-button ${voiceListening ? 'listening' : ''}`}
+            aria-label="Voice search"
+            title="Search with your voice"
+            onClick={handleVoiceSearch}
+          >
+            <Mic size={20} />
+          </button>
+          {voiceListening && (
+            <div className="voice-search-overlay">
+              <div className="voice-search-pulse">
+                <Mic size={28} />
+              </div>
+              <span>Listening…</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="header-right">

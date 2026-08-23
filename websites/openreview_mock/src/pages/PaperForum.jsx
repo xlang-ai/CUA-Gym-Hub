@@ -89,9 +89,21 @@ function ForumReply({ note, depth, state, appendSid }) {
           Readers: {readers.includes('everyone') ? 'Everyone' : readers.map(r => r.split('/').pop().replace(/_/g, ' ')).join(', ')}
         </span>
         <span className="revisions">
-          <a href="#" onClick={e => e.preventDefault()}>Revisions</a>
+          <a href="#" onClick={e => { e.preventDefault(); setShowRevisions(true) }}>Revisions</a>
         </span>
       </div>
+
+      {showRevisions && (
+        <InfoModal title="Revision History" onClose={() => setShowRevisions(false)}>
+          <ul style={{ margin: 0, paddingLeft: 18 }}>
+            {buildRevisions(note).map((rev, i) => (
+              <li key={i} style={{ marginBottom: 6 }}>
+                {rev.label} &mdash; {new Date(rev.date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+              </li>
+            ))}
+          </ul>
+        </InfoModal>
+      )}
 
       {/* Note content */}
       {contentExpanded && (
@@ -130,6 +142,8 @@ function PaperForum() {
   const [showCommentForm, setShowCommentForm] = useState(false)
   const [sortOrder, setSortOrder] = useState('date-desc')
   const [filterKeyword, setFilterKeyword] = useState('')
+  const [activeModal, setActiveModal] = useState(null) // 'revisions' | 'bibtex' | null
+  const [bibtexCopied, setBibtexCopied] = useState(false)
 
   const venueId = state.venue.id
 
@@ -249,8 +263,8 @@ function PaperForum() {
               <span className="readers item">
                 Readers: {note.readers?.includes('everyone') ? 'Everyone' : (note.readers || []).join(', ')}
               </span>
-              <span className="item"><a href="#" onClick={e => e.preventDefault()}>Revisions</a></span>
-              <span className="item"><a href="#" onClick={e => e.preventDefault()}>BibTeX</a></span>
+              <span className="item"><a href="#" onClick={e => { e.preventDefault(); setActiveModal('revisions') }}>Revisions</a></span>
+              <span className="item"><a href="#" onClick={e => { e.preventDefault(); setBibtexCopied(false); setActiveModal('bibtex') }}>BibTeX</a></span>
               {note.license && <span className="item">{note.license}</span>}
             </div>
             <div className="invitation-buttons" style={{ textAlign: 'right', marginBottom: '1rem' }}>
@@ -275,6 +289,40 @@ function PaperForum() {
             })}
           </div>
         </div>
+
+        {activeModal === 'revisions' && (
+          <InfoModal title="Revision History" onClose={() => setActiveModal(null)}>
+            <ul style={{ margin: 0, paddingLeft: 18 }}>
+              {buildRevisions(note).map((rev, i) => (
+                <li key={i} style={{ marginBottom: 6 }}>
+                  {rev.label} &mdash; {new Date(rev.date).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                </li>
+              ))}
+            </ul>
+          </InfoModal>
+        )}
+
+        {activeModal === 'bibtex' && (
+          <InfoModal
+            title="BibTeX Citation"
+            onClose={() => setActiveModal(null)}
+            footer={
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={() => {
+                  navigator.clipboard.writeText(buildBibTeX(note, authors, venueId, title))
+                  setBibtexCopied(true)
+                }}
+              >
+                {bibtexCopied ? 'Copied!' : 'Copy to clipboard'}
+              </button>
+            }
+          >
+            <pre style={{ whiteSpace: 'pre-wrap', background: '#f5f5f5', padding: 12, borderRadius: 4, fontSize: 12, margin: 0 }}>
+              {buildBibTeX(note, authors, venueId, title)}
+            </pre>
+          </InfoModal>
+        )}
 
         <hr style={{ border: 0, borderTop: '1px solid rgba(0,0,0,0.1)', margin: '1.5rem 0' }} />
 

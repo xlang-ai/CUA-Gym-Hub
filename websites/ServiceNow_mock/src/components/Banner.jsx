@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Globe, HelpCircle, Bell } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useToast } from './Toast';
 import { formatDistanceToNow } from 'date-fns';
 
 function getNotifIcon(type) {
@@ -30,11 +31,13 @@ const LANGUAGES = [
 
 export default function Banner() {
   const { state, dispatch } = useApp();
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchValue, setSearchValue] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showImpersonatePicker, setShowImpersonatePicker] = useState(false);
   const [showGlobeMenu, setShowGlobeMenu] = useState(false);
   const [showHelpPanel, setShowHelpPanel] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -260,10 +263,10 @@ export default function Banner() {
         </div>
 
         <div ref={userRef} style={{ position: 'relative' }}>
-          <button className="sn-avatar-btn" onClick={() => { setShowUserMenu(!showUserMenu); setShowNotifications(false); setShowGlobeMenu(false); setShowHelpPanel(false); }}>
+          <button className="sn-avatar-btn" onClick={() => { setShowUserMenu(!showUserMenu); setShowImpersonatePicker(false); setShowNotifications(false); setShowGlobeMenu(false); setShowHelpPanel(false); }}>
             {state.currentUser?.avatar || 'SA'}
           </button>
-          {showUserMenu && (
+          {showUserMenu && !showImpersonatePicker && (
             <div className="sn-user-dropdown">
               <div className="sn-user-dropdown-header">
                 <div className="sn-user-dropdown-name">{state.currentUser?.first_name} {state.currentUser?.last_name}</div>
@@ -273,6 +276,18 @@ export default function Banner() {
               <div className="sn-user-dropdown-item" onClick={handleImpersonate}>Impersonate User</div>
               <div className="sn-user-dropdown-divider" />
               <div className="sn-user-dropdown-item" onClick={handleLogout}>Logout</div>
+            </div>
+          )}
+          {showUserMenu && showImpersonatePicker && (
+            <div className="sn-user-dropdown">
+              <div className="sn-impersonate-back" onClick={() => setShowImpersonatePicker(false)}>&larr; Back</div>
+              <div className="sn-impersonate-list">
+                {state.users.filter(u => u.sys_id !== state.currentUser.sys_id).map(u => (
+                  <div key={u.sys_id} className="sn-impersonate-item" onClick={() => handleImpersonateSelect(u)}>
+                    {u.first_name} {u.last_name} <span style={{ color: '#999' }}>({u.user_name})</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

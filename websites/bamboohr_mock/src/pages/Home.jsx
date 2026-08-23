@@ -7,6 +7,29 @@ import {
 } from 'lucide-react';
 import TimeOffModal from '../components/TimeOffModal';
 
+const COMPANY_LINKS = {
+  benefits: {
+    title: 'Benefits Portal',
+    body: 'Manage your health, dental, and vision coverage, view plan documents, and update dependents. This mock does not connect to a live carrier portal; use the Benefits tab on your profile to see enrolled plans.',
+  },
+  four01k: {
+    title: '401(k) Enrollment',
+    body: 'Set your contribution rate and choose investment elections for the company retirement plan. Changes typically take one pay cycle to take effect. This mock does not connect to a live plan administrator.',
+  },
+  handbook: {
+    title: 'Employee Handbook',
+    body: 'The employee handbook covers company policies on time off, conduct, remote work, and benefits eligibility. Ask your manager or HR business partner if you need the current PDF.',
+  },
+  itHelp: {
+    title: 'IT Help Desk',
+    body: 'For password resets, hardware requests, and software access, open a ticket with IT. Most requests are acknowledged within one business day.',
+  },
+  referral: {
+    title: 'Employee Referral',
+    body: 'Refer a candidate for an open role from the Hiring tab. Referral bonuses are paid out after the referred candidate completes 90 days of employment.',
+  },
+};
+
 function getInitials(name) {
   if (!name) return '?';
   const parts = name.trim().split(' ');
@@ -58,6 +81,7 @@ export default function Home() {
   const [showTimeOffModal, setShowTimeOffModal] = useState(false);
   const [dismissedNotifs, setDismissedNotifs] = useState(new Set());
   const [feedView, setFeedView] = useState('all');
+  const [companyLinkModal, setCompanyLinkModal] = useState(null); // key into COMPANY_LINKS
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const sid = searchParams.get('sid');
@@ -339,14 +363,14 @@ export default function Home() {
             </div>
             <div style={{ fontSize: 12, color: '#666', marginBottom: 4, fontWeight: 600 }}>Benefits</div>
             <div style={{ paddingLeft: 8, marginBottom: 8 }}>
-              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }}>Benefits Portal</a></div>
-              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }}>401(k) Enrollment</a></div>
+              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }} onClick={e => { e.preventDefault(); setCompanyLinkModal('benefits'); }}>Benefits Portal</a></div>
+              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }} onClick={e => { e.preventDefault(); setCompanyLinkModal('four01k'); }}>401(k) Enrollment</a></div>
             </div>
             <div style={{ fontSize: 12, color: '#666', marginBottom: 4, fontWeight: 600 }}>General</div>
             <div style={{ paddingLeft: 8 }}>
-              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }}>Employee Handbook</a></div>
-              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }}>IT Help Desk</a></div>
-              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }}>Employee Referral</a></div>
+              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }} onClick={e => { e.preventDefault(); setCompanyLinkModal('handbook'); }}>Employee Handbook</a></div>
+              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }} onClick={e => { e.preventDefault(); setCompanyLinkModal('itHelp'); }}>IT Help Desk</a></div>
+              <div><a href="#" style={{ fontSize: 12, color: '#73C41D', display: 'block', padding: '2px 0' }} onClick={e => { e.preventDefault(); setCompanyLinkModal('referral'); }}>Employee Referral</a></div>
             </div>
           </div>
         </div>
@@ -532,6 +556,22 @@ export default function Home() {
           employeeId={state.currentUser?.employeeId}
           onClose={() => setShowTimeOffModal(false)}
         />
+      )}
+
+      {/* Company Link Modal */}
+      {companyLinkModal && (
+        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setCompanyLinkModal(null)}>
+          <div className="modal" style={{ width: 420 }}>
+            <div className="modal-header">
+              <h2>{COMPANY_LINKS[companyLinkModal].title}</h2>
+              <button onClick={() => setCompanyLinkModal(null)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#666' }}><X size={18} /></button>
+            </div>
+            <p style={{ fontSize: 13, color: '#555', lineHeight: 1.5 }}>{COMPANY_LINKS[companyLinkModal].body}</p>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={() => setCompanyLinkModal(null)}>Close</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

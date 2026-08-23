@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Play, Pause, Volume2, VolumeX, Settings, Maximize, ThumbsUp, ThumbsDown, Share2, Download, ListPlus, MoreHorizontal, ChevronDown, ChevronUp, Bell } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Settings, Maximize, ThumbsUp, ThumbsDown, Share2, Download, ListPlus, MoreHorizontal, ChevronDown, ChevronUp, Bell, BellRing, BellOff, Check } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import ShareModal from '../components/ShareModal';
 import PlaylistModal from '../components/PlaylistModal';
@@ -10,7 +10,7 @@ import './VideoPlayerPage.css';
 const VideoPlayerPage = () => {
   const { videoId } = useParams();
   const navigate = useNavigate();
-  const { data, addToWatchHistory, toggleLike, toggleDislike, toggleCommentLike, toggleWatchLater, toggleSubscription, addComment, showToast } = useData();
+  const { data, addToWatchHistory, toggleLike, toggleDislike, toggleCommentLike, toggleCommentDislike, updateNotificationPreference, toggleWatchLater, toggleSubscription, addComment, showToast } = useData();
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -30,11 +30,13 @@ const VideoPlayerPage = () => {
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [expandedReplies, setExpandedReplies] = useState({});
+  const [showNotifMenu, setShowNotifMenu] = useState(false);
   const [autoplayEnabled, setAutoplayEnabled] = useState(() => {
     return data?.settings?.autoplay !== false;
   });
   const sortDropdownRef = useRef(null);
   const moreOptionsRef = useRef(null);
+  const notifMenuRef = useRef(null);
 
   const video = data.videos.find(v => v.videoId === videoId);
   const channel = video ? data.channels.find(c => c.channelId === video.channelId) : null;
@@ -94,6 +96,9 @@ const VideoPlayerPage = () => {
       }
       if (moreOptionsRef.current && !moreOptionsRef.current.contains(event.target)) {
         setShowMoreOptions(false);
+      }
+      if (notifMenuRef.current && !notifMenuRef.current.contains(event.target)) {
+        setShowNotifMenu(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -192,9 +197,16 @@ const VideoPlayerPage = () => {
     showToast(isSubscribed ? 'Unsubscribed' : 'Subscribed');
   };
 
-  const handleNotificationBell = () => {
-    showToast(isSubscribed ? 'Notification preferences updated' : 'Subscribe to manage notifications');
+  const notifPreference = channel ? (data.user.notificationPreferences || {})[channel.channelId] || 'all' : 'all';
+
+  const handleNotifSelect = (preference) => {
+    updateNotificationPreference(channel.channelId, preference);
+    setShowNotifMenu(false);
+    const labels = { all: 'All notifications', personalized: 'Personalized notifications', none: 'Notifications off' };
+    showToast(labels[preference]);
   };
+
+  const NotifIcon = notifPreference === 'none' ? BellOff : (notifPreference === 'all' ? BellRing : Bell);
 
   const handleShare = () => {
     setShowShareModal(true);
@@ -224,6 +236,10 @@ const VideoPlayerPage = () => {
 
   const handleCommentLike = (commentId, isReply = false, parentCommentId = null) => {
     toggleCommentLike(videoId, commentId, isReply, parentCommentId);
+  };
+
+  const handleCommentDislike = (commentId, isReply = false, parentCommentId = null) => {
+    toggleCommentDislike(videoId, commentId, isReply, parentCommentId);
   };
 
   const handleSuggestedVideoClick = (suggestedVideoId) => {
@@ -405,13 +421,34 @@ const VideoPlayerPage = () => {
               {isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
             {isSubscribed && (
-              <button
-                className="notification-bell-button"
-                aria-label="Notifications"
-                onClick={handleNotificationBell}
-              >
-                <Bell size={20} />
-              </button>
+              <div className="notification-bell-wrapper" ref={notifMenuRef} style={{ position: 'relative' }}>
+                <button
+                  className="notification-bell-button"
+                  aria-label="Notifications"
+                  onClick={() => setShowNotifMenu(prev => !prev)}
+                >
+                  <NotifIcon size={20} />
+                </button>
+                {showNotifMenu && (
+                  <div className="dropdown-menu" style={{ minWidth: 220 }}>
+                    <div className="dropdown-item" onClick={() => handleNotifSelect('all')}>
+                      <BellRing size={18} />
+                      <span style={{ flex: 1 }}>All</span>
+                      {notifPreference === 'all' && <Check size={16} />}
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNotifSelect('personalized')}>
+                      <Bell size={18} />
+                      <span style={{ flex: 1 }}>Personalized</span>
+                      {notifPreference === 'personalized' && <Check size={16} />}
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNotifSelect('none')}>
+                      <BellOff size={18} />
+                      <span style={{ flex: 1 }}>None</span>
+                      {notifPreference === 'none' && <Check size={16} />}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -516,7 +553,10 @@ const VideoPlayerPage = () => {
                           {comment.likeCount}
                         </span>
                       </button>
-                      <button className="comment-action" onClick={() => showToast('Dislike recorded')}>
+                      <button
+                        className={`comment-action ${(comment.dislikedBy || []).includes(data.user.userId) ? 'liked' : ''}`}
+                        onClick={() => handleCommentDislike(comment.commentId)}
+                      >
                         <ThumbsDown size={16} />
                       </button>
                       <button
@@ -590,7 +630,10 @@ const VideoPlayerPage = () => {
                                         {reply.likeCount}
                                       </span>
                                     </button>
-                                    <button className="comment-action" onClick={() => showToast('Dislike recorded')}>
+                                    <button
+                                      className={`comment-action ${(reply.dislikedBy || []).includes(data.user.userId) ? 'liked' : ''}`}
+                                      onClick={() => handleCommentDislike(reply.commentId, true, comment.commentId)}
+                                    >
                                       <ThumbsDown size={14} />
                                     </button>
                                     <button

@@ -132,7 +132,7 @@ export default function ChartBuilder() {
   const existingChart = id && id !== 'new' ? state.charts.find(c => c.id === id) : null
 
   const [chartType, setChartType] = useState(existingChart?.type || initialType)
-  const [title, setTitle] = useState(existingChart?.name || 'Page views')
+  const [title, setTitle] = useState(existingChart?.name || searchParams.get('title') || 'Page views')
   const [editingTitle, setEditingTitle] = useState(false)
   const [measuredAs, setMeasuredAs] = useState(existingChart?.config?.measuredAs || 'uniques')
   const [viz, setViz] = useState(existingChart?.config?.chartVisualization || 'line')

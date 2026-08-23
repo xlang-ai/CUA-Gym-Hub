@@ -204,7 +204,17 @@ export default function Home() {
               <tbody>
                 {homeMetrics.topPages.map((p, i) => (
                   <tr key={i}>
-                    <td><a href="#" onClick={e => e.preventDefault()}>{p.title}</a></td>
+                    <td>
+                      <a
+                        href="#"
+                        onClick={e => {
+                          e.preventDefault()
+                          navigate(`/chart/new?type=segmentation&title=${encodeURIComponent(p.title + ' - Page Views')}`)
+                        }}
+                      >
+                        {p.title}
+                      </a>
+                    </td>
                     <td style={{ textAlign: 'right' }}>{p.volume.toLocaleString()}</td>
                   </tr>
                 ))}

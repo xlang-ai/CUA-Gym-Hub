@@ -152,6 +152,11 @@
   white-space: nowrap;
 }
 
+.voice-button-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
 .voice-button {
   width: 40px;
   height: 40px;
@@ -166,6 +171,50 @@
 
 .voice-button:hover {
   background-color: var(--active-bg);
+}
+
+.voice-button.listening {
+  background-color: #FF0000;
+  color: #fff;
+}
+
+.voice-search-overlay {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
+  z-index: 2002;
+  white-space: nowrap;
+}
+
+.voice-search-pulse {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #FF0000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: voice-pulse 1.1s ease-in-out infinite;
+}
+
+.voice-search-overlay span {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+@keyframes voice-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(255, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
 }
 
 .header-right {

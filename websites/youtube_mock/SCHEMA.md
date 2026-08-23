@@ -46,7 +46,10 @@ Note: Port is dynamically assigned (vite `port: 0`). 8057 is the expected port a
     dislikedVideos: string[],          // array of videoIds (new)
     watchLater: string[],              // array of videoIds
     playlists: string[],               // array of playlistIds
-    searchHistory: string[]            // array of search query strings, most recent first, max 30 (new)
+    searchHistory: string[],           // array of search query strings, most recent first, max 30 (new)
+    notificationPreferences: {         // channelId -> preference (new)
+      [channelId]: string              // 'all' | 'personalized' | 'none'
+    }
   },
   videos: [                            // 54 videos total
     {
@@ -111,6 +114,7 @@ Note: Port is dynamically assigned (vite `port: 0`). 8057 is the expected port a
         likeCount: number,
         dislikeCount: number,
         likedBy: string[],             // array of userIds who liked this comment (new)
+        dislikedBy: string[],          // array of userIds who disliked this comment (new)
         replies: [                     // nested reply objects, same shape as comment
           {
             commentId: string,
@@ -123,6 +127,7 @@ Note: Port is dynamically assigned (vite `port: 0`). 8057 is the expected port a
             likeCount: number,
             dislikeCount: number,
             likedBy: string[],         // array of userIds who liked this reply (new)
+            dislikedBy: string[],      // array of userIds who disliked this reply (new)
             replies: [],
             isPinned: boolean
           }

@@ -1,15 +1,27 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Bell, CheckCircle } from 'lucide-react';
+import { Bell, BellRing, BellOff, CheckCircle, Check } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import './ChannelPage.css';
 
 const ChannelPage = () => {
   const { channelId } = useParams();
   const navigate = useNavigate();
-  const { data, toggleSubscription, showToast } = useData();
+  const { data, toggleSubscription, updateNotificationPreference, showToast } = useData();
   const [activeTab, setActiveTab] = useState('home');
+  const [showNotifMenu, setShowNotifMenu] = useState(false);
+  const notifMenuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notifMenuRef.current && !notifMenuRef.current.contains(event.target)) {
+        setShowNotifMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const channel = data.channels.find(c => c.channelId === channelId);
   const channelVideos = data.videos.filter(v => v.channelId === channelId);
@@ -51,6 +63,17 @@ const ChannelPage = () => {
     navigate(`/watch/${videoId}`);
   };
 
+  const notifPreference = (data.user.notificationPreferences || {})[channelId] || 'all';
+
+  const handleNotifSelect = (preference) => {
+    updateNotificationPreference(channelId, preference);
+    setShowNotifMenu(false);
+    const labels = { all: 'All notifications', personalized: 'Personalized notifications', none: 'Notifications off' };
+    showToast(labels[preference]);
+  };
+
+  const NotifIcon = notifPreference === 'none' ? BellOff : (notifPreference === 'all' ? BellRing : Bell);
+
   const tabs = ['Home', 'Videos', 'Shorts', 'Playlists', 'Community', 'About'];
 
   return (
@@ -88,9 +111,34 @@ const ChannelPage = () => {
               {isSubscribed ? 'Subscribed' : 'Subscribe'}
             </button>
             {isSubscribed && (
-              <button className="notification-bell-button" onClick={() => showToast('Notifications updated')}>
-                <Bell size={20} />
-              </button>
+              <div className="notification-bell-wrapper" ref={notifMenuRef} style={{ position: 'relative' }}>
+                <button
+                  className="notification-bell-button"
+                  aria-label="Notifications"
+                  onClick={() => setShowNotifMenu(prev => !prev)}
+                >
+                  <NotifIcon size={20} />
+                </button>
+                {showNotifMenu && (
+                  <div className="dropdown-menu" style={{ minWidth: 220 }}>
+                    <div className="dropdown-item" onClick={() => handleNotifSelect('all')}>
+                      <BellRing size={18} />
+                      <span style={{ flex: 1 }}>All</span>
+                      {notifPreference === 'all' && <Check size={16} />}
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNotifSelect('personalized')}>
+                      <Bell size={18} />
+                      <span style={{ flex: 1 }}>Personalized</span>
+                      {notifPreference === 'personalized' && <Check size={16} />}
+                    </div>
+                    <div className="dropdown-item" onClick={() => handleNotifSelect('none')}>
+                      <BellOff size={18} />
+                      <span style={{ flex: 1 }}>None</span>
+                      {notifPreference === 'none' && <Check size={16} />}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>

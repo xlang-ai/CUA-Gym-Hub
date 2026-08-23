@@ -45,8 +45,15 @@ export default function Canvas({
   onSendToBack,
   connectorStart,
   onConnectorItemClick,
+  filter,
+  presentationFrameId,
+  cursorChatMode,
 }) {
   const canvasRef = useRef(null);
+  // Cursor chat: transient message bubbles dropped at a canvas location (local analog for
+  // "screen share"-adjacent live chat — bubbles auto-expire, nothing is persisted to app state).
+  const [chatInput, setChatInput] = useState(null); // { x, y, value } in canvas coordinates
+  const [chatBubbles, setChatBubbles] = useState([]); // [{ id, x, y, text }]
   const [isPanning, setIsPanning] = useState(false);
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -132,11 +139,19 @@ export default function Canvas({
   }, [panX, panY, zoom]);
 
   const handleMouseDown = (e) => {
-    if (e.target.closest('.canvas-item') || e.target.closest('.context-toolbar') || e.target.closest('.canvas-context-menu')) return;
+    if (e.target.closest('.canvas-item') || e.target.closest('.context-toolbar') || e.target.closest('.canvas-context-menu') || e.target.closest('.cursor-chat-input-wrapper')) return;
 
     // Close context menu
     setContextMenu(null);
     setShowColorPicker(false);
+
+    // Cursor chat mode takes priority over the active tool: clicking the open canvas
+    // drops a transient chat bubble instead of panning/creating/selecting.
+    if (cursorChatMode) {
+      const { x, y } = clientToCanvas(e.clientX, e.clientY);
+      setChatInput({ x, y, value: '' });
+      return;
+    }
 
     if (e.button === 1 || spaceDown || activeTool === 'hand') {
       setIsPanning(true);
@@ -355,6 +370,42 @@ export default function Canvas({
   // Sort items by zIndex for rendering
   const sortedItems = [...items].sort((a, b) => (a.zIndex || 0) - (b.zIndex || 0));
 
+  // Compute which items should render dimmed: presentation mode dims everything outside
+  // the currently-presented frame, and the filter panel dims items that don't match the
+  // active type/tag selection. Both are purely visual (non-destructive, local) analogs.
+  const filterActive = !!filter && ((filter.types?.length || 0) > 0 || (filter.tagIds?.length || 0) > 0);
+  const isItemDimmed = useCallback((item) => {
+    if (presentationFrameId) {
+      const isActiveFrame = item.id === presentationFrameId;
+      const isInActiveFrame = item.parentId === presentationFrameId;
+      if (!isActiveFrame && !isInActiveFrame) return true;
+    }
+    if (filterActive) {
+      if ((filter.types?.length || 0) > 0 && !filter.types.includes(item.type)) return true;
+      if ((filter.tagIds?.length || 0) > 0) {
+        const itemTagIds = item.tagIds || [];
+        const matchesTag = itemTagIds.some(t => filter.tagIds.includes(t));
+        if (!matchesTag) return true;
+      }
+    }
+    return false;
+  }, [presentationFrameId, filterActive, filter]);
+
+  // Cursor chat: submit the pending input as a transient bubble that auto-expires on its
+  // own timer (each bubble schedules its own removal once, at creation time).
+  const submitChatInput = useCallback(() => {
+    setChatInput(prev => {
+      if (prev && prev.value.trim()) {
+        const bubbleId = `chat_${Date.now()}_${Math.round(Math.random() * 1e6)}`;
+        setChatBubbles(bubbles => [...bubbles, { id: bubbleId, x: prev.x, y: prev.y, text: prev.value.trim() }]);
+        setTimeout(() => {
+          setChatBubbles(bubbles => bubbles.filter(b => b.id !== bubbleId));
+        }, 6000);
+      }
+      return null;
+    });
+  }, []);
+
   // Get selected items for context toolbar
   const selectedItems = items.filter(i => selectedItemIds.includes(i.id));
   const showContextToolbar = selectedItems.length > 0 && !isResizing && !isDragging && activeTool === 'select';
@@ -396,12 +447,14 @@ export default function Canvas({
         {sortedItems.map(item => {
           const isSelected = selectedItemIds.includes(item.id);
           const isEditing = editingItemId === item.id;
+          const dimmed = isItemDimmed(item);
           return (
             <CanvasItem
               key={item.id}
               item={item}
               isSelected={isSelected}
               isEditing={isEditing}
+              dimmed={dimmed}
               editValue={editValue}
               onEditChange={setEditValue}
               onEditBlur={() => handleEditBlur(item)}
@@ -428,6 +481,40 @@ export default function Canvas({
               height: selectionRect.height,
             }}
           />
+        )}
+
+        {/* Cursor chat: transient message bubbles, positioned in canvas coordinates so they
+            pan/zoom with the board. */}
+        {chatBubbles.map(bubble => (
+          <div
+            key={bubble.id}
+            className="cursor-chat-bubble"
+            style={{ left: bubble.x, top: bubble.y }}
+          >
+            {bubble.text}
+          </div>
+        ))}
+
+        {/* Cursor chat: active input box, dropped where the user clicked. */}
+        {chatInput && (
+          <div
+            className="cursor-chat-input-wrapper"
+            style={{ left: chatInput.x, top: chatInput.y }}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            <input
+              autoFocus
+              className="cursor-chat-input"
+              placeholder="Say something…"
+              value={chatInput.value}
+              onChange={(e) => setChatInput(prev => (prev ? { ...prev, value: e.target.value } : prev))}
+              onBlur={submitChatInput}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { e.preventDefault(); submitChatInput(); }
+                if (e.key === 'Escape') { e.preventDefault(); setChatInput(null); }
+              }}
+            />
+          </div>
         )}
       </div>
 
@@ -654,8 +741,8 @@ function ContextToolbar({ items, x, y, onUpdateItem, showColorPicker, onToggleCo
 }
 
 // --- Canvas Item Router ---
-function CanvasItem({ item, isSelected, isEditing, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown, allItems, zoom }) {
-  const common = { item, isSelected, isEditing, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown };
+function CanvasItem({ item, isSelected, isEditing, dimmed, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown, allItems, zoom }) {
+  const common = { item, isSelected, isEditing, dimmed, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown };
 
   switch (item.type) {
     case 'sticky_note':
@@ -667,7 +754,7 @@ function CanvasItem({ item, isSelected, isEditing, editValue, onEditChange, onEd
     case 'frame':
       return <FrameItem {...common} />;
     case 'connector':
-      return <ConnectorItem item={item} isSelected={isSelected} onMouseDown={onMouseDown} onContextMenu={onContextMenu} allItems={allItems} />;
+      return <ConnectorItem item={item} isSelected={isSelected} dimmed={dimmed} onMouseDown={onMouseDown} onContextMenu={onContextMenu} allItems={allItems} />;
     default:
       return null;
   }
@@ -710,7 +797,7 @@ function SelectionHandles({ item, onResizeHandleMouseDown }) {
 }
 
 // --- Sticky Note ---
-function StickyNoteItem({ item, isSelected, isEditing, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
+function StickyNoteItem({ item, isSelected, isEditing, dimmed, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
   const bgColor = getStickyColor(item.style?.fillColor);
   const textColor = item.style?.fillColor === 'black' ? '#ffffff' : '#1a1a1a';
   const editRef = useRef(null);
@@ -723,7 +810,7 @@ function StickyNoteItem({ item, isSelected, isEditing, editValue, onEditChange, 
 
   return (
     <div
-      className={`canvas-item sticky-note-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''}`}
+      className={`canvas-item sticky-note-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''} ${dimmed ? 'dimmed' : ''}`}
       style={{
         left: item.x - item.width / 2,
         top: item.y - item.height / 2,
@@ -732,6 +819,7 @@ function StickyNoteItem({ item, isSelected, isEditing, editValue, onEditChange, 
         backgroundColor: bgColor,
         transform: item.rotation ? `rotate(${item.rotation}deg)` : undefined,
         zIndex: item.zIndex || 1,
+        opacity: dimmed ? 0.25 : undefined,
       }}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}
@@ -767,7 +855,7 @@ function StickyNoteItem({ item, isSelected, isEditing, editValue, onEditChange, 
 }
 
 // --- Shape ---
-function ShapeItem({ item, isSelected, isEditing, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
+function ShapeItem({ item, isSelected, isEditing, dimmed, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
   const s = item.style || {};
   const editRef = useRef(null);
 
@@ -790,14 +878,14 @@ function ShapeItem({ item, isSelected, isEditing, editValue, onEditChange, onEdi
 
   return (
     <div
-      className={`canvas-item shape-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''}`}
+      className={`canvas-item shape-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''} ${dimmed ? 'dimmed' : ''}`}
       style={{
         left: item.x - item.width / 2,
         top: item.y - item.height / 2,
         width: item.width,
         height: item.height,
         backgroundColor: clipPath ? 'transparent' : (s.fillColor || '#ffffff'),
-        opacity: s.fillOpacity ?? 1,
+        opacity: dimmed ? 0.25 : (s.fillOpacity ?? 1),
         border: clipPath ? 'none' : `${s.borderWidth || 2}px ${borderStyle} ${s.borderColor || '#1a1a1a'}`,
         borderRadius: clipPath ? 0 : borderRadius,
         transform: item.rotation ? `rotate(${item.rotation}deg)` : undefined,
@@ -861,7 +949,7 @@ function ShapeItem({ item, isSelected, isEditing, editValue, onEditChange, onEdi
 }
 
 // --- Text ---
-function TextItem({ item, isSelected, isEditing, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
+function TextItem({ item, isSelected, isEditing, dimmed, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
   const s = item.style || {};
   const editRef = useRef(null);
 
@@ -873,7 +961,7 @@ function TextItem({ item, isSelected, isEditing, editValue, onEditChange, onEdit
 
   return (
     <div
-      className={`canvas-item text-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''}`}
+      className={`canvas-item text-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''} ${dimmed ? 'dimmed' : ''}`}
       style={{
         left: item.x - item.width / 2,
         top: item.y - item.height / 2,
@@ -881,6 +969,7 @@ function TextItem({ item, isSelected, isEditing, editValue, onEditChange, onEdit
         minHeight: item.height,
         transform: item.rotation ? `rotate(${item.rotation}deg)` : undefined,
         zIndex: item.zIndex || 1,
+        opacity: dimmed ? 0.25 : undefined,
       }}
       onMouseDown={onMouseDown}
       onDoubleClick={onDoubleClick}
@@ -922,7 +1011,7 @@ function TextItem({ item, isSelected, isEditing, editValue, onEditChange, onEdit
 }
 
 // --- Frame ---
-function FrameItem({ item, isSelected, isEditing, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
+function FrameItem({ item, isSelected, isEditing, dimmed, editValue, onEditChange, onEditBlur, onEditKeyDown, onMouseDown, onDoubleClick, onContextMenu, onResizeHandleMouseDown }) {
   const s = item.style || {};
   const editRef = useRef(null);
 
@@ -934,7 +1023,7 @@ function FrameItem({ item, isSelected, isEditing, editValue, onEditChange, onEdi
 
   return (
     <div
-      className={`canvas-item frame-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''}`}
+      className={`canvas-item frame-item ${isSelected ? 'selected' : ''} ${item.locked ? 'locked' : ''} ${dimmed ? 'dimmed' : ''}`}
       style={{
         left: item.x - item.width / 2,
         top: item.y - item.height / 2,
@@ -943,6 +1032,7 @@ function FrameItem({ item, isSelected, isEditing, editValue, onEditChange, onEdi
         backgroundColor: s.fillColor || '#f5f5f5',
         transform: item.rotation ? `rotate(${item.rotation}deg)` : undefined,
         zIndex: item.zIndex || 0,
+        opacity: dimmed ? 0.35 : undefined,
       }}
       onMouseDown={onMouseDown}
       onContextMenu={onContextMenu}
@@ -965,7 +1055,7 @@ function FrameItem({ item, isSelected, isEditing, editValue, onEditChange, onEdi
 }
 
 // --- Connector ---
-function ConnectorItem({ item, isSelected, onMouseDown, onContextMenu, allItems }) {
+function ConnectorItem({ item, isSelected, dimmed, onMouseDown, onContextMenu, allItems }) {
   const s = item.style || {};
 
   let startX = 0, startY = 0, endX = 100, endY = 100;
@@ -1035,7 +1125,7 @@ function ConnectorItem({ item, isSelected, onMouseDown, onContextMenu, allItems 
   return (
     <>
       <svg
-        className={`canvas-item connector-item ${isSelected ? 'selected' : ''}`}
+        className={`canvas-item connector-item ${isSelected ? 'selected' : ''} ${dimmed ? 'dimmed' : ''}`}
         style={{
           position: 'absolute',
           left: minX,
@@ -1046,6 +1136,7 @@ function ConnectorItem({ item, isSelected, onMouseDown, onContextMenu, allItems 
           overflow: 'visible',
           pointerEvents: 'all',
           cursor: 'pointer',
+          opacity: dimmed ? 0.25 : undefined,
         }}
         onMouseDown={onMouseDown}
         onContextMenu={onContextMenu}
