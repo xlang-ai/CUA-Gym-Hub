@@ -92,6 +92,13 @@ const measure = () => page.evaluate(() => {
     // text; judging only on roles and text length called their working buttons inert. If nodes
     // appeared or vanished, something happened.
     nodeCount: document.querySelectorAll('*').length,
+    // Navigation shape. An app that routes entirely through click handlers exposes no links,
+    // so an agent reading the accessibility tree cannot discover what routes exist, cannot
+    // deep-link and cannot open one in a new tab — and this crawl, which follows links, sees
+    // only the entry page. Both facts matter and they have the same cause.
+    inAppLinks: [...document.querySelectorAll('a[href]')]
+      .filter((a) => a.href.startsWith(location.origin)).length,
+    navButtons: document.querySelectorAll('button, [role=button]').length,
     // Tab-like groups that never say which tab is selected. Three or more sibling buttons whose
     // classes differ only by a state suffix is the shape; if none of them carries
     // aria-selected or aria-current, the active one is invisible to the accessibility tree.
@@ -192,6 +199,8 @@ while (queue.length && results.length < MAX_ROUTES) {
     rows: m.rowCount,
     deadEndList: m.rowCount > 0 && m.linkedRows === 0,
     unmarkedTabGroups: m.unmarkedTabGroups,
+    inAppLinks: m.inAppLinks,
+    navButtons: m.navButtons,
     probed: probe.probed,
     inert: probe.inert,
     threw: pageErrors.length - errsBefore,
@@ -215,6 +224,13 @@ console.log(`  no <h1> page title      ${untitled.length}`);
 console.log(`  dead-end lists          ${deadEnds.length}`);
 console.log(`  tab groups with no aria-selected  ${unmarkedTabs.reduce((a, r) => a + r.unmarkedTabGroups, 0)} across ${unmarkedTabs.length} route(s)`);
 console.log(`  inert controls          ${inertTotal} of ${probedTotal} clicked${probedTotal ? ` (${Math.round((1 - inertTotal / probedTotal) * 100)}% responded)` : ''}`);
+const entry = ok[0];
+if (entry && entry.inAppLinks === 0) {
+  console.log(`\n  NO IN-APP LINKS on the entry page (${entry.navButtons} buttons instead).`);
+  console.log(`  Two consequences with one cause: an agent reading the accessibility tree cannot`);
+  console.log(`  discover this app's routes, deep-link into one, or open one in a new tab — and this`);
+  console.log(`  crawl follows links, so the route count above is a floor, not a census.`);
+}
 if (probedTotal && ok.some((r) => r.probed >= PROBE_CAP)) {
   console.log(`  note: ${ok.filter((r) => r.probed >= PROBE_CAP).length} route(s) hit the per-page probe cap of ${PROBE_CAP}; not every control was clicked`);
 }

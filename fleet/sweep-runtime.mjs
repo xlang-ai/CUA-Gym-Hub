@@ -77,6 +77,7 @@ for (const site of all) {
       deadEnds: num(/dead-end lists\s+(\d+)/),
       unmarkedTabs: num(/no aria-selected\s+(\d+)/),
       inert: num(/inert controls\s+(\d+) of/),
+      noInAppLinks: /NO IN-APP LINKS/.test(out),
       probed: num(/inert controls\s+\d+ of (\d+)/),
     });
   } catch (e) {

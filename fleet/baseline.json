@@ -2,6 +2,488 @@
   "generated_by": "fleet/audit-static.mjs",
   "sites": [
     {
+      "site": "woocommerce_mock",
+      "files": 26,
+      "lines": 5579,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 37,
+          "files": 1,
+          "examples": [
+            "37 routes declared, 0 in-app links anywhere in src/"
+          ]
+        },
+        {
+          "id": "empty_handler",
+          "severity": "high",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => { }}"
+          ]
+        }
+      ],
+      "score": 114
+    },
+    {
+      "site": "cloudflare_mock",
+      "files": 29,
+      "lines": 6535,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 29,
+          "files": 1,
+          "examples": [
+            "29 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 87
+    },
+    {
+      "site": "hubspot_marketing_mock",
+      "files": 20,
+      "lines": 6998,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 29,
+          "files": 1,
+          "examples": [
+            "29 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 87
+    },
+    {
+      "site": "adp_mock",
+      "files": 31,
+      "lines": 5415,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 24,
+          "files": 1,
+          "examples": [
+            "24 routes declared, 0 in-app links anywhere in src/"
+          ]
+        },
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Report exported as CSV', 'success')}"
+          ]
+        }
+      ],
+      "score": 75
+    },
+    {
+      "site": "epic-health_mock",
+      "files": 31,
+      "lines": 5906,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 25,
+          "files": 1,
+          "examples": [
+            "25 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 75
+    },
+    {
+      "site": "mailchimp_mock",
+      "files": 26,
+      "lines": 5436,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 24,
+          "files": 1,
+          "examples": [
+            "24 routes declared, 0 in-app links anywhere in src/"
+          ]
+        },
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "<a href=\"#\" style={{ color: '#007C89' }}>{block.content.unsubscribeTex"
+          ]
+        }
+      ],
+      "score": 73
+    },
+    {
+      "site": "ServiceNow_mock",
+      "files": 26,
+      "lines": 4214,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 23,
+          "files": 1,
+          "examples": [
+            "23 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 69
+    },
+    {
+      "site": "gusto_mock",
+      "files": 31,
+      "lines": 6223,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 23,
+          "files": 1,
+          "examples": [
+            "23 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 69
+    },
+    {
+      "site": "dingtalk_mock",
+      "files": 26,
+      "lines": 5780,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 21,
+          "files": 1,
+          "examples": [
+            "21 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 63
+    },
+    {
+      "site": "mixpanel_mock",
+      "files": 28,
+      "lines": 5134,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 20,
+          "files": 1,
+          "examples": [
+            "20 routes declared, 0 in-app links anywhere in src/"
+          ]
+        },
+        {
+          "id": "href_hash_only",
+          "severity": "medium",
+          "guide": "No obvious clickable placeholder remains",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "<a href=\"#\" onClick={e => e.preventDefault()} style={{ color: '#4F44E0"
+          ]
+        }
+      ],
+      "score": 61
+    },
+    {
+      "site": "circleci_mock",
+      "files": 23,
+      "lines": 3866,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 17,
+          "files": 1,
+          "examples": [
+            "17 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 51
+    },
+    {
+      "site": "klaviyo_mock",
+      "files": 22,
+      "lines": 3343,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 17,
+          "files": 1,
+          "examples": [
+            "17 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 51
+    },
+    {
+      "site": "wechat_mock",
+      "files": 22,
+      "lines": 5576,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 17,
+          "files": 1,
+          "examples": [
+            "17 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 51
+    },
+    {
+      "site": "feishu_mock",
+      "files": 29,
+      "lines": 7746,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 15,
+          "files": 1,
+          "examples": [
+            "15 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 45
+    },
+    {
+      "site": "SAP_mock",
+      "files": 25,
+      "lines": 4250,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 14,
+          "files": 1,
+          "examples": [
+            "14 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 42
+    },
+    {
+      "site": "microsoft_teams_mock",
+      "files": 21,
+      "lines": 3885,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 12,
+          "files": 1,
+          "examples": [
+            "12 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 36
+    },
+    {
+      "site": "contractbook_mock",
+      "files": 20,
+      "lines": 4739,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 10,
+          "files": 1,
+          "examples": [
+            "10 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 30
+    },
+    {
+      "site": "discord_mock",
+      "files": 14,
+      "lines": 7430,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 7,
+          "files": 1,
+          "examples": [
+            "7 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 21
+    },
+    {
+      "site": "PACS-viewer_mock",
+      "files": 12,
+      "lines": 3141,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 5,
+          "files": 1,
+          "examples": [
+            "5 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 15
+    },
+    {
+      "site": "google_docs_mock",
+      "files": 23,
+      "lines": 5204,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 4,
+          "files": 1,
+          "examples": [
+            "4 routes declared, 0 in-app links anywhere in src/"
+          ]
+        },
+        {
+          "id": "toast_only_handler",
+          "severity": "high",
+          "guide": "Prefer real, minimal local behavior over fake feedback",
+          "count": 1,
+          "files": 1,
+          "examples": [
+            "onClick={() => showToast('Spell check completed: no issues found')}"
+          ]
+        }
+      ],
+      "score": 15
+    },
+    {
+      "site": "TradingView_mock",
+      "files": 26,
+      "lines": 5304,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 4,
+          "files": 1,
+          "examples": [
+            "4 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 12
+    },
+    {
+      "site": "lucidchart_mock",
+      "files": 8,
+      "lines": 3231,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 4,
+          "files": 1,
+          "examples": [
+            "4 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 12
+    },
+    {
+      "site": "miro_mock",
+      "files": 15,
+      "lines": 5445,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 3,
+          "files": 1,
+          "examples": [
+            "3 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 9
+    },
+    {
+      "site": "tableau_mock",
+      "files": 20,
+      "lines": 2700,
+      "findings": [
+        {
+          "id": "nav_without_links",
+          "severity": "high",
+          "guide": "Realistic product shape / route navigation",
+          "count": 3,
+          "files": 1,
+          "examples": [
+            "3 routes declared, 0 in-app links anywhere in src/"
+          ]
+        }
+      ],
+      "score": 9
+    },
+    {
       "site": "google_sheets_mock",
       "files": 19,
       "lines": 5869,
@@ -22,8 +504,8 @@
     },
     {
       "site": "Canvas-LMS_mock",
-      "files": 37,
-      "lines": 6951,
+      "files": 39,
+      "lines": 7330,
       "findings": [
         {
           "id": "placeholder_component",
@@ -33,24 +515,6 @@
           "files": 1,
           "examples": [
             "<Placeholder"
-          ]
-        }
-      ],
-      "score": 3
-    },
-    {
-      "site": "adp_mock",
-      "files": 31,
-      "lines": 5415,
-      "findings": [
-        {
-          "id": "toast_only_handler",
-          "severity": "high",
-          "guide": "Prefer real, minimal local behavior over fake feedback",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "onClick={() => showToast('Report exported as CSV', 'success')}"
           ]
         }
       ],
@@ -167,24 +631,6 @@
       "score": 3
     },
     {
-      "site": "google_docs_mock",
-      "files": 23,
-      "lines": 5204,
-      "findings": [
-        {
-          "id": "toast_only_handler",
-          "severity": "high",
-          "guide": "Prefer real, minimal local behavior over fake feedback",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "onClick={() => showToast('Spell check completed: no issues found')}"
-          ]
-        }
-      ],
-      "score": 3
-    },
-    {
       "site": "pinterest_mock",
       "files": 19,
       "lines": 5186,
@@ -215,24 +661,6 @@
           "files": 1,
           "examples": [
             "onChangeStatus={() => {}}"
-          ]
-        }
-      ],
-      "score": 3
-    },
-    {
-      "site": "woocommerce_mock",
-      "files": 26,
-      "lines": 5579,
-      "findings": [
-        {
-          "id": "empty_handler",
-          "severity": "high",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "onClick={() => { }}"
           ]
         }
       ],
@@ -275,42 +703,6 @@
       "score": 1
     },
     {
-      "site": "mailchimp_mock",
-      "files": 26,
-      "lines": 5436,
-      "findings": [
-        {
-          "id": "href_hash_only",
-          "severity": "medium",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "<a href=\"#\" style={{ color: '#007C89' }}>{block.content.unsubscribeTex"
-          ]
-        }
-      ],
-      "score": 1
-    },
-    {
-      "site": "mixpanel_mock",
-      "files": 28,
-      "lines": 5134,
-      "findings": [
-        {
-          "id": "href_hash_only",
-          "severity": "medium",
-          "guide": "No obvious clickable placeholder remains",
-          "count": 1,
-          "files": 1,
-          "examples": [
-            "<a href=\"#\" onClick={e => e.preventDefault()} style={{ color: '#4F44E0"
-          ]
-        }
-      ],
-      "score": 1
-    },
-    {
       "site": "gitlab_mock",
       "files": 57,
       "lines": 7058,
@@ -339,34 +731,6 @@
       "site": "Expensify_mock",
       "files": 19,
       "lines": 3153,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "PACS-viewer_mock",
-      "files": 12,
-      "lines": 3141,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "SAP_mock",
-      "files": 25,
-      "lines": 4250,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "ServiceNow_mock",
-      "files": 26,
-      "lines": 4214,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "TradingView_mock",
-      "files": 26,
-      "lines": 5304,
       "findings": [],
       "score": 0
     },
@@ -434,21 +798,7 @@
       "score": 0
     },
     {
-      "site": "circleci_mock",
-      "files": 23,
-      "lines": 3866,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "clio_mock",
-      "files": 29,
-      "lines": 6535,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "cloudflare_mock",
       "files": 29,
       "lines": 6535,
       "findings": [],
@@ -469,30 +819,9 @@
       "score": 0
     },
     {
-      "site": "contractbook_mock",
-      "files": 20,
-      "lines": 4739,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "datadog_mock",
       "files": 32,
       "lines": 4599,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "dingtalk_mock",
-      "files": 26,
-      "lines": 5780,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "discord_mock",
-      "files": 14,
-      "lines": 7430,
       "findings": [],
       "score": 0
     },
@@ -511,23 +840,9 @@
       "score": 0
     },
     {
-      "site": "epic-health_mock",
-      "files": 31,
-      "lines": 5906,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "facebook_mock",
       "files": 27,
       "lines": 7594,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "feishu_mock",
-      "files": 29,
-      "lines": 7746,
       "findings": [],
       "score": 0
     },
@@ -574,23 +889,9 @@
       "score": 0
     },
     {
-      "site": "gusto_mock",
-      "files": 31,
-      "lines": 6223,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "hotjar_mock",
       "files": 20,
       "lines": 4592,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "hubspot_marketing_mock",
-      "files": 20,
-      "lines": 6998,
       "findings": [],
       "score": 0
     },
@@ -623,13 +924,6 @@
       "score": 0
     },
     {
-      "site": "klaviyo_mock",
-      "files": 22,
-      "lines": 3343,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "lattice_mock",
       "files": 25,
       "lines": 5270,
@@ -658,30 +952,9 @@
       "score": 0
     },
     {
-      "site": "lucidchart_mock",
-      "files": 8,
-      "lines": 3231,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "meta_ads_mock",
       "files": 20,
       "lines": 5729,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "microsoft_teams_mock",
-      "files": 21,
-      "lines": 3885,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "miro_mock",
-      "files": 15,
-      "lines": 5428,
       "findings": [],
       "score": 0
     },
@@ -777,13 +1050,6 @@
       "score": 0
     },
     {
-      "site": "tableau_mock",
-      "files": 20,
-      "lines": 2700,
-      "findings": [],
-      "score": 0
-    },
-    {
       "site": "taobao_seller_mock",
       "files": 23,
       "lines": 6762,
@@ -829,13 +1095,6 @@
       "site": "wandb_mock",
       "files": 24,
       "lines": 5667,
-      "findings": [],
-      "score": 0
-    },
-    {
-      "site": "wechat_mock",
-      "files": 22,
-      "lines": 5576,
       "findings": [],
       "score": 0
     },

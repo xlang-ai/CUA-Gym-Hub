@@ -188,6 +188,29 @@ It also inherits two corrections learned the hard way in the per-app scorer: an 
 tab is not a probe subject, and opening a menu counts as a response even when the text barely
 moves. Carrying those over took minutes; rediscovering them cost a release each.
 
+### What the first fleet-wide runtime sweep found
+
+Thirteen sites, 56 routes, everything measured by loading pages and clicking:
+
+- **0 crashes.** The fleet is stable; nothing renders an error boundary or throws.
+- **31 of 56 routes render no `<h1>`** — four sites have no page title on any route.
+- **49 unmarked tab groups across 10 of 13 sites.** No site marks its active tab with
+  `aria-selected` or `aria-current`, so an agent reading the accessibility tree cannot tell
+  which tab is current — and neither can this audit, which is why a re-clicked selected tab
+  looked like a dead control until the pattern was recognised.
+- **87% of clicked controls responded.**
+
+And the finding with the widest consequences:
+
+- **Six of seven sites checked expose no in-app links at all.** Navigation is entirely click
+  handlers on buttons. An agent reading the accessibility tree cannot discover their routes,
+  deep-link into one, or open one in a new tab. It also caps this crawl at the entry page, so
+  their route counts are a floor rather than a census.
+
+The one site that does expose links is `aws_console_mock`, where list rows were converted from
+`<td onClick>` to real `<Link>` elements. That change was made for accessibility and looked
+cosmetic at the time. It is the difference between an app an agent can explore and one it cannot.
+
 ## Layer 3: real-product references
 
 The half the fleet does not have. `reference/page-depth.*.json` states what the real product

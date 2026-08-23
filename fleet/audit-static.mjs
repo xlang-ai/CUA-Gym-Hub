@@ -16,6 +16,12 @@
  * a finding as a place to look, and the per-site runtime harness as the thing that decides.
  *
  * Detectors map onto the guide's own language, one per acceptance criterion where possible.
+ *
+ * One detector was written and then REMOVED: a static proxy for "tab strip with no
+ * aria-selected". Against the runtime sweep it was wrong in both directions — 2 hits where the
+ * browser found 0, and 2 where the browser found 22. The runtime audit measures that property
+ * exactly, by reading the rendered DOM, so a noisy source-level stand-in is pure downside: it
+ * would send someone to rewrite correct markup while missing most of the real cases.
  */
 import fs from 'fs';
 import path from 'path';
@@ -205,7 +211,7 @@ for (const site of sites) {
     s = s.replace(/(htmlContent|template|body|html|content)\s*:\s*`[\s\S]*?`/g, '$1: ``')
          .replace(/(htmlContent|template|body|html|content)\s*:\s*(['"])(?:\\.|(?!\2).)*\2/g, '$1: ""');
     for (const d of DETECTORS) {
-      const hits = d.test(s);
+      const hits = d.fileTest ? d.fileTest(s, f) : d.test(s);
       if (!hits.length) continue;
       findings[d.id] = findings[d.id] || { severity: d.severity, guide: d.guide, count: 0, examples: [], files: new Set() };
       findings[d.id].count += hits.length;
@@ -215,6 +221,30 @@ for (const site of sites) {
       }
     }
   }
+  // ---- app-level checks ------------------------------------------------------------------
+  // Some properties are not visible in any single file. "Navigation exposes no links" is one:
+  // it needs the whole app — routes declared somewhere, and no <Link> or in-app <a href>
+  // anywhere. The first attempt at this ran per file and flagged 94 of 98 sites, because it
+  // only tested half its own stated condition.
+  const whole = files.map((f) => userFacing(fs.readFileSync(f, 'utf8'))).join('\n');
+  const routeCount = (whole.match(/<Route\b/g) || []).length;
+  const linkCount = (whole.match(/<Link\b|<NavLink\b/g) || []).length
+    + (whole.match(/<a\s[^>]*href=\{?["'`]\//g) || []).length;
+  // Checked against the runtime sweep, which knows the truth by loading the page: of six sites
+  // observed to render no in-app links, this catches five and misses Canvas-LMS_mock, whose
+  // source contains a <Link> that its entry page never renders. It correctly leaves
+  // aws_console_mock alone. So it is a LOWER BOUND — an app with links somewhere but none in its
+  // navigation will slip past, and only the runtime audit will see it.
+  if (routeCount >= 3 && linkCount === 0) {
+    findings.nav_without_links = {
+      severity: 'high',
+      guide: 'Realistic product shape / route navigation',
+      count: routeCount,
+      examples: [`${routeCount} routes declared, 0 in-app links anywhere in src/`],
+      files: new Set(['(whole app)']),
+    };
+  }
+
   const flat = Object.entries(findings).map(([id, v]) => ({
     id, severity: v.severity, guide: v.guide, count: v.count,
     files: v.files.size, examples: v.examples,

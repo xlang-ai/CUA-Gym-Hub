@@ -39,6 +39,16 @@ L.push(`| inert controls | ${sum('inert')} of ${sum('probed')} clicked | ${respo
 L.push('');
 L.push('A toast is not counted as a response: a handler whose only effect is a success message is');
 L.push('the defect, not the reaction to it.');
+const noLinks = audited.filter((r) => r.noInAppLinks);
+if (noLinks.length) {
+  L.push('');
+  L.push(`**${noLinks.length} site(s) expose no in-app links at all** — navigation is entirely click`);
+  L.push('handlers on buttons. An agent reading the accessibility tree cannot discover their routes,');
+  L.push('deep-link into one, or open one in a new tab. It also means this crawl, which follows');
+  L.push('links, saw only their entry page: their route counts below are a floor, not a census.');
+  L.push('');
+  L.push(noLinks.map((r) => `\`${r.site}\``).join(', ') + '.');
+}
 L.push('');
 L.push('## Per site');
 L.push('');
