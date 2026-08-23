@@ -1,0 +1,321 @@
+{
+  "product": "Salesforce Lightning Experience",
+  "captured": "2026-08-23",
+  "method": "Official Salesforce Help documentation (help.salesforce.com). Entry screen, navigation bar, list view controls, and record page structure sourced from official documentation. Standard object columns inferred from product knowledge and Salesforce documentation patterns.",
+  "entry_screen": {
+    "title": "Home page with personalized dashboard",
+    "primary_nav": [
+      "App Launcher (grid icon, access all apps and custom apps)",
+      "Home",
+      "Object-specific tabs (configurable by app)",
+      "Search bar",
+      "Recent items",
+      "Favorites"
+    ],
+    "sidebar_sections": [
+      "Navigation bar with app-specific items",
+      "Quick Links (Assistant, People, Groups)",
+      "Recent records"
+    ],
+    "confidence": "partially_sourced"
+  },
+  "surfaces": [
+    {
+      "id": "home_page",
+      "title": "Home",
+      "route_shape": "/lightning/o/Home",
+      "description": "Personalized home view with dashboard cards and action items",
+      "tabs": [
+        "Cards (default - editable card view)"
+      ],
+      "primary_actions": [
+        "View All Cards",
+        "Change Home Card (for customization)",
+        "Edit cards"
+      ],
+      "card_types": [
+        "Suggestions (AI-recommended)",
+        "Recent activity",
+        "Assistant (action list)",
+        "Custom cards (admin-created)"
+      ],
+      "controls": [
+        "preferences",
+        "customization"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "sourced",
+        "card_types": "sourced",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "app_launcher",
+      "title": "App Launcher",
+      "route_shape": "/lightning/n/AppLauncher",
+      "description": "Grid-based interface for accessing all available apps",
+      "primary_actions": [
+        "Search apps and items box",
+        "Click app tile to open",
+        "Drag app tile to reorder"
+      ],
+      "app_categories": [
+        "Standard Lightning apps",
+        "Custom apps",
+        "Connected apps"
+      ],
+      "controls": [
+        "search",
+        "preferences"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "app_categories": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "list_view",
+      "title": "Standard Object List View (Accounts)",
+      "route_shape": "/lightning/o/Account/list",
+      "description": "List view of records with filtering, sorting, and search capabilities",
+      "columns_default": [
+        "Account Name (linked to record)",
+        "Phone",
+        "Website",
+        "Owner",
+        "Industry",
+        "Annual Revenue"
+      ],
+      "columns_optional": [
+        "Configurable via column preferences - columns vary by org configuration"
+      ],
+      "tabs": [
+        "All Accounts (default)",
+        "Recently Viewed",
+        "My Accounts",
+        "Custom views (admin-created)"
+      ],
+      "primary_actions": [
+        "New button (create new record)",
+        "Import accounts",
+        "Change view (dropdown)"
+      ],
+      "actions_menu": [
+        "Add to campaign",
+        "Mass edit",
+        "Export records",
+        "Refresh list",
+        "Chart view"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "sort",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "sourced",
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "record_page",
+      "title": "Record Detail Page (Account Record)",
+      "route_shape": "/lightning/r/Account/:recordId/view",
+      "description": "Single record view with details, related information, and actions",
+      "main_sections": [
+        "Highlights panel (compact layout with key fields)",
+        "Tabs component"
+      ],
+      "tabs": [
+        "Details (default - field values)",
+        "Related (related list information)",
+        "Custom tabs (admin-configured)"
+      ],
+      "details_tab_content": [
+        "Field values organized by section",
+        "Related list summary cards"
+      ],
+      "related_tab_content": [
+        "Related list cards",
+        "Each card shows up to 6 records (wide region) or 3 records (sidebar)"
+      ],
+      "primary_actions": [
+        "Edit button",
+        "Delete button",
+        "Clone button",
+        "Quick action buttons (custom actions)"
+      ],
+      "actions_menu": [
+        "More actions (...)",
+        "Related list actions (on each related list card)"
+      ],
+      "sidebar_elements": [
+        "Activity timeline",
+        "Related list cards (sidebar region)",
+        "Notes and files"
+      ],
+      "controls": [
+        "tabs",
+        "bulk_select (in related lists)"
+      ],
+      "confidence": {
+        "main_sections": "sourced",
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred",
+        "sidebar_elements": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "related_list",
+      "title": "Related List (on Record Page)",
+      "route_shape": "/lightning/r/Account/:recordId/view (related tab)",
+      "description": "List of related records displayed on record page",
+      "columns_default": [
+        "Varies by relationship type"
+      ],
+      "primary_actions": [
+        "New button (create new related record)",
+        "Open related list full view"
+      ],
+      "actions_menu": [
+        "List view actions (more details accessible from full view)",
+        "Action buttons on each related list card"
+      ],
+      "controls": [
+        "quick_filter (session-only, unsaved)"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "setup",
+      "title": "Setup Interface",
+      "route_shape": "/lightning/setup/SetupOneHome/home",
+      "description": "Administrative configuration interface",
+      "primary_actions": [
+        "Quick Find box (search for setup pages)",
+        "Browse setup menu items"
+      ],
+      "menu_sections": [
+        "Administration (Users, Org Settings, etc.)",
+        "Platform Tools",
+        "Feature Settings",
+        "Integrations",
+        "Customization"
+      ],
+      "quick_find_behavior": [
+        "Search for setup page by name",
+        "Results show matching pages as you type"
+      ],
+      "controls": [
+        "search"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "menu_sections": "inferred",
+        "quick_find_behavior": "sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "reports_dashboards",
+      "title": "Reports and Dashboards",
+      "route_shape": "/lightning/o/Report/list",
+      "description": "Interface for accessing and managing reports and dashboards",
+      "primary_actions": [
+        "New Report button",
+        "New Dashboard button",
+        "Run Report button",
+        "Refresh dashboard"
+      ],
+      "report_list_columns": [
+        "Report Name",
+        "Description",
+        "Created By",
+        "Last Modified Date"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "bulk_select"
+      ],
+      "customization_available": [
+        "Enable/disable UI features",
+        "Configure chart components",
+        "Customize dashboard layout"
+      ],
+      "confidence": {
+        "primary_actions": "inferred",
+        "report_list_columns": "inferred",
+        "controls": "inferred",
+        "customization_available": "sourced"
+      }
+    },
+    {
+      "id": "navigation_bar",
+      "title": "Navigation Bar (Top Level)",
+      "route_shape": "All pages",
+      "description": "Top navigation bar common to all app pages",
+      "elements": [
+        "App Launcher icon",
+        "App name/logo",
+        "App-specific navigation items (configurable)",
+        "Search bar (global search)",
+        "Help icon",
+        "Settings/gear icon (quick settings and setup access)",
+        "User profile/avatar"
+      ],
+      "search_capabilities": [
+        "Search records by name",
+        "Search Chatter posts",
+        "Search list views",
+        "Search reports and dashboards"
+      ],
+      "confidence": {
+        "elements": "partially_sourced",
+        "search_capabilities": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Delete record",
+      "available_when": "User has delete permission on the record type",
+      "unavailable_when": "Record is locked or user lacks delete permission",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Edit record",
+      "available_when": "User has edit permission and record is not read-only",
+      "unavailable_when": "Record is locked or user lacks edit permission",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Create new record via quick action",
+      "available_when": "Quick action is configured on page layout",
+      "unavailable_when": "Quick action not configured or user lacks create permission",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Standard column defaults for Accounts and Opportunities list views could not be established — they are highly customizable per organization; default documentation not available in official help pages",
+    "Exact button labels and layout of quick actions vary by organization configuration and Page Layout customization",
+    "Related list types, quantities, and layout depend on standard/custom field relationships defined in the org",
+    "Reports and Dashboards interface has significant customization options; specific UI elements vary based on enabled features and user permissions"
+  ]
+}

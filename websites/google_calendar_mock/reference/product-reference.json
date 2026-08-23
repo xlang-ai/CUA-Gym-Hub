@@ -1,0 +1,226 @@
+{
+  "product": "Google Calendar",
+  "captured": "2026-08-23",
+  "method": "Fetched from official support.google.com/calendar documentation, including: calendar views guide, event creation guide, event detail and deletion, calendar settings, keyboard shortcuts, and task management documentation.",
+  "entry_screen": {
+    "title": "Calendar (Month View)",
+    "primary_nav": ["Create", "Search", "Settings", "Help"],
+    "confidence": "partially_sourced"
+  },
+  "surfaces": [
+    {
+      "id": "month_view",
+      "title": "Month View",
+      "route_shape": "/calendar/u/0/r/month/",
+      "columns_default": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Create", "Jump to today"],
+      "actions_menu": ["Change view", "Settings"],
+      "controls": ["month_selector", "navigation", "view_switcher"],
+      "confidence": {
+        "columns_default": "sourced",
+        "primary_actions": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "week_view",
+      "title": "Week View",
+      "route_shape": "/calendar/u/0/r/week/",
+      "columns_default": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Create", "Jump to today"],
+      "actions_menu": ["Change view", "Settings"],
+      "controls": ["week_selector", "navigation", "view_switcher", "time_slot_grid"],
+      "confidence": {
+        "columns_default": "sourced",
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "day_view",
+      "title": "Day View",
+      "route_shape": "/calendar/u/0/r/day/",
+      "columns_default": ["Time slots (hourly)"],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Create", "Jump to today"],
+      "actions_menu": ["Change view", "Settings"],
+      "controls": ["day_selector", "navigation", "view_switcher", "time_slot_grid"],
+      "confidence": {
+        "columns_default": "inferred",
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "schedule_view",
+      "title": "Schedule View",
+      "route_shape": "/calendar/u/0/r/schedule/",
+      "columns_default": ["Date", "Event title", "Time"],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Create", "Jump to today"],
+      "actions_menu": ["Change view", "Settings"],
+      "controls": ["list_display", "navigation", "view_switcher"],
+      "confidence": {
+        "columns_default": "sourced",
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "year_view",
+      "title": "Year View",
+      "route_shape": "/calendar/u/0/r/year/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Create", "Jump to today"],
+      "actions_menu": ["Change view", "Settings"],
+      "controls": ["year_selector", "navigation", "view_switcher"],
+      "confidence": {
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "four_days_view",
+      "title": "4 Days View",
+      "route_shape": "/calendar/u/0/r/4days/",
+      "columns_default": ["Day 1", "Day 2", "Day 3", "Day 4"],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Create", "Jump to today"],
+      "actions_menu": ["Change view", "Settings"],
+      "controls": ["navigation", "view_switcher", "time_slot_grid"],
+      "confidence": {
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "event_creation",
+      "title": "Event Creation / Quick Add",
+      "route_shape": "/calendar/u/0/r/event/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Save", "Cancel", "Save and add guests"],
+      "actions_menu": ["Add description", "Add location", "Add guests", "Add Google Meet", "Add attachment", "Set notifications", "Recurring event", "Change calendar", "Color", "Other options"],
+      "controls": ["date_time_picker", "guest_search", "calendar_selector"],
+      "confidence": {
+        "primary_actions": "inferred",
+        "actions_menu": "partially_sourced"
+      }
+    },
+    {
+      "id": "event_detail",
+      "title": "Event Detail View",
+      "route_shape": "/calendar/u/0/event/:eventId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Edit", "Delete", "Close"],
+      "actions_menu": ["Edit event", "Delete event", "Respond to invitation (Accept/Decline/Maybe)", "Change color", "View description"],
+      "controls": ["guest_list"],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "partially_sourced"
+      }
+    },
+    {
+      "id": "calendar_sidebar",
+      "title": "Calendar Sidebar",
+      "route_shape": "/calendar/u/0/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": ["My calendars", "Other calendars"],
+      "primary_actions": ["Create calendar", "Add calendar", "Show/hide calendar"],
+      "actions_menu": ["Calendar settings", "Subscribe to calendar", "Calendar options"],
+      "controls": ["calendar_list", "search_calendars"],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred"
+      }
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "route_shape": "/calendar/u/0/r/settings/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": ["General", "Calendars", "Notifications", "Keyboard shortcuts"],
+      "primary_actions": ["Save changes"],
+      "actions_menu": [],
+      "controls": ["settings_sections"],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred"
+      }
+    }
+  ],
+  "view_types": [
+    {
+      "view": "Month",
+      "description": "View full month in grid layout",
+      "confidence": "sourced"
+    },
+    {
+      "view": "Week",
+      "description": "View 7-day week with time slots",
+      "confidence": "sourced"
+    },
+    {
+      "view": "Day",
+      "description": "View single day with hourly time slots",
+      "confidence": "sourced"
+    },
+    {
+      "view": "Schedule",
+      "description": "View events as a list by day",
+      "confidence": "sourced"
+    },
+    {
+      "view": "Year",
+      "description": "View full year in compact grid",
+      "confidence": "inferred"
+    },
+    {
+      "view": "4 Days",
+      "description": "View 4 consecutive days with time slots",
+      "confidence": "inferred"
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Edit event button visible",
+      "available_when": "event detail is open and user is the event creator or has edit access",
+      "unavailable_when": "viewing read-only event or event details not open",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Delete event button visible",
+      "available_when": "event is selected and user has delete permissions",
+      "unavailable_when": "user does not have event management permissions",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Add guests option available",
+      "available_when": "creating new event or editing existing event with edit access",
+      "unavailable_when": "viewing read-only event",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Google Meet option in event creation",
+      "available_when": "Google Workspace account or Meet enabled",
+      "unavailable_when": "personal Google account without Meet access",
+      "confidence": "sourced"
+    }
+  ],
+  "gaps": [
+    "Sidebar layout and visual hierarchy not explicitly documented; inferred from community discussions and help topics rather than official UI specification.",
+    "Exact button positions and groupings in the interface layouts are inferred; sourced information confirms features but not precise positioning.",
+    "Settings panel sub-sections, field names, and organization within each settings tab are inferred from help topics rather than sourced from direct UI documentation.",
+    "Time zone display and world clock feature mentioned in settings but specific UI controls not detailed.",
+    "Task integration and task sidebar interaction with calendar is mentioned but detailed UI element documentation is limited."
+  ]
+}

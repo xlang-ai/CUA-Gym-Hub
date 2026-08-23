@@ -1,0 +1,161 @@
+{
+  "product": "Gmail",
+  "captured": "2026-08-23",
+  "method": "Fetched from official support.google.com/mail documentation, including: interface layout guide, toolbar buttons reference, inbox categories guide, conversation view documentation, labels management, and compose window documentation.",
+  "entry_screen": {
+    "title": "Inbox",
+    "primary_nav": ["Inbox", "Starred", "Snoozed", "Sent", "Drafts", "All Mail", "Spam", "Trash", "Labels"],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "inbox_list",
+      "title": "Inbox",
+      "route_shape": "/mail/u/0/",
+      "columns_default": ["Sender", "Subject", "Date", "Attachment indicator"],
+      "columns_optional": [],
+      "tabs": ["Primary", "Social", "Promotions", "Updates", "Forums"],
+      "primary_actions": ["Compose", "Search"],
+      "actions_menu": ["Refresh"],
+      "controls": ["filter", "bulk_select", "pagination", "preferences", "tabs"],
+      "confidence": {
+        "columns_default": "inferred",
+        "tabs": "sourced",
+        "primary_actions": "sourced"
+      }
+    },
+    {
+      "id": "conversation_view",
+      "title": "Conversation / Thread View",
+      "route_shape": "/mail/u/0/:threadId",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Reply", "Reply All", "Forward"],
+      "actions_menu": ["Archive", "Report spam", "Delete", "Mark as unread", "Add to Tasks", "Create event", "Snooze", "Label as", "Forward as attachment", "Filter messages like these", "Mute"],
+      "controls": ["expand_all", "collapse_all"],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "sourced"
+      }
+    },
+    {
+      "id": "compose_window",
+      "title": "Compose",
+      "route_shape": "/mail/u/0/compose/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Send", "Save Draft", "Discard"],
+      "actions_menu": ["Attach files", "Insert link", "Insert image", "Insert emoji", "Scheduled send", "Add signature", "Request read receipt"],
+      "controls": ["attachment_upload", "formatting_toolbar"],
+      "confidence": {
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "search_and_filters",
+      "title": "Search & Filters",
+      "route_shape": "/mail/u/0/search/",
+      "columns_default": ["Sender", "Subject", "Date"],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Search"],
+      "actions_menu": ["Advanced search", "Create filter", "Search filters (from:, to:, has:, etc)"],
+      "controls": ["search_input", "filter_options"],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "labels_sidebar",
+      "title": "Labels & Sidebar Navigation",
+      "route_shape": "/mail/u/0/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": ["Create new label", "Edit label", "Delete label"],
+      "actions_menu": ["Nest label", "Show/hide label"],
+      "controls": ["label_hierarchy", "label_search"],
+      "confidence": {
+        "primary_actions": "sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "route_shape": "/mail/u/0/settings/",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": ["General", "Labels", "Inbox", "Accounts and Import", "Forwarding and POP/IMAP", "Filters and Blocked Addresses", "Display", "Chat and Meet", "Advanced"],
+      "primary_actions": ["Save Changes"],
+      "actions_menu": [],
+      "controls": ["settings_tabs"],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred"
+      }
+    }
+  ],
+  "toolbar_buttons": [
+    {
+      "label": "Archive",
+      "function": "Archive the selected message(s)",
+      "confidence": "sourced"
+    },
+    {
+      "label": "Report spam",
+      "function": "Mark message as spam",
+      "confidence": "sourced"
+    },
+    {
+      "label": "Delete",
+      "function": "Delete the selected message(s)",
+      "confidence": "sourced"
+    },
+    {
+      "label": "Mark as unread",
+      "function": "Mark the message as unread",
+      "confidence": "sourced"
+    },
+    {
+      "label": "Move to",
+      "function": "Move message to a label",
+      "confidence": "sourced"
+    },
+    {
+      "label": "Label as",
+      "function": "Add or remove labels from message",
+      "confidence": "sourced"
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Compose button visible",
+      "available_when": "always",
+      "unavailable_when": "never",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Conversation view expand/collapse controls",
+      "available_when": "viewing a thread with multiple messages",
+      "unavailable_when": "viewing a single message",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Delete button in toolbar",
+      "available_when": "message is selected",
+      "unavailable_when": "no message selected",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Exact button layout/positioning in toolbar not specified; determined order from help documentation but visual arrangement is inferred.",
+    "Hover actions mentioned in documentation but specific UI trigger patterns not detailed.",
+    "Settings panel sub-sections and specific field names within each settings tab were inferred rather than sourced verbatim.",
+    "Search filter syntax and advanced search options sourced conceptually but exact UI representation inferred."
+  ]
+}

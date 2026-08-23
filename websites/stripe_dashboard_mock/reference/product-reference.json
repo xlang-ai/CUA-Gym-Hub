@@ -1,0 +1,430 @@
+{
+  "product": "Stripe Dashboard",
+  "captured": "2026-08-23",
+  "method": "Official Stripe documentation (docs.stripe.com/dashboard/basics) and Stripe support pages. Primary navigation, surface names, and key controls sourced from official documentation. Specific column names and menu items inferred from Stripe Dashboard patterns and API documentation.",
+  "entry_screen": {
+    "title": "Home / Dashboard overview",
+    "primary_nav": [
+      "Home",
+      "Balances",
+      "Transactions (Payments)",
+      "Customers",
+      "Products",
+      "Shortcuts (pinned and recently visited)",
+      "More (expandable menu for additional products)"
+    ],
+    "sidebar_structure": [
+      "Primary navigation (primary actions)",
+      "Shortcuts section",
+      "Products section (Payments, Billing, Reporting, etc.)",
+      "Help and settings (at bottom)"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "home",
+      "title": "Home / Dashboard",
+      "route_shape": "/dashboard",
+      "description": "Main overview with analytics and notifications",
+      "primary_actions": [
+        "Add widget (to customize overview)",
+        "Edit widget layout",
+        "Apply changes"
+      ],
+      "widgets": [
+        "Revenue chart",
+        "Transaction volume",
+        "Payment success rate",
+        "Balance information",
+        "Payout status",
+        "Custom widgets (configurable)"
+      ],
+      "notifications": [
+        "Unresolved disputes",
+        "Identity verification required",
+        "Account alerts"
+      ],
+      "controls": [
+        "preferences",
+        "customization"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "widgets": "inferred",
+        "notifications": "sourced",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "payments_list",
+      "title": "Transactions / Payments List",
+      "route_shape": "/payments",
+      "description": "List of all customer payments with filters and export options",
+      "columns_default": [
+        "Payment ID (linked to payment detail)",
+        "Status",
+        "Amount",
+        "Currency",
+        "Customer",
+        "Date",
+        "Card/Payment method used"
+      ],
+      "columns_optional": [
+        "Custom columns added via column preferences",
+        "Column visibility toggleable by user"
+      ],
+      "primary_actions": [
+        "Filter button",
+        "Refund button (on selected payment)",
+        "Export payments",
+        "Search payments"
+      ],
+      "actions_menu": [
+        "Filter by payment method (Apple Pay, Google Pay, etc.)",
+        "Filter by status (succeeded, failed, pending)",
+        "Sort by column",
+        "Customize columns"
+      ],
+      "controls": [
+        "filter",
+        "sort",
+        "search",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "sourced",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "payment_detail",
+      "title": "Payment Detail Page",
+      "route_shape": "/payments/:paymentId",
+      "description": "Single payment view with full details",
+      "primary_actions": [
+        "Refund button",
+        "Retry payment (if applicable)",
+        "Copy payment ID"
+      ],
+      "details_sections": [
+        "Payment status",
+        "Amount and currency",
+        "Customer information",
+        "Payment method details",
+        "Charges and fees",
+        "Invoice reference (if applicable)",
+        "Dispute information (if applicable)"
+      ],
+      "timeline": [
+        "Payment created timestamp",
+        "Payment succeeded/failed timestamp",
+        "Refund history (if applicable)"
+      ],
+      "confidence": {
+        "primary_actions": "inferred",
+        "details_sections": "inferred",
+        "timeline": "inferred"
+      }
+    },
+    {
+      "id": "customers_list",
+      "title": "Customers List",
+      "route_shape": "/customers",
+      "description": "List of customer profiles with filtering and search",
+      "columns_default": [
+        "Customer Name/Email",
+        "Status",
+        "Total transactions",
+        "Lifetime value",
+        "Account type",
+        "Creation date"
+      ],
+      "columns_optional": [
+        "Custom columns via preferences",
+        "Filter by email, card status, creation date, delinquency"
+      ],
+      "primary_actions": [
+        "New Customer button",
+        "Search customers",
+        "Export customers",
+        "Filter customers"
+      ],
+      "filters_available": [
+        "Email address",
+        "Card status",
+        "Creation date",
+        "Account type",
+        "Delinquency status"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "bulk_select",
+        "pagination",
+        "preferences"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "columns_optional": "sourced",
+        "primary_actions": "inferred",
+        "filters_available": "sourced",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "customer_detail",
+      "title": "Customer Detail Page",
+      "route_shape": "/customers/:customerId",
+      "description": "Single customer view with related information",
+      "tabs": [
+        "Overview (default - customer details)",
+        "Payments",
+        "Subscriptions",
+        "Payment methods",
+        "Invoices",
+        "Quotes"
+      ],
+      "overview_section": [
+        "Customer name",
+        "Email",
+        "Accounting details",
+        "Phone",
+        "Address"
+      ],
+      "primary_actions": [
+        "Edit customer details",
+        "Send invoice",
+        "New subscription",
+        "Delete customer"
+      ],
+      "actions_menu": [
+        "More actions (context menu)"
+      ],
+      "related_information": [
+        "Subscriptions summary",
+        "Payment methods summary",
+        "Recent transactions",
+        "Invoices summary"
+      ],
+      "controls": [
+        "tabs"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "overview_section": "inferred",
+        "primary_actions": "inferred",
+        "related_information": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "products_list",
+      "title": "Product Catalog",
+      "route_shape": "/products",
+      "description": "List of products and their prices",
+      "columns_default": [
+        "Product Name",
+        "Description",
+        "Price",
+        "Currency",
+        "Status (active/archived)",
+        "Creation date"
+      ],
+      "primary_actions": [
+        "New Product button",
+        "Search products",
+        "Filter by status"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "bulk_select",
+        "pagination"
+      ],
+      "confidence": {
+        "columns_default": "inferred",
+        "primary_actions": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "balances",
+      "title": "Balances / Payouts",
+      "route_shape": "/balances",
+      "description": "Account balance, top-ups, payouts, and transaction history",
+      "primary_actions": [
+        "Request payout",
+        "View payout details",
+        "Export transaction history"
+      ],
+      "balance_sections": [
+        "Current balance",
+        "Available funds",
+        "Pending balance",
+        "Connected account balances (if applicable)"
+      ],
+      "payout_information": [
+        "Payout history",
+        "Payout schedule",
+        "Bank account details",
+        "Payout status"
+      ],
+      "controls": [
+        "filter",
+        "pagination"
+      ],
+      "confidence": {
+        "primary_actions": "inferred",
+        "balance_sections": "inferred",
+        "payout_information": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "settings",
+      "title": "Settings Interface",
+      "route_shape": "/settings",
+      "description": "Account, team, and product settings",
+      "settings_categories": [
+        "Account settings (account details, payouts, legal entity)",
+        "Personal settings (user profile, password, preferences)",
+        "Business details (public information, branding)",
+        "Team and security (invite members, set permissions)",
+        "Product settings (Billing, Payments, Tax, Connect, Radar, etc.)",
+        "PCI compliance",
+        "Early access features"
+      ],
+      "primary_actions": [
+        "Edit settings",
+        "Invite team member",
+        "Upload document",
+        "Change branding",
+        "Save changes"
+      ],
+      "team_permissions": [
+        "Different role levels for team members",
+        "Admin, Developer, Restricted roles"
+      ],
+      "branding_customization": [
+        "Logo upload",
+        "Color selection",
+        "Custom domain",
+        "Invoice customization"
+      ],
+      "controls": [
+        "tabs",
+        "preferences"
+      ],
+      "confidence": {
+        "settings_categories": "sourced",
+        "primary_actions": "inferred",
+        "team_permissions": "inferred",
+        "branding_customization": "sourced",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "reporting",
+      "title": "Reporting Interface",
+      "route_shape": "/reports",
+      "description": "Financial reports and export options",
+      "report_types": [
+        "Transaction reports (export historical transactions)",
+        "Payout reports",
+        "Payment reports",
+        "Revenue recognition reports",
+        "Billing-specific reports"
+      ],
+      "primary_actions": [
+        "Create report",
+        "Export data",
+        "Filter by date range",
+        "Customize columns"
+      ],
+      "customization_options": [
+        "Filter by date",
+        "Add custom columns",
+        "Group by category",
+        "Save report configuration"
+      ],
+      "controls": [
+        "filter",
+        "preferences"
+      ],
+      "confidence": {
+        "report_types": "sourced",
+        "primary_actions": "inferred",
+        "customization_options": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "billing_subscriptions",
+      "title": "Billing / Subscriptions",
+      "route_shape": "/billing",
+      "description": "Manage subscriptions, invoices, and billing configuration",
+      "primary_actions": [
+        "New subscription",
+        "Send invoice",
+        "Create quote",
+        "Manage customer portal"
+      ],
+      "management_sections": [
+        "Subscriptions (create and manage)",
+        "Invoices (create and send)",
+        "Quotes",
+        "Discounts (create and apply)",
+        "Customer portal configuration",
+        "Billing settings"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "bulk_select"
+      ],
+      "confidence": {
+        "primary_actions": "sourced",
+        "management_sections": "sourced",
+        "controls": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Refund payment",
+      "available_when": "Payment status is succeeded",
+      "unavailable_when": "Payment is failed, pending, or already refunded",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Retry payment",
+      "available_when": "Payment status is failed",
+      "unavailable_when": "Payment is succeeded or has been disputed",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Send invoice to customer",
+      "available_when": "Invoice is created and not sent",
+      "unavailable_when": "Invoice already sent or finalized",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Export transactions",
+      "available_when": "User has sufficient permissions",
+      "unavailable_when": "User lacks export permissions or format is not available",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Exact column names and default sorting order for list views could not be established from documentation; column structure is inferred from common dashboard patterns",
+    "Specific menu items and button labels for actions vary based on feature enablement (Connect, Tax, Billing, Radar, etc.) and may not be visible to all accounts",
+    "Customer filter options and available filters depend on account configuration and enabled Stripe products",
+    "Reports and data export capabilities vary based on subscription tier and enabled features; specific report types not exhaustively documented in basic dashboard docs"
+  ]
+}

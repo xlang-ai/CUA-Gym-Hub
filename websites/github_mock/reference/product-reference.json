@@ -1,0 +1,348 @@
+{
+  "product": "GitHub",
+  "captured": "2026-08-23",
+  "method": "docs.github.com, github.blog changelog 2026, GitHub Docs on pull requests, issues, and repositories. Sources: https://docs.github.com, https://github.blog/changelog, https://github.com help articles.",
+  "entry_screen": {
+    "title": "GitHub homepage with 'The future of building happens together' headline",
+    "primary_nav": [
+      "Platform",
+      "Solutions",
+      "Resources",
+      "Open Source",
+      "Enterprise"
+    ],
+    "confidence": "sourced"
+  },
+  "surfaces": [
+    {
+      "id": "repository_home",
+      "title": "Code browser / Repository home",
+      "route_shape": "/owner/repo",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Code",
+        "Issues",
+        "Pull Requests",
+        "Discussions",
+        "Actions",
+        "Projects",
+        "Wiki",
+        "Security",
+        "Insights"
+      ],
+      "primary_actions": [
+        "Add file",
+        "Create new file",
+        "Upload files"
+      ],
+      "actions_menu": [
+        "Download ZIP",
+        "View commits"
+      ],
+      "controls": [
+        "branch_selector",
+        "file_search",
+        "readme_display"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "code_file_browser",
+      "title": "File browser tree view",
+      "route_shape": "/owner/repo/tree/branch/path",
+      "columns_default": [
+        "filename",
+        "last_commit_message",
+        "last_commit_date"
+      ],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Open file",
+        "View raw",
+        "View history"
+      ],
+      "actions_menu": [
+        "Copy path",
+        "Copy permalink",
+        "Delete file"
+      ],
+      "controls": [
+        "file_tree",
+        "branch_selector",
+        "commit_history"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "issues_list",
+      "title": "Issues list",
+      "route_shape": "/owner/repo/issues",
+      "columns_default": [
+        "title",
+        "status",
+        "assignee",
+        "labels"
+      ],
+      "columns_optional": [
+        "priority",
+        "milestone",
+        "comments",
+        "created_date"
+      ],
+      "tabs": [
+        "Open",
+        "Closed"
+      ],
+      "primary_actions": [
+        "New issue",
+        "Labels",
+        "Milestones"
+      ],
+      "actions_menu": [
+        "Filter by assignee",
+        "Filter by label",
+        "Sort by date",
+        "Sort by comments"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "sort",
+        "pagination"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "columns_default": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "single_issue",
+      "title": "Single issue",
+      "route_shape": "/owner/repo/issues/number",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "About",
+        "Timeline"
+      ],
+      "primary_actions": [
+        "Add label",
+        "Set assignee",
+        "Link pull request",
+        "Close issue"
+      ],
+      "actions_menu": [
+        "Pin issue",
+        "Lock conversation",
+        "Transfer issue",
+        "Delete issue"
+      ],
+      "controls": [
+        "comment_section",
+        "sidebar_metadata",
+        "reaction_emoji"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "pull_request",
+      "title": "Pull request",
+      "route_shape": "/owner/repo/pull/number",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Conversation",
+        "Commits",
+        "Checks",
+        "Files changed",
+        "Findings"
+      ],
+      "primary_actions": [
+        "Add reviewers",
+        "Request review",
+        "Approve",
+        "Request changes",
+        "Comment",
+        "Merge pull request"
+      ],
+      "actions_menu": [
+        "Dismiss review",
+        "Convert to draft",
+        "Close pull request",
+        "Quote reply"
+      ],
+      "controls": [
+        "merge_status_box",
+        "merge_button",
+        "side_by_side_diff",
+        "docked_panels",
+        "code_comments"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "partially_sourced",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "actions_tab",
+      "title": "GitHub Actions",
+      "route_shape": "/owner/repo/actions",
+      "columns_default": [
+        "workflow_name",
+        "status",
+        "commit",
+        "branch",
+        "triggered_by",
+        "run_date"
+      ],
+      "columns_optional": [
+        "duration",
+        "conclusion"
+      ],
+      "tabs": [
+        "All workflows"
+      ],
+      "primary_actions": [
+        "Run workflow",
+        "Create workflow"
+      ],
+      "actions_menu": [
+        "View logs",
+        "Download artifacts",
+        "Rerun job",
+        "Cancel workflow"
+      ],
+      "controls": [
+        "workflow_filter",
+        "branch_selector",
+        "search",
+        "pagination"
+      ],
+      "confidence": {
+        "columns_default": "partially_sourced",
+        "tabs": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "sourced"
+      }
+    },
+    {
+      "id": "repository_settings",
+      "title": "Repository Settings",
+      "route_shape": "/owner/repo/settings",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "General",
+        "Branches",
+        "Code and automation",
+        "Pages",
+        "Integrations",
+        "Security and analysis",
+        "Environments"
+      ],
+      "primary_actions": [
+        "Rename repository",
+        "Change repository visibility",
+        "Archive repository",
+        "Delete repository"
+      ],
+      "actions_menu": [
+        "Danger zone options"
+      ],
+      "controls": [
+        "sidebar_navigation",
+        "settings_forms"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "agents_tab",
+      "title": "Agents tab (2026 feature)",
+      "route_shape": "/owner/repo/agents",
+      "columns_default": [
+        "session_name",
+        "status",
+        "created_date",
+        "last_activity"
+      ],
+      "columns_optional": [],
+      "tabs": [],
+      "primary_actions": [
+        "Create new agent session",
+        "Switch session"
+      ],
+      "actions_menu": [
+        "View session details",
+        "Stop session"
+      ],
+      "controls": [
+        "session_list",
+        "search"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Merge pull request",
+      "available_when": "all checks pass and required approvals are met",
+      "unavailable_when": "merge conflicts exist or required status checks are failing",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Run workflow",
+      "available_when": "user has write access to repository",
+      "unavailable_when": "user has read-only access",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Turn off pull requests",
+      "available_when": "user is repository owner or admin",
+      "unavailable_when": "user has lower permissions",
+      "confidence": "sourced"
+    },
+    {
+      "action": "Archive repository",
+      "available_when": "user is repository owner",
+      "unavailable_when": "repository is already archived",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Exact UI elements and button text on repository home (e.g., exact wording of action buttons for creating files)",
+    "Detailed columns available on the Issues list beyond default shown columns",
+    "Complete list of filters available in the Issues list view",
+    "Specific keyboard shortcuts and their availability across surfaces",
+    "Mobile UI surface variations and responsive behavior",
+    "Exact styling and positioning of merge status box on pull request",
+    "Complete state dependent rules for all features (e.g., when 'Delete issue' is available)",
+    "Nested comments and reply threading specifics on issues and pull requests",
+    "Workflow matrix and conditional run options in Actions",
+    "Fine-grained access control (FGAC) options in Settings"
+  ]
+}

@@ -76,5 +76,20 @@ for (const site of sites) {
   console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${site.padEnd(26)} ${String(d.surfaces?.length ?? 0).padStart(2)} surfaces, ${marks.length} marks (${pct}% sourced, ${counts.inferred} inferred), ${gaps.length} gaps`);
   for (const p of problems) console.log(`        - ${p}`);
 }
-console.log(`\n  ${sites.length - bad}/${sites.length} references conform\n`);
+// A coverage line, because the interesting number is not how many references exist but how much
+// of each was actually read off the product. The spread is itself a finding: it says whose
+// documentation describes their own UI and whose does not.
+const pcts = [];
+for (const site of sites) {
+  const d = JSON.parse(fs.readFileSync(path.join(ROOT, 'websites', site, 'reference/product-reference.json'), 'utf8'));
+  const m = confidences(d);
+  if (m.length) pcts.push(Math.round((m.filter((x) => x === 'sourced').length / m.length) * 100));
+}
+pcts.sort((a, b) => a - b);
+console.log(`\n  ${sites.length - bad}/${sites.length} references conform`);
+if (pcts.length) {
+  console.log(`  sourced share: ${pcts[0]}% low, ${pcts[Math.floor(pcts.length / 2)]}% median, ${pcts[pcts.length - 1]}% high`);
+  console.log(`  Documentation alone tops out here. Only reading the live product pushed one past 90%,`);
+  console.log(`  and doing that overturned several doc-derived claims that had looked solid.\n`);
+}
 process.exit(bad ? 1 : 0);

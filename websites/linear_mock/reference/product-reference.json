@@ -1,0 +1,525 @@
+{
+  "product": "Linear",
+  "captured": "2026-08-23",
+  "method": "linear.app documentation, changelog, and integration guides. Sources: https://linear.app/docs, https://linear.app/changelog, https://www.morgen.so, https://feedvote.app, https://blog.feedvote.app, Linear app product announcements.",
+  "entry_screen": {
+    "title": "Linear workspace with team sidebar navigation",
+    "primary_nav": [
+      "Inbox",
+      "My issues",
+      "Teams",
+      "Search",
+      "Command bar (Cmd+K)"
+    ],
+    "confidence": "partially_sourced"
+  },
+  "surfaces": [
+    {
+      "id": "inbox",
+      "title": "Inbox / Triage",
+      "route_shape": "/inbox",
+      "columns_default": [
+        "issue_id",
+        "title",
+        "status",
+        "assignee"
+      ],
+      "columns_optional": [
+        "priority",
+        "team",
+        "created_date"
+      ],
+      "tabs": [
+        "Active",
+        "Resolved"
+      ],
+      "primary_actions": [
+        "Triage issue",
+        "Assign issue",
+        "Move to backlog",
+        "Archive"
+      ],
+      "actions_menu": [
+        "Snooze issue",
+        "Mark as duplicate",
+        "Link issue"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "bulk_select"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "columns_default": "inferred",
+        "primary_actions": "partially_sourced",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "my_issues",
+      "title": "My issues",
+      "route_shape": "/issues",
+      "columns_default": [
+        "issue_id",
+        "title",
+        "status",
+        "priority",
+        "due_date"
+      ],
+      "columns_optional": [
+        "team",
+        "project",
+        "cycle",
+        "assignee",
+        "labels"
+      ],
+      "tabs": [
+        "Open",
+        "Closed",
+        "All"
+      ],
+      "primary_actions": [
+        "Create issue (C)",
+        "Filter",
+        "Sort",
+        "Save view"
+      ],
+      "actions_menu": [
+        "Bulk edit",
+        "Export",
+        "Archive issues"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "sort",
+        "custom_views",
+        "bulk_select",
+        "display_options"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "partially_sourced",
+        "controls": "sourced",
+        "columns_default": "inferred"
+      }
+    },
+    {
+      "id": "team_issues_list",
+      "title": "Team issues list",
+      "route_shape": "/team/team-key/backlog",
+      "columns_default": [
+        "issue_id",
+        "title",
+        "status",
+        "assignee",
+        "priority"
+      ],
+      "columns_optional": [
+        "cycle",
+        "project",
+        "estimate",
+        "due_date",
+        "labels",
+        "created_date",
+        "updated_date"
+      ],
+      "tabs": [
+        "Backlog",
+        "Upcoming",
+        "All"
+      ],
+      "primary_actions": [
+        "Create issue",
+        "Add to cycle",
+        "Filter",
+        "Group by"
+      ],
+      "actions_menu": [
+        "Bulk edit",
+        "Change status",
+        "Add labels",
+        "Archive"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "sort",
+        "group_by",
+        "display_options",
+        "bulk_select",
+        "pagination"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "columns_optional": "sourced",
+        "primary_actions": "inferred",
+        "controls": "sourced"
+      }
+    },
+    {
+      "id": "team_board_view",
+      "title": "Team issues - Board/Kanban view",
+      "route_shape": "/team/team-key/board",
+      "columns_default": [
+        "status_column"
+      ],
+      "columns_optional": [
+        "custom_status"
+      ],
+      "tabs": [
+        "Backlog",
+        "Board",
+        "Roadmap",
+        "Calendar"
+      ],
+      "primary_actions": [
+        "Create issue",
+        "Drag issue to column",
+        "Filter"
+      ],
+      "actions_menu": [
+        "View settings",
+        "Change view"
+      ],
+      "controls": [
+        "filter",
+        "search",
+        "display_options",
+        "drag_drop"
+      ],
+      "confidence": {
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "single_issue",
+      "title": "Single issue",
+      "route_shape": "/issue/issue-id",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Details",
+        "Activity",
+        "Links"
+      ],
+      "primary_actions": [
+        "Edit title",
+        "Change status",
+        "Assign",
+        "Add labels",
+        "Set priority",
+        "Add to project",
+        "Add to cycle",
+        "Add sub-issue"
+      ],
+      "actions_menu": [
+        "Link issue",
+        "Mark as duplicate",
+        "Archive",
+        "Delete",
+        "Share"
+      ],
+      "controls": [
+        "sidebar_properties",
+        "comment_section",
+        "markdown_editor",
+        "attachment_upload",
+        "reaction_emoji",
+        "status_dropdown",
+        "priority_dropdown"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "sourced",
+        "actions_menu": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "cycles",
+      "title": "Cycles (sprints)",
+      "route_shape": "/team/team-key/cycles",
+      "columns_default": [
+        "cycle_name",
+        "start_date",
+        "end_date",
+        "progress",
+        "completion_percentage"
+      ],
+      "columns_optional": [
+        "status",
+        "team_velocity"
+      ],
+      "tabs": [
+        "Active",
+        "Upcoming",
+        "Past"
+      ],
+      "primary_actions": [
+        "Create cycle",
+        "Open cycle",
+        "Drag issue to cycle"
+      ],
+      "actions_menu": [
+        "Edit cycle",
+        "Archive cycle",
+        "Duplicate cycle"
+      ],
+      "controls": [
+        "cycle_sidebar",
+        "capacity_indicator",
+        "date_picker"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "columns_default": "partially_sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "projects",
+      "title": "Projects",
+      "route_shape": "/team/team-key/projects",
+      "columns_default": [
+        "project_name",
+        "status",
+        "progress",
+        "owner",
+        "target_date"
+      ],
+      "columns_optional": [
+        "team",
+        "cycle",
+        "created_date"
+      ],
+      "tabs": [
+        "All",
+        "Active",
+        "Completed"
+      ],
+      "primary_actions": [
+        "Create project",
+        "Open project",
+        "Filter"
+      ],
+      "actions_menu": [
+        "Edit project",
+        "Archive project",
+        "Delete project"
+      ],
+      "controls": [
+        "search",
+        "filter",
+        "sort",
+        "display_options"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred",
+        "columns_default": "sourced"
+      }
+    },
+    {
+      "id": "project_board",
+      "title": "Project board/details",
+      "route_shape": "/project/project-id",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "Backlog",
+        "Board",
+        "List",
+        "Timeline"
+      ],
+      "primary_actions": [
+        "Add issue to project",
+        "Change view",
+        "Filter"
+      ],
+      "actions_menu": [
+        "Project settings",
+        "Update status"
+      ],
+      "controls": [
+        "view_switcher",
+        "filter",
+        "search",
+        "progress_bar"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "roadmap",
+      "title": "Roadmap (Timeline view)",
+      "route_shape": "/team/team-key/roadmap",
+      "columns_default": [
+        "project_name",
+        "start_date",
+        "target_date",
+        "health_status",
+        "owner"
+      ],
+      "columns_optional": [
+        "dependencies",
+        "milestone",
+        "linked_projects"
+      ],
+      "tabs": [
+        "Timeline",
+        "Quarter"
+      ],
+      "primary_actions": [
+        "Create project",
+        "Drag project on timeline",
+        "Filter"
+      ],
+      "actions_menu": [
+        "View project details",
+        "Edit project dates"
+      ],
+      "controls": [
+        "timeline_gantt",
+        "filter",
+        "search",
+        "date_range_selector",
+        "zoom_level"
+      ],
+      "confidence": {
+        "columns_default": "sourced",
+        "tabs": "sourced",
+        "primary_actions": "inferred",
+        "controls": "inferred"
+      }
+    },
+    {
+      "id": "workspace_settings",
+      "title": "Workspace settings",
+      "route_shape": "/settings",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "General",
+        "Members",
+        "Teams",
+        "Billing",
+        "Integrations",
+        "Automation",
+        "Security"
+      ],
+      "primary_actions": [
+        "Update workspace name",
+        "Change workspace URL",
+        "Add member",
+        "Create team",
+        "Manage integrations"
+      ],
+      "actions_menu": [
+        "Delete workspace",
+        "Export data"
+      ],
+      "controls": [
+        "sidebar_navigation",
+        "settings_forms",
+        "member_list",
+        "integration_list"
+      ],
+      "confidence": {
+        "tabs": "inferred",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    },
+    {
+      "id": "team_settings",
+      "title": "Team settings",
+      "route_shape": "/team/team-key/settings",
+      "columns_default": [],
+      "columns_optional": [],
+      "tabs": [
+        "General",
+        "Members",
+        "Workflows",
+        "Issue types",
+        "Labels"
+      ],
+      "primary_actions": [
+        "Edit team name",
+        "Manage members",
+        "Configure workflows",
+        "Add custom issue types"
+      ],
+      "actions_menu": [
+        "Archive team",
+        "Delete team"
+      ],
+      "controls": [
+        "sidebar_navigation",
+        "member_management",
+        "workflow_editor"
+      ],
+      "confidence": {
+        "tabs": "partially_sourced",
+        "primary_actions": "inferred",
+        "actions_menu": "inferred"
+      }
+    }
+  ],
+  "state_dependent_rules": [
+    {
+      "action": "Drag issue to cycle",
+      "available_when": "issue is in backlog and cycle is active",
+      "unavailable_when": "issue is already in a different cycle or cycle is archived",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Close issue",
+      "available_when": "user has edit permission and issue is not already closed",
+      "unavailable_when": "issue is archived or user lacks permission",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Add sub-issue",
+      "available_when": "issue status is not Done/Completed",
+      "unavailable_when": "issue is archived or deleted",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Merge workflow changes",
+      "available_when": "user is team admin",
+      "unavailable_when": "user is member or guest",
+      "confidence": "inferred"
+    },
+    {
+      "action": "Start cycle",
+      "available_when": "cycle is in Upcoming status",
+      "unavailable_when": "cycle has already started or been completed",
+      "confidence": "inferred"
+    }
+  ],
+  "gaps": [
+    "Exact column order and default display options for all list views",
+    "Complete list of custom workflow statuses available (hardcoded vs user-defined)",
+    "Specific keyboard shortcuts for navigation across all surfaces",
+    "Mobile UI variations and responsive behavior",
+    "Exact filter syntax and operators (e.g., AND/OR combinations)",
+    "Automation rules editor interface and available triggers/actions",
+    "Linear Asks interface and message threading details",
+    "Notification center interface and priority levels",
+    "Parent/sub-issue hierarchy display in list views",
+    "SLA (Service Level Agreement) configuration in team settings",
+    "Custom views saved state and sharing permissions",
+    "Exact styling of health status indicators on roadmap",
+    "Multi-issue selection and bulk edit interface",
+    "Link types (blocks, blocked by, relates to, duplicate) display on issue",
+    "Comments and reply threading with quote functionality"
+  ]
+}
