@@ -236,6 +236,9 @@ node fleet/validate-reference.mjs
 
 - **Source screen**: 98 sites measured, 29 flagged. `fleet/BASELINE.md`.
 - **Runtime audit**: available to any app that can be served, no authoring required.
+  **13 of 98 measured** so far (`fleet/RUNTIME.md`); the other 85 have no `node_modules`, and
+  installing ~90 Vite apps is the whole reason this layer has been thin. `--install` covers them
+  when the disk and time are available.
 - **Per-app harness**: 1 of 98 (`aws_console_mock`). Its gates, walkthroughs and fidelity index
   are portable in shape; only the reference content is app-specific.
 - **Product references**: 6 of 98 — `aws_console_mock` (from the live console), and
@@ -249,3 +252,19 @@ The three documentation-derived references sit at 60–86% `sourced` with 9–11
 That is the expected shape from docs alone. The AWS reference reached higher only because the
 live product was read directly — and doing that overturned several doc-derived claims that had
 looked solid, in both directions.
+
+## What each artefact is for
+
+| file | what it answers |
+|---|---|
+| `audit-static.mjs` | where to look, across all 98 sites, in seconds |
+| `audit-runtime.mjs` | what is actually true on one served app |
+| `sweep-runtime.mjs` | the same, across every app that can be built |
+| `audit-build.mjs` | does it build, and is its preview reachable from both address families |
+| `validate-reference.mjs` | is a product reference honest about what it verified |
+| `fix-preview-host.mjs` | the one fleet-wide repair this program has made |
+| `BASELINE.md`, `RUNTIME.md` | generated reports; never hand-edit, regenerate |
+
+Everything reported here is generated from a run. A number typed by hand drifts from the run
+that produced it, and drifts silently — which is the same failure as an instrument that stops
+covering improved code while still looking complete.
