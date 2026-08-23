@@ -272,5 +272,6 @@ export default defineConfig({
     }
   ],
   server: { port: 0, strictPort: false, allowedHosts: true, watch: { usePolling: true, interval: 1000 }, hmr: { port: 0 } },
-  preview: { port: 0 }
+  preview: {
+    host: true, port: 0 }
 })

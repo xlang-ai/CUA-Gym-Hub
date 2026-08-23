@@ -576,5 +576,5 @@ export default defineConfig({
       ignored: ['**/.mock-states/**', '**/.mock-files/**'],
     },
   },
-  preview: { port: 0, host: '0.0.0.0', allowedHosts: true }
+  preview: { port: 0, host: true, allowedHosts: true }
 });

@@ -88,6 +88,25 @@ const measure = () => page.evaluate(() => {
     dialogCount: document.querySelectorAll('[role=dialog], .modal, .fixed.inset-0').length,
     menuCount: document.querySelectorAll('[role=menu], [role=listbox]').length,
     expanded: document.querySelectorAll('[aria-expanded=true]').length,
+    // The most portable signal there is. Many apps open a dropdown with no ARIA role and little
+    // text; judging only on roles and text length called their working buttons inert. If nodes
+    // appeared or vanished, something happened.
+    nodeCount: document.querySelectorAll('*').length,
+    // Tab-like groups that never say which tab is selected. Three or more sibling buttons whose
+    // classes differ only by a state suffix is the shape; if none of them carries
+    // aria-selected or aria-current, the active one is invisible to the accessibility tree.
+    unmarkedTabGroups: (() => {
+      let groups = 0;
+      for (const parent of document.querySelectorAll('div, nav, ul, header, section')) {
+        const kids = [...parent.children].filter((c) => c.tagName === 'BUTTON' || c.tagName === 'A');
+        if (kids.length < 3) continue;
+        const marked = kids.some((k) => k.hasAttribute('aria-selected') || k.hasAttribute('aria-current')
+          || k.getAttribute('role') === 'tab');
+        const styled = new Set(kids.map((k) => (k.className || '').toString())).size > 1;
+        if (!marked && styled) groups++;
+      }
+      return groups;
+    })(),
   };
 });
 
@@ -125,6 +144,7 @@ async function probeControls(pageRef) {
       || after.menuCount > before.menuCount
       || after.expanded !== before.expanded
       || after.fieldCount !== before.fieldCount
+      || after.nodeCount !== before.nodeCount
       || Math.abs(after.textLen - before.textLen) > 60
       || after.rowCount !== before.rowCount;
     // A toast-only response is reported separately, not merged into the count, because one
@@ -171,6 +191,7 @@ while (queue.length && results.length < MAX_ROUTES) {
     crashed: m.crashed,
     rows: m.rowCount,
     deadEndList: m.rowCount > 0 && m.linkedRows === 0,
+    unmarkedTabGroups: m.unmarkedTabGroups,
     probed: probe.probed,
     inert: probe.inert,
     threw: pageErrors.length - errsBefore,
@@ -183,6 +204,7 @@ const ok = results.filter((r) => !r.error);
 const crashed = ok.filter((r) => r.crashed || r.threw > 0);
 const untitled = ok.filter((r) => !r.h1);
 const deadEnds = ok.filter((r) => r.deadEndList);
+const unmarkedTabs = ok.filter((r) => r.unmarkedTabGroups > 0);
 const inertTotal = ok.reduce((a, r) => a + (r.inert?.length || 0), 0);
 const probedTotal = ok.reduce((a, r) => a + (r.probed || 0), 0);
 
@@ -191,6 +213,7 @@ console.log(`  routes reached          ${results.length}${results.length >= MAX_
 console.log(`  crashed or threw        ${crashed.length}`);
 console.log(`  no <h1> page title      ${untitled.length}`);
 console.log(`  dead-end lists          ${deadEnds.length}`);
+console.log(`  tab groups with no aria-selected  ${unmarkedTabs.reduce((a, r) => a + r.unmarkedTabGroups, 0)} across ${unmarkedTabs.length} route(s)`);
 console.log(`  inert controls          ${inertTotal} of ${probedTotal} clicked${probedTotal ? ` (${Math.round((1 - inertTotal / probedTotal) * 100)}% responded)` : ''}`);
 if (probedTotal && ok.some((r) => r.probed >= PROBE_CAP)) {
   console.log(`  note: ${ok.filter((r) => r.probed >= PROBE_CAP).length} route(s) hit the per-page probe cap of ${PROBE_CAP}; not every control was clicked`);
@@ -199,6 +222,8 @@ for (const [title, rows, fmt] of [
   ['crashed or threw', crashed, (r) => `${r.route}${r.threw ? `  (${r.threw} uncaught)` : ''}`],
   ['no page title', untitled, (r) => r.route],
   ['dead-end lists', deadEnds, (r) => `${r.route}  (${r.rows} rows, none linked)`],
+  ['tab groups with no aria-selected — the active tab is invisible to the accessibility tree, so an agent reading it cannot tell which is current, and this audit cannot tell a selected tab from a dead control',
+   unmarkedTabs, (r) => `${r.route}  (${r.unmarkedTabGroups} group${r.unmarkedTabGroups === 1 ? '' : 's'})`],
 ]) {
   if (!rows.length) continue;
   console.log(`\n  ${title}`);

@@ -130,5 +130,5 @@ export default defineConfig({
     watch: { usePolling: true, interval: 1000 },
     port: 5173
   },
-  preview: { port: 0, host: '0.0.0.0', allowedHosts: true },
+  preview: { port: 0, host: true, allowedHosts: true },
 });

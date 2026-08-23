@@ -294,5 +294,5 @@ export default defineConfig({
     allowedHosts: true,
     hmr: { overlay: false }
   },
-  preview: { port: 0, host: '0.0.0.0', allowedHosts: true }
+  preview: { port: 0, host: true, allowedHosts: true }
 })

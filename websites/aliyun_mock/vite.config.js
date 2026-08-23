@@ -253,5 +253,5 @@ export default defineConfig({
   ],
   server: {
     watch: { usePolling: true, interval: 1000 }, host: true, allowedHosts: true },
-  preview: { port: 0, host: '0.0.0.0', allowedHosts: true }
+  preview: { port: 0, host: true, allowedHosts: true }
 })

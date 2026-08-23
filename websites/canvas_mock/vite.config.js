@@ -269,6 +269,7 @@ export default defineConfig({
     }
   },
   preview: {
+    host: true,
     port: 0
   }
 })

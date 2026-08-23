@@ -188,6 +188,8 @@ function computeDiff(initial, current) {
 }
 
 export default defineConfig({
+  // Bind both address families: a client using 127.0.0.1 and one using ::1 must both reach it.
+  preview: { host: true },
   plugins: [secureMockApiPlugin(), react(), mockApiPlugin()],
   server: {
     watch: { usePolling: true, interval: 1000 },

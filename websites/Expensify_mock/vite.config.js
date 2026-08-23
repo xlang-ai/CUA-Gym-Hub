@@ -186,5 +186,5 @@ export default defineConfig({
   plugins: [secureMockApiPlugin(), react(), mockApiPlugin()],
   server: {
     watch: { usePolling: true, interval: 1000 }, host: '0.0.0.0', allowedHosts: true },
-  preview: { port: 0, host: '0.0.0.0', allowedHosts: true }
+  preview: { port: 0, host: true, allowedHosts: true }
 });

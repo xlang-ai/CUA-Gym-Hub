@@ -417,5 +417,5 @@ export default defineConfig({
     },
     hmr: false
   },
-  preview: { port: 5180, host: '0.0.0.0', allowedHosts: true }
+  preview: { port: 5180, host: true, allowedHosts: true }
 })

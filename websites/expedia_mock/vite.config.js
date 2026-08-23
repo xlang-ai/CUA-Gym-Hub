@@ -243,6 +243,8 @@ const mockApiPlugin = () => ({
 })
 
 export default defineConfig({
+  // Bind both address families: a client using 127.0.0.1 and one using ::1 must both reach it.
+  preview: { host: true },
   plugins: [secureMockApiPlugin(), react(), mockApiPlugin()],
   server: {
     watch: { ignored: ['**/assets/screenshots/**', '**/.mock-states/**', '**/.mock-files/**', '**/node_modules/**'], usePolling: true, interval: 1000 },

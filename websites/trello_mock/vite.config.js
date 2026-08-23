@@ -536,5 +536,5 @@ export default defineConfig({
       port: 0
     }
   },
-  preview: { port: 0, host: '0.0.0.0', allowedHosts: true }
+  preview: { port: 0, host: true, allowedHosts: true }
 })
