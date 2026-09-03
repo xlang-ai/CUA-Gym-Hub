@@ -23,6 +23,28 @@ Each mock is a production-quality React SPA that faithfully replicates the UI an
   <img src="figures/env.png" alt="CUA-Gym-Hub mock applications" width="100%"/>
 </p>
 
+
+## Fidelity program
+
+Quality across these mocks is measured, not assumed. Start at **[`fleet/ROADMAP.md`](fleet/ROADMAP.md)** —
+it carries the vision, the working agreement for concurrent workers, and the prioritised next
+work. [`fleet/README.md`](fleet/README.md) explains the three measurement layers and each
+detector's calibration.
+
+```bash
+node fleet/audit-static.mjs                       # all 98 sites, seconds
+node fleet/audit-runtime.mjs --base <url>         # one served app, in a browser
+./fleet/sweep-all.sh                              # everything, on a build host
+```
+
+Current baselines: [`fleet/BASELINE.md`](fleet/BASELINE.md) (source, 98/98) and
+[`fleet/RUNTIME.md`](fleet/RUNTIME.md) (browser, 88/98). Both are generated — regenerate them,
+never hand-edit.
+
+**Before fixing anything an audit reports, triage it.** The source screen is a screen, not a
+verdict: roughly a third of its findings are legitimate code, and the false-positive rate of each
+detector is recorded in `fleet/README.md`.
+
 ## Why This Works
 
 Two coupled design choices make every mock in CUA-Gym-Hub usable as an RL training environment — not just a pretty UI fixture:
