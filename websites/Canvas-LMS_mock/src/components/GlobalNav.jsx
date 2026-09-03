@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Users, Calendar, MessageSquare, HelpCircle, User, Settings, Bell } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Users, Calendar, MessageSquare, HelpCircle, User, Settings, Bell, Search, MessageCircle, Send, CheckCircle2 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import './GlobalNav.css';
 
@@ -12,14 +12,28 @@ const NAV_ITEMS = [
   { id: 'inbox', icon: MessageSquare, label: 'Inbox', path: '/conversations' },
 ];
 
+const GUIDE_ARTICLES = [
+  { q: 'How do I submit an assignment?', a: 'Go to the assignment page in your course and use the submission type shown (file upload, text entry, etc.) before the due date.' },
+  { q: 'How do I view my grades?', a: 'Open your course and select Grades from the course navigation to see scored and pending assignments.' },
+  { q: 'How do I message my instructor?', a: 'Use the Inbox from the global navigation to start a new conversation with your instructor or classmates.' },
+  { q: 'How do I join a course?', a: 'Courses you are enrolled in appear automatically on your Dashboard and under Courses once your instructor publishes the course.' },
+  { q: 'How do I check upcoming due dates?', a: 'The Calendar and your Dashboard "To Do" list show upcoming assignments across all of your courses.' },
+];
+
 export default function GlobalNav() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { state } = useAppContext();
+  const { state, setState } = useAppContext();
   const [accountOpen, setAccountOpen] = useState(false);
   const [coursesOpen, setCoursesOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [helpView, setHelpView] = useState('menu'); // 'menu' | 'search' | 'report' | 'reported'
+  const [guideQuery, setGuideQuery] = useState('');
+  const [reportSubject, setReportSubject] = useState('');
+  const [reportDetails, setReportDetails] = useState('');
   const accountRef = useRef(null);
   const coursesRef = useRef(null);
+  const helpRef = useRef(null);
 
   const unreadCount = state.conversations.filter(c => c.workflow_state === 'unread').length;
 
@@ -38,10 +52,37 @@ export default function GlobalNav() {
     const handleClick = (e) => {
       if (accountRef.current && !accountRef.current.contains(e.target)) setAccountOpen(false);
       if (coursesRef.current && !coursesRef.current.contains(e.target)) setCoursesOpen(false);
+      if (helpRef.current && !helpRef.current.contains(e.target)) {
+        setHelpOpen(false);
+        setHelpView('menu');
+      }
     };
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  const handleSubmitReport = (e) => {
+    e.preventDefault();
+    if (!reportSubject.trim()) return;
+    const newId = Math.max(0, ...(state.supportTickets || []).map(t => t.id)) + 1;
+    setState(prev => ({
+      ...prev,
+      supportTickets: [
+        ...(prev.supportTickets || []),
+        {
+          id: newId,
+          subject: reportSubject.trim(),
+          details: reportDetails.trim(),
+          submitted_by: state.currentUser.name,
+          submitted_at: new Date().toISOString(),
+          status: 'open',
+        },
+      ],
+    }));
+    setReportSubject('');
+    setReportDetails('');
+    setHelpView('reported');
+  };
 
   const handleNavClick = (item) => {
     if (item.id === 'courses') {
@@ -87,10 +128,10 @@ export default function GlobalNav() {
               </div>
             </div>
             <div className="flyout-divider" />
-            <button className="flyout-item" onClick={() => { setAccountOpen(false); }}>
+            <button className="flyout-item" onClick={() => { setAccountOpen(false); navigate('/profile'); }}>
               <User size={16} /> Profile
             </button>
-            <button className="flyout-item" onClick={() => { setAccountOpen(false); }}>
+            <button className="flyout-item" onClick={() => { setAccountOpen(false); navigate('/profile/settings'); }}>
               <Settings size={16} /> Settings
             </button>
             <button className="flyout-item" onClick={() => { setAccountOpen(false); navigate('/notifications'); }}>
@@ -162,12 +203,93 @@ export default function GlobalNav() {
       <div className="nav-spacer" />
 
       {/* Help */}
-      <button className="nav-item" onClick={() => {}}>
-        <div className="nav-icon-wrap">
-          <HelpCircle size={22} />
-        </div>
-        <span className="nav-label">Help</span>
-      </button>
+      <div className="nav-item-wrapper" ref={helpRef}>
+        <button
+          className={`nav-item ${helpOpen ? 'active' : ''}`}
+          onClick={() => { setHelpOpen(!helpOpen); setHelpView('menu'); setAccountOpen(false); setCoursesOpen(false); }}
+        >
+          <div className="nav-icon-wrap">
+            <HelpCircle size={22} />
+          </div>
+          <span className="nav-label">Help</span>
+        </button>
+        {helpOpen && (
+          <div className="nav-flyout help-flyout">
+            {helpView === 'menu' && (
+              <>
+                <div className="flyout-title">Help</div>
+                <button className="flyout-item" onClick={() => setHelpView('search')}>
+                  <Search size={16} /> Search the Canvas Guides
+                </button>
+                <button className="flyout-item" onClick={() => setHelpView('report')}>
+                  <MessageCircle size={16} /> Report a Problem
+                </button>
+              </>
+            )}
+            {helpView === 'search' && (
+              <div className="help-panel">
+                <div className="help-panel-header">
+                  <button className="help-back-link" onClick={() => setHelpView('menu')}>&larr; Back</button>
+                </div>
+                <input
+                  className="help-search-input"
+                  type="text"
+                  autoFocus
+                  placeholder="Search guides…"
+                  value={guideQuery}
+                  onChange={(e) => setGuideQuery(e.target.value)}
+                />
+                <div className="help-guide-results">
+                  {GUIDE_ARTICLES.filter(g => g.q.toLowerCase().includes(guideQuery.toLowerCase())).map((g, i) => (
+                    <div key={i} className="help-guide-item">
+                      <div className="help-guide-q">{g.q}</div>
+                      <div className="help-guide-a">{g.a}</div>
+                    </div>
+                  ))}
+                  {guideQuery && GUIDE_ARTICLES.filter(g => g.q.toLowerCase().includes(guideQuery.toLowerCase())).length === 0 && (
+                    <div className="help-guide-empty">No guides matched "{guideQuery}".</div>
+                  )}
+                </div>
+              </div>
+            )}
+            {helpView === 'report' && (
+              <form className="help-panel" onSubmit={handleSubmitReport}>
+                <div className="help-panel-header">
+                  <button type="button" className="help-back-link" onClick={() => setHelpView('menu')}>&larr; Back</button>
+                </div>
+                <div className="help-field">
+                  <label>Subject</label>
+                  <input
+                    className="help-search-input" type="text" autoFocus
+                    value={reportSubject} onChange={(e) => setReportSubject(e.target.value)}
+                    placeholder="Briefly describe the problem"
+                  />
+                </div>
+                <div className="help-field">
+                  <label>Details</label>
+                  <textarea
+                    className="help-search-input" rows={3}
+                    value={reportDetails} onChange={(e) => setReportDetails(e.target.value)}
+                    placeholder="What were you trying to do?"
+                  />
+                </div>
+                <button type="submit" className="btn btn-success help-submit-btn" disabled={!reportSubject.trim()}>
+                  <Send size={14} /> Submit
+                </button>
+              </form>
+            )}
+            {helpView === 'reported' && (
+              <div className="help-panel help-reported">
+                <CheckCircle2 size={28} color="var(--success, #0B874B)" />
+                <div className="help-reported-text">Thanks — your report has been logged for the sandbox admins.</div>
+                <button className="flyout-item flyout-all-courses" onClick={() => { setHelpOpen(false); setHelpView('menu'); }}>
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </nav>
   );
 }

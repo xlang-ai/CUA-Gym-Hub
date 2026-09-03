@@ -1,10 +1,17 @@
 {
-  "node": "18.20.2",
+  "node": "22.22.2",
   "results": [
     {
       "site": "12306_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 8,
+      "deadEnds": 7,
+      "unmarkedTabs": 0,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 10
     },
     {
       "site": "Canvas-LMS_mock",
@@ -14,24 +21,45 @@
       "untitled": 0,
       "deadEnds": 0,
       "unmarkedTabs": 1,
-      "inert": 1,
+      "inert": 2,
       "noInAppLinks": true,
       "probed": 8
     },
     {
       "site": "Expensify_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 3,
+      "unmarkedTabs": 1,
+      "inert": 4,
+      "noInAppLinks": false,
+      "probed": 13
     },
     {
       "site": "PACS-viewer_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 1,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 0
     },
     {
       "site": "SAP_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 4,
+      "noInAppLinks": true,
+      "probed": 10
     },
     {
       "site": "ServiceNow_mock",
@@ -47,38 +75,80 @@
     },
     {
       "site": "TradingView_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "build-failed",
+      "why": ""
     },
     {
       "site": "Zendesk_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 1,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 1
     },
     {
       "site": "adp_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 2,
+      "noInAppLinks": true,
+      "probed": 10
     },
     {
       "site": "airtable_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 2,
+      "inert": 2,
+      "noInAppLinks": true,
+      "probed": 10
     },
     {
       "site": "aliyun_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 6,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 6,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 30
     },
     {
       "site": "amazon_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 2,
+      "unmarkedTabs": 14,
+      "inert": 37,
+      "noInAppLinks": false,
+      "probed": 66
     },
     {
       "site": "amazon_seller_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 2,
+      "noInAppLinks": false,
+      "probed": 10
     },
     {
       "site": "amplitude_mock",
@@ -94,8 +164,15 @@
     },
     {
       "site": "asana_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 20,
+      "inert": 5,
+      "noInAppLinks": false,
+      "probed": 45
     },
     {
       "site": "aws_console_mock",
@@ -111,8 +188,15 @@
     },
     {
       "site": "azure_mock",
-      "status": "toolchain",
-      "why": "Error: CustomEvent is not defined"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 1,
+      "unmarkedTabs": 2,
+      "inert": 10,
+      "noInAppLinks": false,
+      "probed": 26
     },
     {
       "site": "bamboohr_mock",
@@ -128,28 +212,56 @@
     },
     {
       "site": "booking_com_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 3,
+      "unmarkedTabs": 0,
+      "inert": 6,
+      "noInAppLinks": false,
+      "probed": 79
     },
     {
       "site": "canva_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 3,
+      "noInAppLinks": true,
+      "probed": 10
     },
     {
       "site": "canvas_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5719 --max-routes 8"
     },
     {
       "site": "circleci_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 0
     },
     {
       "site": "clio_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 6,
+      "unmarkedTabs": 5,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 37
     },
     {
       "site": "cloudflare_mock",
@@ -165,23 +277,51 @@
     },
     {
       "site": "coinbase_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 5,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 7,
+      "inert": 15,
+      "noInAppLinks": false,
+      "probed": 44
     },
     {
       "site": "confluence_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 5,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 10,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 10
     },
     {
       "site": "contractbook_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 1,
+      "inert": 2,
+      "noInAppLinks": true,
+      "probed": 10
     },
     {
       "site": "datadog_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 11,
+      "inert": 7,
+      "noInAppLinks": false,
+      "probed": 32
     },
     {
       "site": "dingtalk_mock",
@@ -197,33 +337,75 @@
     },
     {
       "site": "discord_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 2,
+      "noInAppLinks": true,
+      "probed": 6
     },
     {
       "site": "docusign_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 5,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 2,
+      "unmarkedTabs": 6,
+      "inert": 3,
+      "noInAppLinks": false,
+      "probed": 18
     },
     {
       "site": "ebay_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 17,
+      "inert": 8,
+      "noInAppLinks": false,
+      "probed": 57
     },
     {
       "site": "epic-health_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 10
     },
     {
       "site": "expedia_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 2,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 2,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 12
     },
     {
       "site": "facebook_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 2,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 2,
+      "noInAppLinks": false,
+      "probed": 14
     },
     {
       "site": "feishu_mock",
@@ -239,8 +421,15 @@
     },
     {
       "site": "github_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 4,
+      "deadEnds": 0,
+      "unmarkedTabs": 8,
+      "inert": 18,
+      "noInAppLinks": false,
+      "probed": 60
     },
     {
       "site": "gitlab_mock",
@@ -256,118 +445,265 @@
     },
     {
       "site": "gmail_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 8,
+      "deadEnds": 0,
+      "unmarkedTabs": 9,
+      "inert": 55,
+      "noInAppLinks": false,
+      "probed": 77
     },
     {
       "site": "google_ads_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 0,
+      "inert": 1,
+      "noInAppLinks": true,
+      "probed": 8
     },
     {
       "site": "google_analytics_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 2,
+      "unmarkedTabs": 13,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 1
     },
     {
       "site": "google_calendar_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 0
     },
     {
       "site": "google_docs_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 2
     },
     {
       "site": "google_drive_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5742 --max-routes 8"
     },
     {
       "site": "google_flights_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5743 --max-routes 8"
     },
     {
       "site": "google_sheets_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 2,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 2,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 11
     },
     {
       "site": "greenhouse_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 6,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 5,
+      "unmarkedTabs": 1,
+      "inert": 5,
+      "noInAppLinks": false,
+      "probed": 11
     },
     {
       "site": "gusto_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 1
     },
     {
       "site": "hotjar_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 2
     },
     {
       "site": "hubspot_marketing_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 2
     },
     {
       "site": "hubspot_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 3,
+      "unmarkedTabs": 22,
+      "inert": 3,
+      "noInAppLinks": false,
+      "probed": 41
     },
     {
       "site": "instacart_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 5,
+      "crashed": 0,
+      "untitled": 3,
+      "deadEnds": 0,
+      "unmarkedTabs": 6,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 1
     },
     {
       "site": "instagram_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 37,
+      "inert": 9,
+      "noInAppLinks": false,
+      "probed": 39
     },
     {
       "site": "jira_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 7,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 2,
+      "unmarkedTabs": 1,
+      "inert": 9,
+      "noInAppLinks": false,
+      "probed": 21
     },
     {
       "site": "klaviyo_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 0
     },
     {
       "site": "lattice_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 2,
+      "inert": 2,
+      "noInAppLinks": false,
+      "probed": 16
     },
     {
       "site": "linear_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 8,
+      "deadEnds": 0,
+      "unmarkedTabs": 2,
+      "inert": 6,
+      "noInAppLinks": false,
+      "probed": 65
     },
     {
       "site": "linkedin_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 5,
+      "deadEnds": 0,
+      "unmarkedTabs": 9,
+      "inert": 12,
+      "noInAppLinks": false,
+      "probed": 33
     },
     {
       "site": "looker_studio_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 5
     },
     {
       "site": "lucidchart_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 2,
+      "inert": 1,
+      "noInAppLinks": true,
+      "probed": 4
     },
     {
       "site": "mailchimp_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 1,
+      "unmarkedTabs": 0,
+      "inert": 1,
+      "noInAppLinks": true,
+      "probed": 3
     },
     {
       "site": "meta_ads_mock",
@@ -383,8 +719,15 @@
     },
     {
       "site": "microsoft_teams_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 4,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 1
     },
     {
       "site": "miro_mock",
@@ -400,18 +743,32 @@
     },
     {
       "site": "mixpanel_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 1,
+      "noInAppLinks": true,
+      "probed": 4
     },
     {
       "site": "monday_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5764 --max-routes 8"
     },
     {
       "site": "notion_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 3,
+      "deadEnds": 0,
+      "unmarkedTabs": 11,
+      "inert": 8,
+      "noInAppLinks": false,
+      "probed": 16
     },
     {
       "site": "openreview_mock",
@@ -427,133 +784,287 @@
     },
     {
       "site": "outlook_web_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5767 --max-routes 8"
     },
     {
       "site": "paypal_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 3,
+      "deadEnds": 1,
+      "unmarkedTabs": 8,
+      "inert": 5,
+      "noInAppLinks": false,
+      "probed": 17
     },
     {
       "site": "pinterest_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 5,
+      "crashed": 0,
+      "untitled": 4,
+      "deadEnds": 0,
+      "unmarkedTabs": 6,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 8
     },
     {
       "site": "postman_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 3,
+      "noInAppLinks": true,
+      "probed": 10
     },
     {
       "site": "quickbooks_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 4,
+      "deadEnds": 5,
+      "unmarkedTabs": 34,
+      "inert": 13,
+      "noInAppLinks": false,
+      "probed": 44
     },
     {
       "site": "reddit_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 51,
+      "inert": 20,
+      "noInAppLinks": false,
+      "probed": 62
     },
     {
       "site": "robinhood_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 6,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 9,
+      "inert": 38,
+      "noInAppLinks": false,
+      "probed": 44
     },
     {
       "site": "salesforce_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 1,
+      "noInAppLinks": false,
+      "probed": 20
     },
     {
       "site": "sentry_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5775 --max-routes 8"
     },
     {
       "site": "shopify_admin_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 3,
+      "unmarkedTabs": 6,
+      "inert": 15,
+      "noInAppLinks": false,
+      "probed": 44
     },
     {
       "site": "slack_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 8,
+      "deadEnds": 0,
+      "unmarkedTabs": 21,
+      "inert": 22,
+      "noInAppLinks": false,
+      "probed": 63
     },
     {
       "site": "stripe_dashboard_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 7,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 3,
+      "unmarkedTabs": 4,
+      "inert": 7,
+      "noInAppLinks": false,
+      "probed": 21
     },
     {
       "site": "tableau_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 1,
+      "noInAppLinks": true,
+      "probed": 6
     },
     {
       "site": "taobao_seller_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 3,
+      "unmarkedTabs": 11,
+      "inert": 4,
+      "noInAppLinks": false,
+      "probed": 16
     },
     {
       "site": "trello_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 5,
+      "crashed": 0,
+      "untitled": 2,
+      "deadEnds": 0,
+      "unmarkedTabs": 3,
+      "inert": 3,
+      "noInAppLinks": false,
+      "probed": 35
     },
     {
       "site": "tripadvisor_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 13,
+      "noInAppLinks": false,
+      "probed": 76
     },
     {
       "site": "twitter_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 7,
+      "crashed": 0,
+      "untitled": 2,
+      "deadEnds": 0,
+      "unmarkedTabs": 24,
+      "inert": 6,
+      "noInAppLinks": false,
+      "probed": 34
     },
     {
       "site": "uber_eats_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5784 --max-routes 8"
     },
     {
       "site": "vercel_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 9
     },
     {
       "site": "wandb_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": true,
+      "probed": 3
     },
     {
       "site": "wechat_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 0,
+      "unmarkedTabs": 0,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 0
     },
     {
       "site": "weibo_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 7,
+      "deadEnds": 0,
+      "unmarkedTabs": 43,
+      "inert": 7,
+      "noInAppLinks": false,
+      "probed": 42
     },
     {
       "site": "westlaw_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5789 --max-routes 8"
     },
     {
       "site": "woocommerce_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 0,
+      "deadEnds": 1,
+      "unmarkedTabs": 0,
+      "inert": 5,
+      "noInAppLinks": true,
+      "probed": 8
     },
     {
       "site": "workday_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 2,
+      "unmarkedTabs": 2,
+      "inert": 6,
+      "noInAppLinks": false,
+      "probed": 69
     },
     {
       "site": "xiaohongshu_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 3,
+      "crashed": 0,
+      "untitled": 3,
+      "deadEnds": 0,
+      "unmarkedTabs": 3,
+      "inert": 8,
+      "noInAppLinks": false,
+      "probed": 30
     },
     {
       "site": "youtube_mock",
@@ -569,18 +1080,32 @@
     },
     {
       "site": "zhihu_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 8,
+      "crashed": 0,
+      "untitled": 2,
+      "deadEnds": 0,
+      "unmarkedTabs": 3,
+      "inert": 7,
+      "noInAppLinks": false,
+      "probed": 26
     },
     {
       "site": "zillow_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audit-failed",
+      "why": "Command failed: node fleet/audit-runtime.mjs --base http://127.0.0.1:5795 --max-routes 8"
     },
     {
       "site": "zoom_web_mock",
-      "status": "skipped",
-      "why": "no node_modules"
+      "status": "audited",
+      "routes": 1,
+      "crashed": 0,
+      "untitled": 1,
+      "deadEnds": 0,
+      "unmarkedTabs": 1,
+      "inert": 0,
+      "noInAppLinks": false,
+      "probed": 3
     }
   ]
 }

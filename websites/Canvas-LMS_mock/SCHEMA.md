@@ -11,7 +11,7 @@
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `currentUser` | object | Active user; `{id, name, short_name, sortable_name, email, avatar_url, role, pronouns, bio, last_login}` |
+| `currentUser` | object | Active user; `{id, name, short_name, sortable_name, email, avatar_url, role, pronouns, bio, last_login}`. Optional additive fields written by Account Settings: `time_zone`, `locale` |
 | `users` | array | All users (teachers, students, TAs); each: `{id, name, short_name, sortable_name, email, avatar_url, role, pronouns, bio}` |
 | `courses` | array | All courses; each: `{id, name, course_code, term, workflow_state, start_at, end_at, color, default_view, syllabus_body, total_students, image_url}` |
 | `enrollments` | array | Course enrollments; each: `{id, user_id, course_id, type, enrollment_state, course_section_id, created_at}` |

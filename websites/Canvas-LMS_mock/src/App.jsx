@@ -27,8 +27,11 @@ import Files from './pages/course/Files';
 import Syllabus from './pages/course/Syllabus';
 import Settings from './pages/course/Settings';
 import Quizzes from './pages/course/Quizzes';
+import Outcomes from './pages/course/Outcomes';
 import Groups from './pages/Groups';
 import NotificationPreferences from './pages/NotificationPreferences';
+import UserProfile from './pages/UserProfile';
+import AccountSettings from './pages/AccountSettings';
 
 function RedirectWithQuery({ to }) {
   const [searchParams] = useSearchParams();
@@ -79,13 +82,15 @@ export default function App() {
                   <Route path="files" element={<Files />} />
                   <Route path="syllabus" element={<Syllabus />} />
                   <Route path="settings" element={<Settings />} />
-                  <Route path="outcomes" element={<Placeholder title="Outcomes" />} />
+                  <Route path="outcomes" element={<Outcomes />} />
                   <Route path="quizzes" element={<Quizzes />} />
                 </Route>
                 <Route path="/calendar" element={<Calendar />} />
                 <Route path="/conversations" element={<Inbox />} />
                 <Route path="/groups" element={<Groups />} />
                 <Route path="/notifications" element={<NotificationPreferences />} />
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/profile/settings" element={<AccountSettings />} />
                 <Route path="*" element={<Placeholder title="Page Not Found" />} />
               </Routes>
             </div>

@@ -454,6 +454,79 @@ export function createInitialData() {
 
     announcementReplies: [],
 
+    outcomes: [
+      {
+        id: 1, course_id: 1, group: 'Programming Fundamentals',
+        title: 'Variables and Data Types',
+        description: 'Student can declare variables, choose appropriate data types, and explain type coercion.',
+        calculation_method: 'decaying_average', calculation_int: 65,
+        mastery_points: 3, points_possible: 4,
+        ratings: [
+          { description: 'Exceeds Mastery', points: 4 },
+          { description: 'Mastery', points: 3 },
+          { description: 'Near Mastery', points: 2 },
+          { description: 'Below Mastery', points: 1 },
+          { description: 'No Evidence', points: 0 }
+        ]
+      },
+      {
+        id: 2, course_id: 1, group: 'Programming Fundamentals',
+        title: 'Control Flow',
+        description: 'Student can construct conditional and loop structures to solve multi-step problems.',
+        calculation_method: 'decaying_average', calculation_int: 65,
+        mastery_points: 3, points_possible: 4,
+        ratings: [
+          { description: 'Exceeds Mastery', points: 4 },
+          { description: 'Mastery', points: 3 },
+          { description: 'Near Mastery', points: 2 },
+          { description: 'Below Mastery', points: 1 },
+          { description: 'No Evidence', points: 0 }
+        ]
+      },
+      {
+        id: 3, course_id: 1, group: 'Object-Oriented Design',
+        title: 'Class and Object Modeling',
+        description: 'Student can design classes with appropriate attributes, methods, and encapsulation.',
+        calculation_method: 'n_mastery', calculation_int: 3,
+        mastery_points: 3, points_possible: 4,
+        ratings: [
+          { description: 'Exceeds Mastery', points: 4 },
+          { description: 'Mastery', points: 3 },
+          { description: 'Near Mastery', points: 2 },
+          { description: 'Below Mastery', points: 1 },
+          { description: 'No Evidence', points: 0 }
+        ]
+      },
+      {
+        id: 4, course_id: 2, group: 'Data Structures',
+        title: 'Linked List Operations',
+        description: 'Student can implement and analyze insertion, deletion, and traversal on singly/doubly linked lists.',
+        calculation_method: 'decaying_average', calculation_int: 65,
+        mastery_points: 3, points_possible: 4,
+        ratings: [
+          { description: 'Exceeds Mastery', points: 4 },
+          { description: 'Mastery', points: 3 },
+          { description: 'Near Mastery', points: 2 },
+          { description: 'Below Mastery', points: 1 },
+          { description: 'No Evidence', points: 0 }
+        ]
+      },
+      {
+        id: 5, course_id: 2, group: 'Algorithm Analysis',
+        title: 'Big-O Complexity Analysis',
+        description: 'Student can derive and compare the time/space complexity of common algorithms.',
+        calculation_method: 'highest', calculation_int: null,
+        mastery_points: 3, points_possible: 4,
+        ratings: [
+          { description: 'Exceeds Mastery', points: 4 },
+          { description: 'Mastery', points: 3 },
+          { description: 'Near Mastery', points: 2 },
+          { description: 'Below Mastery', points: 1 },
+          { description: 'No Evidence', points: 0 }
+        ]
+      }
+    ],
+
     // UI state
     dashboardView: 'cards',
     activeCourseNav: {}

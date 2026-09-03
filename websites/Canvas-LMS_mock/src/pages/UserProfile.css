@@ -1,0 +1,236 @@
+.profile-page {
+  max-width: 800px;
+  padding: 20px 24px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 30px;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-identity {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-identity h1 {
+  margin-bottom: 4px;
+}
+
+.profile-subline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.profile-display-name {
+  font-size: var(--font-size-body);
+  color: var(--text-secondary);
+}
+
+.profile-pronouns {
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+}
+
+.profile-role-badge {
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  color: var(--primary);
+  background: var(--primary-light);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+}
+
+.profile-email {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+}
+
+.profile-header-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.profile-section {
+  margin-bottom: 28px;
+}
+
+.profile-section h2 {
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 12px;
+}
+
+.profile-bio {
+  font-size: var(--font-size-body);
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.profile-meta {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-content);
+  overflow: hidden;
+}
+
+.profile-meta-row {
+  display: flex;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.profile-meta-row:last-child {
+  border-bottom: none;
+}
+
+.profile-meta-row dt {
+  width: 180px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.profile-meta-row dd {
+  color: var(--text-primary);
+}
+
+.profile-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 520px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-label {
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.profile-input {
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-content);
+  color: var(--text-primary);
+  outline: none;
+  width: 100%;
+  resize: vertical;
+}
+
+.profile-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(3, 116, 181, 0.15);
+}
+
+.profile-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-empty {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.profile-enrollment-list {
+  list-style: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-content);
+  overflow: hidden;
+}
+
+.profile-enrollment-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.profile-enrollment-item:last-child {
+  border-bottom: none;
+}
+
+.profile-course-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.profile-course-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-link);
+  font-size: var(--font-size-body);
+  padding: 0;
+}
+
+.profile-course-link:hover {
+  text-decoration: underline;
+}
+
+.profile-enrollment-meta {
+  margin-left: auto;
+  font-size: var(--font-size-small);
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+.profile-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.profile-inline-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-link);
+  font-size: var(--font-size-body);
+  padding: 0;
+}
+
+.profile-inline-link:hover {
+  text-decoration: underline;
+}

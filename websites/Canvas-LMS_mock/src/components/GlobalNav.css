@@ -10,12 +10,12 @@
   align-items: center;
   padding: 4px 0;
   z-index: 1000;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.global-nav::-webkit-scrollbar {
-  width: 0;
+  /* Intentionally not overflow:auto/hidden here: the Account/Courses/Help flyouts are
+     position:absolute descendants anchored to this rail. An overflow-clipping ancestor
+     clips absolutely-positioned descendants regardless of z-index, which made every
+     flyout in this rail invisible even though it existed correctly in the DOM. The nav
+     has a small fixed item count that fits comfortably in any real viewport height, so
+     no scroll behavior is needed here. */
 }
 
 .nav-item-wrapper {
@@ -221,4 +221,105 @@
 .flyout-all-courses {
   color: var(--text-link);
   font-weight: 600;
+}
+
+/* Help flyout */
+.help-flyout {
+  top: auto;
+  bottom: 0;
+  width: 280px;
+}
+
+.help-panel {
+  padding: 4px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.help-panel-header {
+  margin-bottom: 2px;
+}
+
+.help-back-link {
+  background: none;
+  border: none;
+  color: var(--text-link);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.help-search-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--text-primary);
+  outline: none;
+  font-family: inherit;
+}
+
+.help-search-input:focus {
+  border-color: var(--primary);
+}
+
+.help-guide-results {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.help-guide-item {
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 8px;
+}
+
+.help-guide-q {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.help-guide-a {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.help-guide-empty {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+}
+
+.help-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.help-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+}
+
+.help-reported {
+  align-items: center;
+  text-align: center;
+  padding-top: 12px;
+}
+
+.help-reported-text {
+  font-size: 13px;
+  color: var(--text-primary);
 }
